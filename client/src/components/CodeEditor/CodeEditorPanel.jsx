@@ -5,6 +5,7 @@ import CodeEditor from "./CodeEditor";
 import LanguageSelect from "./LanguageSelect";
 import { CODE_SNIPPETS, LANGUAGE_VERSIONS } from "../../utils/constants";
 import { getLanguageVersion } from "../../utils/api";
+import Output from "./Output";
 
 function CodeEditorPanel() {
   const editorRef = useRef();
@@ -38,32 +39,30 @@ function CodeEditorPanel() {
     <Box height="100vh" width="100%">
       <PanelGroup direction="vertical">
         {/* code editor */}
-        <Panel defaultSize={50} maxSize={75}>
-          <LanguageSelect
-            languages={languages}
-            language={language}
-            onSelect={onSelectLanguage}
-          />
-          <CodeEditor
-            onMount={onMount}
-            value={value}
-            setValue={setValue}
-            language={language}
-          />
+        <Panel defaultSize={60} maxSize={80}>
+          <Box height="100%">
+            <LanguageSelect
+              languages={languages}
+              language={language}
+              onSelect={onSelectLanguage}
+            />
+            <CodeEditor
+              onMount={onMount}
+              value={value}
+              setValue={setValue}
+              language={language}
+            />
+          </Box>
         </Panel>
 
-        <PanelResizeHandle />
+        <PanelResizeHandle
+          style={{ backgroundColor: "var(--accent-10)", padding: "1px" }}
+        />
 
         {/* output window */}
-        <Panel defaultSize={50} maxSize={75}>
-          <Box
-            style={{
-              height: "100%",
-              background: "#3c4048",
-              color: "white",
-            }}
-          >
-            Bottom Panel
+        <Panel defaultSize={40} maxSize={75}>
+          <Box height="100%" mt="1">
+            <Output language={language} editorRef={editorRef} />
           </Box>
         </Panel>
       </PanelGroup>

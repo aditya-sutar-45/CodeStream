@@ -2,7 +2,7 @@ import { Box, DropdownMenu, Text, Button, Flex } from "@radix-ui/themes";
 
 function LanguageSelect({ languages, language, onSelect }) {
   return (
-    <Flex p="1" style={{ borderRadius: "8px" }}>
+    <Flex p="1">
       <Box p="1" mx="1">
         <Text size="4" align="left" weight="medium">
           {languages.length > 0
