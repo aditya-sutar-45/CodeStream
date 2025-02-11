@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@radix-ui/themes/styles.css";
 import App from "./App.jsx";
-import { Theme, ThemePanel } from "@radix-ui/themes";
+import { Theme } from "@radix-ui/themes";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -15,7 +15,6 @@ createRoot(document.getElementById("root")).render(
       grayColor="slate"
     >
       <App />
-      <ThemePanel />
     </Theme>
   </StrictMode>
 );

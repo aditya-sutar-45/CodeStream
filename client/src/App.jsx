@@ -1,7 +1,9 @@
+import CodeEditorPanel from "./components/CodeEditor/CodeEditorPanel";
+
 function App() {
   return (
     <>
-      <h1>Hello World</h1>
+      <CodeEditorPanel />
     </>
   );
 }
