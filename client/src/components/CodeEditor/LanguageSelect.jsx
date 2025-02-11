@@ -1,23 +1,6 @@
 import { Box, DropdownMenu, Text, Button, Flex } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
-import { LANGUAGE_VERSIONS } from "../../utils/constants";
-import { getLanguageVersion } from "../../utils/api";
 
-function LanguageSelect({ language, onSelect }) {
-  const [languages, setLanguages] = useState({});
-
-  useEffect(() => {
-    const updateLanguageVersions = async () => {
-      const updatedVersions = {};
-      for (const lang in LANGUAGE_VERSIONS) {
-        updatedVersions[lang] = await getLanguageVersion(lang);
-        LANGUAGE_VERSIONS[lang] = await getLanguageVersion(lang);
-      }
-      setLanguages(Object.entries(updatedVersions));
-    };
-    updateLanguageVersions();
-  }, []);
-
+function LanguageSelect({ languages, language, onSelect }) {
   return (
     <Flex p="1" style={{ borderRadius: "8px" }}>
       <Box p="1" mx="1">

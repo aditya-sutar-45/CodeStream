@@ -1,14 +1,28 @@
 import { Box } from "@radix-ui/themes";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import CodeEditor from "./CodeEditor";
 import LanguageSelect from "./LanguageSelect";
-import { CODE_SNIPPETS } from "../../utils/constants";
+import { CODE_SNIPPETS, LANGUAGE_VERSIONS } from "../../utils/constants";
+import { getLanguageVersion } from "../../utils/api";
 
 function CodeEditorPanel() {
   const editorRef = useRef();
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
+  const [languages, setLanguages] = useState({});
+
+  useEffect(() => {
+    const updateLanguageVersions = async () => {
+      const updatedVersions = {};
+      for (const lang in LANGUAGE_VERSIONS) {
+        updatedVersions[lang] = await getLanguageVersion(lang);
+        LANGUAGE_VERSIONS[lang] = await getLanguageVersion(lang);
+      }
+      setLanguages(Object.entries(updatedVersions));
+    };
+    updateLanguageVersions();
+  }, []);
 
   const onMount = (editor) => {
     editorRef.current = editor;
@@ -25,7 +39,11 @@ function CodeEditorPanel() {
       <PanelGroup direction="vertical">
         {/* code editor */}
         <Panel defaultSize={50} maxSize={75}>
-          <LanguageSelect language={language} onSelect={onSelectLanguage} />
+          <LanguageSelect
+            languages={languages}
+            language={language}
+            onSelect={onSelectLanguage}
+          />
           <CodeEditor
             onMount={onMount}
             value={value}
