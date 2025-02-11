@@ -1,9 +1,21 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import "@radix-ui/themes/styles.css";
 import App from "./App.jsx";
+import { Theme, ThemePanel } from "@radix-ui/themes";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
+    <Theme
+      appearance="dark"
+      accentColor="purple"
+      radius="medium"
+      scaling="100%"
+      panelBackground="translucent"
+      grayColor="slate"
+    >
+      <App />
+      <ThemePanel />
+    </Theme>
   </StrictMode>
 );
