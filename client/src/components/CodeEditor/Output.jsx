@@ -23,7 +23,7 @@ function Output({ editorRef, language }) {
   };
 
   return (
-    <Box>
+    <Box height="100%">
       <Flex p="1">
         <Box p="1" mx="1">
           <Text size="4" align="left" weight="medium">
@@ -39,7 +39,7 @@ function Output({ editorRef, language }) {
         </Button>
       </Flex>
       <Box
-        height="90vh"
+        height="80%"
         p="2"
         mx="1"
         style={{

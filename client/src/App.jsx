@@ -4,9 +4,8 @@ import CodeEditorPanel from "./components/CodeEditor/CodeEditorPanel";
 
 function App() {
   return (
-    <Box height="100vh" width="100%">
+    <Box mx="4">
       <CodeEditorPanel />
-      {/* <WhiteBaord/> */}
     </Box>
   );
 }
