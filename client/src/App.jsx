@@ -1,10 +1,12 @@
+import { Box } from "@radix-ui/themes";
 import CodeEditorPanel from "./components/CodeEditor/CodeEditorPanel";
+import WhiteBaord from "./components/WhiteBoard/Whiteboard";
 
 function App() {
   return (
-    <>
-      <CodeEditorPanel />
-    </>
+    <Box height="100vh" width="100%">
+      <WhiteBaord/>
+    </Box>
   );
 }
 
