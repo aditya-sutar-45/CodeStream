@@ -39,7 +39,7 @@ function CodeEditorPanel() {
     <Box height="100vh" width="100%">
       <PanelGroup direction="vertical">
         {/* code editor */}
-        <Panel defaultSize={60} maxSize={100}>
+        <Panel defaultSize={65} maxSize={100}>
           <Box height="100%">
             <LanguageSelect
               languages={languages}
