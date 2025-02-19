@@ -1,4 +1,3 @@
-import * as fabric from "fabric";
 import { useEffect } from "react";
 import { useRef } from "react";
 
@@ -7,23 +6,6 @@ function WhiteBaord() {
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    const canvas = new fabric.Canvas(canvasRef.current, {
-      backgroundColor: "white",
-    });
-
-    const rect = new fabric.Rect({
-      left: 50,
-      top: 50,
-      opacity: 0,
-      width: 100,
-      height: 100,
-    });
-
-    canvas.add(rect);
-
-    return () => {
-      canvas.dispose();
-    };
   }, [canvasRef]);
 
   return (
