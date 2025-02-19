@@ -1,8 +1,8 @@
-import { Box, DropdownMenu, Text, Button, Flex } from "@radix-ui/themes";
+import { Box, DropdownMenu, Text, Button } from "@radix-ui/themes";
 
 function LanguageSelect({ languages, language, onSelect }) {
   return (
-    <Flex p="1">
+    <>
       <Box p="1" mx="1">
         <Text size="4" align="left" weight="medium">
           {languages.length > 0
@@ -37,7 +37,7 @@ function LanguageSelect({ languages, language, onSelect }) {
           )}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
-    </Flex>
+    </>
   );
 }
 

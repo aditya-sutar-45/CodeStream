@@ -1,4 +1,4 @@
-import { Box } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import CodeEditor from "./CodeEditor";
@@ -6,6 +6,7 @@ import LanguageSelect from "./LanguageSelect";
 import { CODE_SNIPPETS, LANGUAGE_VERSIONS } from "../../utils/constants";
 import { getLanguageVersion } from "../../utils/api";
 import Output from "./Output";
+import ThemeSelect from "./ThemeSelect";
 
 function CodeEditorPanel() {
   const editorRef = useRef();
@@ -41,11 +42,10 @@ function CodeEditorPanel() {
         {/* code editor */}
         <Panel defaultSize={65} maxSize={100}>
           <Box height="100%">
-            <LanguageSelect
-              languages={languages}
-              language={language}
-              onSelect={onSelectLanguage}
-            />
+            <Flex p="1">
+              <LanguageSelect language={language} languages={languages} onSelect={onSelectLanguage}/>
+              <ThemeSelect />
+            </Flex>
             <CodeEditor
               onMount={onMount}
               value={value}
