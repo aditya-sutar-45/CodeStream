@@ -7,6 +7,8 @@ import { CODE_SNIPPETS, LANGUAGE_VERSIONS } from "../../utils/constants";
 import { getLanguageVersion } from "../../utils/api";
 import Output from "./Output";
 import ThemeSelect from "./ThemeSelect";
+import cobaltTheme from "../../assets/EditorThemes/Cobalt.json";
+import githubDark from "../../assets/EditorThemes/GitHub Dark.json"
 
 function CodeEditorPanel() {
   const editorRef = useRef();
@@ -26,9 +28,13 @@ function CodeEditorPanel() {
     updateLanguageVersions();
   }, []);
 
-  const onMount = (editor) => {
+  const onMount = (editor, monaco) => {
     editorRef.current = editor;
     editor.focus();
+
+    monaco.editor.defineTheme("cobalt", cobaltTheme);
+    monaco.editor.defineTheme("github-dark", githubDark) 
+    monaco.editor.setTheme("github-dark");
   };
 
   const onSelectLanguage = (language) => {
@@ -43,7 +49,11 @@ function CodeEditorPanel() {
         <Panel defaultSize={65} maxSize={100}>
           <Box height="100%">
             <Flex p="1">
-              <LanguageSelect language={language} languages={languages} onSelect={onSelectLanguage}/>
+              <LanguageSelect
+                language={language}
+                languages={languages}
+                onSelect={onSelectLanguage}
+              />
               <ThemeSelect />
             </Flex>
             <CodeEditor
