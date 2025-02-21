@@ -1,33 +1,30 @@
 import { useEffect, useRef } from "react";
 import rough from "roughjs";
 
-function WhiteBaord() {
+function Whiteboard({width, height}) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    canvas.width = width;
+    canvas.height = height;
+
     const ctx = canvas.getContext("2d");
     const rc = rough.canvas(canvas);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    rc.rectangle(50, 50, 200, 100, { roughness: 2, stroke: "blue" });
-    rc.circle(300, 100, 50, {
-      roughness: 1,
-      stroke: "red",
-      fill: "yellow",
-      fillStyle: "solid",
-    });
-  }, []);
+    rc.rectangle(10, 10, 100, 50, { roughness: 2, stroke: "blue" });
+  }, [width, height]);
 
   return (
     <canvas
       ref={canvasRef}
-      width={800}
-      height={500}
-      style={{ backgroundColor: "white", border: "1px solid white" }}
+      style={{ backgroundColor: "white", border: "1px solid white", height: "100vh", width: "auto" }}
     />
   );
 }
 
-export default WhiteBaord;
+export default Whiteboard;

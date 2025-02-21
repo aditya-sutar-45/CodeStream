@@ -1,13 +1,10 @@
 import { Box } from "@radix-ui/themes";
-// import CodeEditorPanel from "./components/CodeEditor/CodeEditorPanel";
-import WhiteBaord from "./components/WhiteBoard/Whiteboard";
-// import WhiteBaord from "./components/WhiteBoard/Whiteboard";
+import Room from "./components/Room";
 
 function App() {
   return (
     <Box mx="4">
-      <WhiteBaord />
-      {/* <CodeEditorPanel /> */}
+      <Room/>
     </Box>
   );
 }
