@@ -1,15 +1,15 @@
-import { Box, DropdownMenu, Text, Button } from "@radix-ui/themes";
+import { Box, DropdownMenu, Button } from "@radix-ui/themes";
 
 function LanguageSelect({ languages, language, onSelect }) {
   return (
-    <>
-      <Box p="1" mx="1">
+    <Box mx="1">
+      {/* <Box p="1" mx="1">
         <Text size="4" align="left" weight="medium">
           {languages.length > 0
-            ? "Language: "
+            ? "Language "
             : "runtime is loading please wait..."}
         </Text>
-      </Box>
+      </Box> */}
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Button variant="soft">
@@ -37,7 +37,7 @@ function LanguageSelect({ languages, language, onSelect }) {
           )}
         </DropdownMenu.Content>
       </DropdownMenu.Root>
-    </>
+    </Box>
   );
 }
 
