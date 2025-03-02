@@ -1,11 +1,10 @@
-import { Box } from "@radix-ui/themes";
-import Room from "./components/Room";
+import Home from "./components/Home";
 
 function App() {
   return (
-    <Box mx="4">
-      <Room/>
-    </Box>
+    <>
+      <Home />
+    </>
   );
 }
 
