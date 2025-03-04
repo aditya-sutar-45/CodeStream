@@ -57,7 +57,7 @@ function CodeEditorPanel() {
                 languages={languages}
                 onSelect={onSelectLanguage}
               />
-              <ThemeSelect theme={theme} themes={THEMES} onSelect={onSelectTheme}/>
+              <ThemeSelect currentSelectedTheme={theme} themes={THEMES} onSelect={onSelectTheme}/>
             </Flex>
             <CodeEditor
               onMount={onMount}

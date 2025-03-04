@@ -1,6 +1,6 @@
 import { DropdownMenu, Button, Box} from "@radix-ui/themes";
 
-function ThemeSelect({theme, themes, onSelect}) {
+function ThemeSelect({currentSelectedTheme, themes, onSelect}) {
   return (
     <Box px="1">
       {/* <Box p="1" mx="1">
@@ -14,7 +14,7 @@ function ThemeSelect({theme, themes, onSelect}) {
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Button variant="soft">
-            nord
+            {currentSelectedTheme}  
             <DropdownMenu.TriggerIcon />
           </Button>
         </DropdownMenu.Trigger>
@@ -24,9 +24,9 @@ function ThemeSelect({theme, themes, onSelect}) {
               <DropdownMenu.Item
                 key={i}
                 onSelect={() => onSelect(t)}
-                data-state={theme === t ? "selected" : ""}
+                data-state={currentSelectedTheme === t ? "selected" : ""}
                 style={{
-                  color: theme === t ? "grey" : "inherit",
+                  color: currentSelectedTheme === t ? "grey" : "inherit",
                 }}
                 >
                   {t}
