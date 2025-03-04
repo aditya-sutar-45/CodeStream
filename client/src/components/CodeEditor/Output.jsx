@@ -46,6 +46,7 @@ function Output({ editorRef, language }) {
           border: "1px solid",
           borderColor: isError ? "red" : "grey",
           color: isError ? "red" : "grey",
+          overflow: "scroll",
         }}
       >
         {output
