@@ -1,6 +1,6 @@
 import { DropdownMenu, Button, Box} from "@radix-ui/themes";
 
-function ThemeSelect() {
+function ThemeSelect({theme, themes, onSelect}) {
   return (
     <Box px="1">
       {/* <Box p="1" mx="1">
@@ -8,6 +8,8 @@ function ThemeSelect() {
           Themes 
         </Text>
       </Box> */}
+
+      {/* {themes.map((t, i) => (<DropdownMenu.Item>t</DropdownMenu.Item>))} */}
 
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
