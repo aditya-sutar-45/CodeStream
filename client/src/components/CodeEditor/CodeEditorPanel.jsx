@@ -29,11 +29,14 @@ function CodeEditorPanel() {
     updateLanguageVersions();
   }, []);
 
+  useEffect(() => {
+    window.monaco?.editor.setTheme(theme);
+  }, [theme]);
+
   const onMount = (editor, monaco) => {
     editorRef.current = editor;
     editor.focus();
     defineMonacoThemes(monaco);
-    monaco.editor.setTheme("github-dark");
   };
 
   const onSelectLanguage = (language) => {
@@ -43,7 +46,7 @@ function CodeEditorPanel() {
 
   const onSelectTheme = (theme) => {
     setTheme(theme);
-  }
+  };
 
   return (
     <Box height="100vh" width="100%">
@@ -57,7 +60,11 @@ function CodeEditorPanel() {
                 languages={languages}
                 onSelect={onSelectLanguage}
               />
-              <ThemeSelect currentSelectedTheme={theme} themes={THEMES} onSelect={onSelectTheme}/>
+              <ThemeSelect
+                currentSelectedTheme={theme}
+                themes={THEMES}
+                onSelect={onSelectTheme}
+              />
             </Flex>
             <CodeEditor
               onMount={onMount}
