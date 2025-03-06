@@ -1,6 +1,6 @@
 import { Box } from "@radix-ui/themes";
 import { useEffect, useRef } from "react";
-import rough from "roughjs";
+// import rough from "roughjs";
 import WhiteboardControls from "./WhiteboardControls";
 
 function Whiteboard({ width, height }) {
@@ -14,11 +14,11 @@ function Whiteboard({ width, height }) {
     canvas.height = height;
 
     const ctx = canvas.getContext("2d");
-    const rc = rough.canvas(canvas);
+    // const rc = rough.canvas(canvas);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    rc.rectangle(10, 10, 100, 50, { roughness: 2, stroke: "blue" });
+    // rc.rectangle(10, 10, 100, 50, { roughness: 2, stroke: "blue" });
   }, [width, height]);
 
   return (
@@ -32,6 +32,8 @@ function Whiteboard({ width, height }) {
           backgroundColor: "white",
           border: "1px solid white",
           height: "100vh",
+          overflow:"hidden",
+          display: "block",
           width: "auto",
         }}
       />
