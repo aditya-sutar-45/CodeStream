@@ -7,6 +7,8 @@ import monokai from "../assets/EditorThemes/Monokai.json";
 import nord from "../assets/EditorThemes/Nord.json";
 
 export const THEMES = [
+  "vs-dark",
+  "vs-light",
   "cobalt",
   "github-dark",
   "all-hallows-eve",
@@ -17,6 +19,7 @@ export const THEMES = [
 ];
 
 export const defineMonacoThemes = (monaco) => {
+  
   monaco.editor.defineTheme("cobalt", cobaltTheme);
   monaco.editor.defineTheme("github-dark", githubDark);
   monaco.editor.defineTheme("all-hallows-eve", allHallowsEve);
