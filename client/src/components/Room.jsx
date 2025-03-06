@@ -15,7 +15,7 @@ function Room() {
         <CodeEditorPanel />
       </Panel>
       <PanelResizeHandle
-        style={{ backgroundColor: "var(--accent-9)", padding: "1.5px" }}
+        style={{ padding: "3px" }}
       />
       <Panel
         defaultSize={0}
