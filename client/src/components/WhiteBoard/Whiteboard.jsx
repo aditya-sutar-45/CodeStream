@@ -1,7 +1,9 @@
+import { Box } from "@radix-ui/themes";
 import { useEffect, useRef } from "react";
 import rough from "roughjs";
+import WhiteboardControls from "./WhiteboardControls";
 
-function Whiteboard({width, height}) {
+function Whiteboard({ width, height }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -20,10 +22,20 @@ function Whiteboard({width, height}) {
   }, [width, height]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ backgroundColor: "white", border: "1px solid white", height: "100vh", width: "auto" }}
-    />
+    <Box style={{ position: "relative", textAlign: "center" }}>
+      <Box style={{ position: "absolute", width: "100%" }}>
+        <WhiteboardControls />
+      </Box>
+      <canvas
+        ref={canvasRef}
+        style={{
+          backgroundColor: "white",
+          border: "1px solid white",
+          height: "100vh",
+          width: "auto",
+        }}
+      />
+    </Box>
   );
 }
 
