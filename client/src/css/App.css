@@ -1,1 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600&display=swap'); */
+
+button:hover {
+    cursor: pointer;
+}
+
+a:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
