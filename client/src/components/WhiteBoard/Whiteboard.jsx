@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 // import rough from "roughjs";
 import WhiteboardControls from "./WhiteboardControls";
 
+
 function Whiteboard({ width, height }) {
   const canvasRef = useRef(null);
 
@@ -22,7 +23,7 @@ function Whiteboard({ width, height }) {
   }, [width, height]);
 
   return (
-    <Box style={{ position: "relative", textAlign: "center" }}>
+   <Box style={{ position: "relative", textAlign: "center" }}>
       <Box style={{ position: "absolute", width: "100%" }}>
         <WhiteboardControls />
       </Box>
@@ -39,6 +40,7 @@ function Whiteboard({ width, height }) {
       />
     </Box>
   );
+ 
 }
 
 export default Whiteboard;
