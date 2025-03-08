@@ -3,6 +3,7 @@ import { auth } from "../utils/auth/firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -19,11 +20,26 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   async function signup(email, password) {
-    return await createUserWithEmailAndPassword(auth, email, password);
+    const userCredentials = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    await sendEmailVerification(userCredentials.user);
+    return userCredentials;
   }
 
   async function login(email, password) {
-    return await signInWithEmailAndPassword(auth, email, password);
+    const userCredentials = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if (!userCredentials.user.emailVerified) {
+      throw new Error("please verify your email before logging in!");
+    }
+    return userCredentials;
   }
 
   async function logout() {
@@ -36,7 +52,15 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
+      if (user) {
+        if (user.emailVerified) {
+          setCurrentUser(user);
+        } else {
+          setCurrentUser(null);
+        }
+      } else {
+        setCurrentUser(null);
+      }
       setLoading(false);
     });
     return unsubscribe;
