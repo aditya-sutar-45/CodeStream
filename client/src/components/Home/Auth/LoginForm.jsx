@@ -1,4 +1,4 @@
-import { Box, Button, Text, TextField } from "@radix-ui/themes";
+import { Box, Button, Text, TextField, Link } from "@radix-ui/themes";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useAuth } from "../../../contexts/AuthContext";
 import * as Yup from "yup";
@@ -28,7 +28,7 @@ function LoginForm() {
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         try {
           await handleSubmit(values);
-          navigate("/dashboard")
+          navigate("/dashboard");
         } catch (e) {
           setErrors({ email: e.message });
         }
@@ -85,9 +85,19 @@ function LoginForm() {
             style={{ width: "100%", marginTop: "8px" }}
             size="2"
             disabled={isSubmitting}
+            {...(isSubmitting && { loading: true })}
           >
-            {isSubmitting ? "Logging In..." : "Log In"}
+            Log In
+            {/* {isSubmitting ? "Logging In..." : "Log In"} */}
           </Button>
+          <Link
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/forgot-password");
+            }}
+          >
+            Forgot Password?
+          </Link>
         </Form>
       )}
     </Formik>

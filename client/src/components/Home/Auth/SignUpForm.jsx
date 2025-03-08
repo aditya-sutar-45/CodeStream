@@ -110,8 +110,9 @@ function SignUpForm() {
             style={{ width: "100%", marginTop: "8px" }}
             size="2"
             disabled={isSubmitting}
+            {...(isSubmitting && { loading: true })}
           >
-            {isSubmitting ? "Signing Up..." : "Sign Up"}
+            Sign Up
           </Button>
         </Form>
       )}
