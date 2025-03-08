@@ -24,66 +24,43 @@ function Dashboard() {
       await logout();
       navigate("/");
     } catch (e) {
-      setError("failed to log out!", e.message);
+      setError("Failed to log out! " + e.message);
     }
   }
 
   return (
-    <Box
-      mx="9"
-      height="70vh"
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      {error && (
-        <Callout.Root color="red" style={{ width: "100%", marginTop: "50px" }}>
-          <Callout.Icon>
-            <InfoCircledIcon />
-          </Callout.Icon>
-          <Callout.Text>{error}</Callout.Text>
-        </Callout.Root>
-      )}
-      <Card
-        style={{
-          marginTop: "10px",
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <Box>
-          <Box p="2" m="1">
-            <Heading align="center">Dashboard</Heading>
-          </Box>
-          <Box p="2" m="1">
-            <Flex gap="3" align="center">
-              <Avatar size="3" radius="full" fallback={currentUser.email[0]} />
-              <Box>
-                <Text as="div" size="2" weight="bold">
-                  {currentUser.email}
-                </Text>
-              </Box>
-            </Flex>
-          </Box>
-          <Box p="2" m="1">
-            <Button
-              onClick={handleLogout}
-              style={{ width: "100%" }}
-              color="crimson"
-            >
-              Logout
-            </Button>
-          </Box>
+    <Flex justify="center" align="center" height="80vh">
+      <Card style={{ width: "400px", padding: "24px", textAlign: "center" }}>
+        <Heading size="4">User Dashboard</Heading>
+        {error && (
+          <Callout.Root color="red" style={{ marginTop: "16px" }}>
+            <Callout.Icon>
+              <InfoCircledIcon />
+            </Callout.Icon>
+            <Callout.Text>{error}</Callout.Text>
+          </Callout.Root>
+        )}
+        <Box mt="4">
+          <Avatar
+            size="5"
+            radius="full"
+            fallback={currentUser.email[0].toUpperCase()}
+          />
+          <Text as="div" size="3" weight="bold" mt="2">
+            {currentUser.displayName || "User"}
+          </Text>
+          <Text as="div" size="2" color="gray">
+            {currentUser.email}
+          </Text>
+        </Box>
+        <Box mt="4">
+          <Button onClick={handleLogout} color="crimson" size="3" style={{ width: "100%" }}>
+            Logout
+          </Button>
         </Box>
       </Card>
-    </Box>
+    </Flex>
   );
 }
+
 export default Dashboard;
