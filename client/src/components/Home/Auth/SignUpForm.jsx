@@ -2,6 +2,7 @@ import { Box, Button, Text, TextField } from "@radix-ui/themes";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
@@ -18,6 +19,7 @@ const validationSchema = Yup.object().shape({
 
 function SignUpForm() {
   const { signup } = useAuth();
+  const navigate = useNavigate();
 
   async function handleSubmit(values) {
     await signup(values.email, values.password);
@@ -29,6 +31,7 @@ function SignUpForm() {
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         try {
           await handleSubmit(values);
+          navigate("/verify");
         } catch (e) {
           setErrors({ email: e.message });
         }

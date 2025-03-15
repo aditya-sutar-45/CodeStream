@@ -54,8 +54,25 @@ function Dashboard() {
           </Text>
         </Box>
         <Box mt="4">
-          <Button onClick={handleLogout} color="crimson" size="3" style={{ width: "100%" }}>
+          <Button
+            onClick={handleLogout}
+            color="crimson"
+            size="3"
+            style={{ width: "100%" }}
+            my="1"
+          >
             Logout
+          </Button>
+          <Button
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/");
+            }}
+            size="3"
+            style={{ width: "100%" }}
+            my="1"
+          >
+            Home
           </Button>
         </Box>
       </Card>

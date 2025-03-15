@@ -10,11 +10,13 @@ import { AuthProvider } from "./contexts/AuthContext.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import ForgotPasswordForm from "./components/Home/Auth/ForgotPasswordForm.jsx";
+import VerifyEmail from "./components/Home/Auth/VerifyEmail.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/room", element: <Room /> },
   { path: "/forgot-password", element: <ForgotPasswordForm /> },
+  { path: "/verify", element: <VerifyEmail /> },
   {
     element: <PrivateRoute />, // Wrap protected routes
     children: [{ path: "/dashboard", element: <Dashboard /> }],
