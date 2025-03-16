@@ -1,6 +1,6 @@
 import { Box, Button, Text, TextField, Link } from "@radix-ui/themes";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../hooks/useAuth";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +28,6 @@ function LoginForm() {
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         try {
           await handleSubmit(values);
-          navigate("/dashboard");
         } catch (e) {
           setErrors({ email: e.message });
         }
@@ -53,7 +52,7 @@ function LoginForm() {
             </Field>
             <ErrorMessage
               name="email"
-              component="Text"
+              component={Text}
               style={{ color: "red", fontSize: "12px" }}
             />
           </Box>
@@ -74,7 +73,7 @@ function LoginForm() {
             </Field>
             <ErrorMessage
               name="password"
-              component="Text"
+              component={Text}
               style={{ color: "red", fontSize: "12px" }}
             />
           </Box>

@@ -2,7 +2,7 @@ import { Dialog, Flex, Button, Link, Avatar } from "@radix-ui/themes";
 import SignUpForm from "./Auth/SignUpForm";
 import { useState } from "react";
 import LoginForm from "./Auth/LoginForm";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
 
 function Auth() {

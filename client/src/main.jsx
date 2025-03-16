@@ -6,7 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Room from "./components/Room.jsx";
 import NotFoundPage from "./components/NotFoundPage.jsx";
 import App from "./App.jsx";
-import { AuthProvider } from "./contexts/AuthContext.jsx";
+import { AuthProvider } from "./contexts/AuthProvider.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import ForgotPasswordForm from "./components/Home/Auth/ForgotPasswordForm.jsx";

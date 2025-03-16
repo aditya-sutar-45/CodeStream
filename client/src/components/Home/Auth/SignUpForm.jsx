@@ -1,11 +1,12 @@
 import { Box, Button, Text, TextField } from "@radix-ui/themes";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useAuth } from "../../../contexts/AuthContext";
+import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 // Validation Schema
 const validationSchema = Yup.object().shape({
+  username: Yup.string().required("usernamem is required"),
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
@@ -22,7 +23,7 @@ function SignUpForm() {
   const navigate = useNavigate();
 
   async function handleSubmit(values) {
-    await signup(values.email, values.password);
+    await signup(values.email, values.password, values.username);
   }
   return (
     <Formik
@@ -57,11 +58,30 @@ function SignUpForm() {
             </Field>
             <ErrorMessage
               name="email"
-              component="Text"
+              component={Text}
               style={{ color: "red", fontSize: "12px" }}
             />
           </Box>
-
+          <Box my="2">
+            <label htmlFor="email">
+              <Text>Username</Text>
+            </label>
+            <Field name="username">
+              {({ field }) => (
+                <TextField.Root
+                  {...field}
+                  id="username"
+                  type="text"
+                  placeholder="username"
+                />
+              )}
+            </Field>
+            <ErrorMessage
+              name="username"
+              component={Text}
+              style={{ color: "red", fontSize: "12px" }}
+            />
+          </Box>
           <Box my="2">
             <label htmlFor="password">
               <Text>Password</Text>
@@ -78,7 +98,7 @@ function SignUpForm() {
             </Field>
             <ErrorMessage
               name="password"
-              component="Text"
+              component={Text}
               style={{ color: "red", fontSize: "12px" }}
             />
           </Box>
@@ -99,7 +119,7 @@ function SignUpForm() {
             </Field>
             <ErrorMessage
               name="confirmPassword"
-              component="Text"
+              component={Text}
               style={{ color: "red", fontSize: "12px" }}
             />
           </Box>
