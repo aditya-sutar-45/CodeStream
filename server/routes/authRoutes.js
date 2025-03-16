@@ -18,9 +18,16 @@ authRouter.get("/checkUsername", async (req, res) => {
   }
 });
 
-authRouter.post("/signup", (req, res) => {
+authRouter.post("/signup", async(req, res) => {
   // create the user here
   console.log(req.body);
+  const {firebaseUid, username, email} = req.body;
+  const newUser = new User({
+    firebaseUid: firebaseUid,
+    username: username,
+    email: email,
+  });
+  await newUser.save();
 
   res.status(200).json({ message: "data recived succesfully!" });
 });
