@@ -1,6 +1,6 @@
-import catchAsync from "../utils/catchAsync";
-import User from "../models/User";
-import ExpressError from "../utils/ExpressError";
+import catchAsync from "../utils/catchAsync.js";
+import User from "../models/User.js";
+import ExpressError from "../utils/ExpressError.js";
 
 export const checkUsername = catchAsync(async (req, res) => {
   const { username } = req.query;
