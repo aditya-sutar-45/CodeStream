@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   async function signup(email, password, username) {
-    const { data } = await axios.get("http://localhost:3000/checkUsername", {
+    const { data } = await axios.get("http://localhost:3000/auth/checkUsername", {
       params: { username },
     });
 
@@ -103,7 +103,7 @@ useEffect(() => {
                 return;
               }
 
-              await axios.post("http://localhost:3000/signup", {
+              await axios.post("http://localhost:3000/auth/signup", {
                 firebaseUid: user.uid,
                 email: user.email,
                 username: savedData.value,
