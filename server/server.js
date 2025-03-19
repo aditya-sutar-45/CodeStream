@@ -18,9 +18,13 @@ app.all("*", (req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  const { statusCode, message } = err;
-  res.status((statusCode = 500), (message = "something went wrong!"));
-  res.send(statusCode).send(message);
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Something went wrong!";
+
+  res.status(statusCode).json({
+    error: true,
+    message,
+  });
 });
 
 connectDB().then(() => {

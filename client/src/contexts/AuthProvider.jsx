@@ -93,7 +93,7 @@ useEffect(() => {
 
             try {
               const { data } = await axios.get(
-                "http://localhost:3000/checkUsername",
+                "http://localhost:3000/auth/checkUsername",
                 { params: { username: savedData.value } }
               );
 
