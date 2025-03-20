@@ -1,9 +1,8 @@
-// import "../css/App.css";
-import { Box, Button, Heading, Container, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Heading, Flex, Text } from "@radix-ui/themes";
+import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 import Auth from "./Auth";
-
-
+import "../../css/Home.css";
 
 function Home() {
   return (
@@ -17,83 +16,34 @@ function Home() {
       </Flex>
 
       {/* Main Container - Centers Everything */}
-      <Container
-        size="3"
-        style={{
-          height: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-          padding: "20px",
-        }}
-      >
+      <Box className="mainContainer">
         {/* Tagline */}
-        <Text
-          as="p"
-          size="4"
-          style={{
-            fontSize: "6vw",
-            fontWeight: 900,
-            lineHeight: 1.4,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            textAlign: "center",
-            marginBottom: "1.5rem",
-            fontFamily: "'Space Grotesk', sans-serif",
-            background:"linear-gradient(45deg, #ff5847 20%, #d699fb 84%, #9177ff)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            width: "100%",
-          }}
-        >
-          Flow with Code
+        <Text className="tagline" as="p" size="4">
+          Flow with Code.
         </Text>
 
         {/* Subtext - Fully Centered */}
 
-        <Text
-          as="p"
-          size="4"
-          style={{
-            fontSize: "24px",
-            fontWeight: 500,
-            lineHeight: 1.5,
-            display: "inline-block",
-            whiteSpace: "nowrap",
-            textAlign: "center",
-            maxWidth: "100%", 
-            color: "#ffffff80",
-            marginBottom: "1.5rem",
-          }}
-        >
+        <Text as="p" size="4" className="subtext">
           Code together, create faster, and innovate seamlessly in real time.
         </Text>
 
         {/* Join Room Button */}
         <Flex justify="center">
           <Link to={"/room"}>
-            <Button
-              size="4" 
-              style={{
-              backgroundColor: "#7B2CBF",
-              color: "white",
-              fontWeight: 600,
-              fontSize: "20px",
-              padding: "16px 32px", 
-             // width: "250px",
-              //height: "60px",
-              borderRadius: "8px",
-              boxShadow: "0 4px 34px rgba(123, 44, 191, 0.5)", 
-              }}
-            >
+            <Button size="4" mx="1" className="joinRoomButton">
               Join Room
+              <ArrowRightIcon/>
+            </Button>
+          </Link>
+          <Link to={"/room"}>
+            <Button size="4" mx="1" className="joinRoomButton">
+              Create Room 
+              <ArrowRightIcon/>
             </Button>
           </Link>
         </Flex>
-      </Container>
+      </Box>
     </>
   );
 }
