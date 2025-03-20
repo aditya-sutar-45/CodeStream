@@ -3,15 +3,20 @@ import { Box, Button, Heading, Container, Flex, Text } from "@radix-ui/themes";
 import { Link } from "react-router-dom";
 import Auth from "./Auth";
 
+
+
 function Home() {
   return (
     <>
-      <Flex p="2">
+      {/* Header with Authentication */}
+      <Flex p="2" align="center">
         <Heading style={{ display: "inline" }}>CodeStream</Heading>
         <Box style={{ marginLeft: "auto" }}>
           <Auth />
         </Box>
       </Flex>
+
+      {/* Main Container - Centers Everything */}
       <Container
         size="3"
         style={{
@@ -20,66 +25,74 @@ function Home() {
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
+          textAlign: "center",
+          padding: "20px",
         }}
       >
-        {/* Tagline with Custom Gradient & Larger Font */}
+        {/* Tagline */}
         <Text
           as="p"
           size="4"
           style={{
-            fontSize: "68px",
-            fontWeight: 600,
+            fontSize: "6vw",
+            fontWeight: 900,
             lineHeight: 1.4,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
             textAlign: "center",
             marginBottom: "1.5rem",
-            fontFamily: "'Exo 2', sans-serif",
-            background:
-              "linear-gradient(45deg, #ff5847 20%, #d699fb 84%, #9177ff)",
+            fontFamily: "'Space Grotesk', sans-serif",
+            background:"linear-gradient(45deg, #ff5847 20%, #d699fb 84%, #9177ff)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
+            width: "100%",
           }}
         >
           Flow with Code
         </Text>
 
-        {/* Transparent Gradient Box Section */}
-        <Box
+        {/* Subtext - Fully Centered */}
+
+        <Text
+          as="p"
+          size="4"
           style={{
+            fontSize: "24px",
+            fontWeight: 500,
+            lineHeight: 1.5,
+            display: "inline-block",
+            whiteSpace: "nowrap",
             textAlign: "center",
-            padding: "2.5rem",
-            borderRadius: "12px",
-            background:
-              "linear-gradient(135deg, rgba(215, 189, 255, 0.4), rgba(230, 220, 255, 0.2))",
-            backdropFilter: "blur(10px)", // Soft glass effect
-            border: "1px solid rgba(255, 255, 255, 0.3)", // Subtle border
-            boxShadow: "0 8px 20px rgba(0, 0, 0, 0.15)",
+            maxWidth: "100%", 
+            color: "#ffffff80",
+            marginBottom: "1.5rem",
           }}
         >
-          {/* Main Heading */}
-          <Heading size="20" style={{ marginBottom: "1rem", color: "#fff" }}>
-            Code Stream
-          </Heading>
+          Code together, create faster, and innovate seamlessly in real time.
+        </Text>
 
-          {/* Purple Button */}
-          <Flex justify="center">
-            <Link to={"/room"}>
-              <Button
-                size="3"
-                variant="soft"
-                style={{
-                  backgroundColor: "#7B2CBF", // Deep Purple
-                  color: "white",
-                  fontWeight: 500,
-                  padding: "10px 20px",
-                  borderRadius: "8px",
-                  boxShadow: "0 4px 10px rgba(123, 44, 191, 0.4)", // Soft purple glow
-                }}
-              >
-                Join Room
-              </Button>
-            </Link>
-          </Flex>
-        </Box>
+        {/* Join Room Button */}
+        <Flex justify="center">
+          <Link to={"/room"}>
+            <Button
+              size="4" 
+              style={{
+              backgroundColor: "#7B2CBF",
+              color: "white",
+              fontWeight: 600,
+              fontSize: "20px",
+              padding: "16px 32px", 
+             // width: "250px",
+              //height: "60px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 34px rgba(123, 44, 191, 0.5)", 
+              }}
+            >
+              Join Room
+            </Button>
+          </Link>
+        </Flex>
       </Container>
     </>
   );
