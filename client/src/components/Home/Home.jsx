@@ -8,7 +8,7 @@ import "../../css/Home.css";
 function Home() {
   const canvasRef = useRef(null);
 
-  useEffect(() => {
+  const initCanvas = () => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
@@ -44,6 +44,10 @@ function Home() {
 
     // Cleanup to avoid memory leaks
     return () => window.removeEventListener("mousemove", handleMouseMove);
+  }
+
+  useEffect(() => {
+    initCanvas();
   }, []);
 
   return (

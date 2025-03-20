@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 function Auth() {
   const [login, setLogin] = useState(true);
-  const { currentUser } = useAuth();
+  const { currentUser, username } = useAuth();
   const navigate = useNavigate();
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -30,7 +30,7 @@ function Auth() {
             navigate("/dashboard");
           }}
         >
-          <Avatar fallback={currentUser.email[0]} />
+          <Avatar fallback={username[0]} />
         </Link>
       ) : (
         <Dialog.Root>

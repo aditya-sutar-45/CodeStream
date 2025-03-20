@@ -11,15 +11,18 @@ import {
 } from "firebase/auth";
 import axios from "axios";
 
-
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
+  const [username, setUsername] = useState("User");
   const [loading, setLoading] = useState(true);
 
   async function signup(email, password, username) {
-    const { data } = await axios.get("http://localhost:3000/auth/checkUsername", {
-      params: { username },
-    });
+    const { data } = await axios.get(
+      "http://localhost:3000/auth/checkUsername",
+      {
+        params: { username },
+      }
+    );
 
     if (!data.isAvailable) {
       throw new Error("username is already taken.");
@@ -70,7 +73,7 @@ export function AuthProvider({ children }) {
   //   }
   // }
 
-useEffect(() => {
+  useEffect(() => {
     let isRequestSent = false; // Prevent multiple requests on rapid reload
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -87,6 +90,16 @@ useEffect(() => {
 
         if (user.emailVerified) {
           setCurrentUser(user);
+
+          // set the username here
+          try {
+            const { data } = await axios.get(
+              `http://localhost:3000/user/${user.uid}`
+            );
+            setUsername(data.username);
+          } catch (err) {
+            console.error("error in fetching username: ", err.message);
+          }
 
           if (!isRequestSent && savedData?.value) {
             isRequestSent = true;
@@ -109,7 +122,7 @@ useEffect(() => {
                 username: savedData.value,
               });
 
-              localStorage.removeItem("username"); 
+              localStorage.removeItem("username");
             } catch (error) {
               console.error("Error sending data:", error.message);
             }
@@ -121,15 +134,15 @@ useEffect(() => {
         setCurrentUser(null); // No user logged in
       }
 
-      setLoading(false); 
+      setLoading(false);
     });
 
     return unsubscribe;
   }, []);
 
-
   const value = {
     currentUser,
+    username,
     login,
     signup,
     logout,
