@@ -28,6 +28,7 @@ function LoginForm() {
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         try {
           await handleSubmit(values);
+          window.location.reload();
         } catch (e) {
           setErrors({ email: e.message });
         }
