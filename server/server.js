@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
 import ExpressError from "./utils/ExpressError.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -10,6 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 6969;
 
 app.use(express.json());
+app.use(cors({
+  origin: "*",
+  credentials: true,
+}))
 
 app.use("/", authRouter);
 
