@@ -19,30 +19,31 @@ function Home() {
       <Box className="mainContainer">
         {/* Tagline */}
         <Text className="tagline" as="p" size="4">
-          Flow with Code.
+          Flow with Code
         </Text>
 
-        {/* Subtext - Fully Centered */}
+        <Box>
+          {/* Subtext - Fully Centered */}
+          <Text as="p" size="4" className="subtext">
+            Code together, create faster, and innovate seamlessly in real time.
+          </Text>
 
-        <Text as="p" size="4" className="subtext">
-          Code together, create faster, and innovate seamlessly in real time.
-        </Text>
-
-        {/* Join Room Button */}
-        <Flex justify="center">
-          <Link to={"/room"}>
-            <Button size="4" mx="1" className="joinRoomButton">
-              Join Room
-              <ArrowRightIcon/>
-            </Button>
-          </Link>
-          <Link to={"/room"}>
-            <Button size="4" mx="1" className="joinRoomButton">
-              Create Room 
-              <ArrowRightIcon/>
-            </Button>
-          </Link>
-        </Flex>
+          {/* Join Room Button */}
+          <Flex justify="center">
+            <Link to={"/room"}>
+              <Button size="4" mx="1" className="joinRoomButton">
+                Join Room
+                <ArrowRightIcon />
+              </Button>
+            </Link>
+            <Link to={"/room"}>
+              <Button size="4" mx="1" className="joinRoomButton">
+                Create Room
+                <ArrowRightIcon />
+              </Button>
+            </Link>
+          </Flex>
+        </Box>
       </Box>
     </>
   );

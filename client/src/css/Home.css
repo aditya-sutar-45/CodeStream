@@ -26,6 +26,7 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   width: 100%;
+  margin-bottom: 6rem;
 }
 
 .subtext {
