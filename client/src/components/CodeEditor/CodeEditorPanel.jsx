@@ -9,6 +9,7 @@ import Output from "./Output";
 import ThemeSelect from "./ThemeSelect";
 import { defineMonacoThemes } from "../../utils/themes";
 import { THEMES } from "../../utils/themes";
+import HeaderLink from "../HeaderLink";
 
 function CodeEditorPanel() {
   const editorRef = useRef();
@@ -55,6 +56,7 @@ function CodeEditorPanel() {
         <Panel defaultSize={65} maxSize={100}>
           <Box height="100%">
             <Flex p="1">
+              <HeaderLink />
               <LanguageSelect
                 language={language}
                 languages={languages}
