@@ -1,11 +1,11 @@
 import { Box } from "@radix-ui/themes";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 // import rough from "roughjs";
 import WhiteboardControls from "./WhiteboardControls";
 
-
 function Whiteboard({ width, height }) {
   const canvasRef = useRef(null);
+  const [darkTheme, setDarkTheme] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -23,24 +23,23 @@ function Whiteboard({ width, height }) {
   }, [width, height]);
 
   return (
-   <Box style={{ position: "relative", textAlign: "center" }}>
+    <Box style={{ position: "relative", textAlign: "center" }}>
       <Box style={{ position: "absolute", width: "100%" }}>
-        <WhiteboardControls />
+        <WhiteboardControls setDarkTheme={setDarkTheme} />
       </Box>
       <canvas
         ref={canvasRef}
         style={{
-          backgroundColor: "white",
+          backgroundColor: darkTheme === true ? "black" : "white",
           border: "1px solid white",
           height: "100vh",
-          overflow:"hidden",
+          overflow: "hidden",
           display: "block",
           width: "auto",
         }}
       />
     </Box>
   );
- 
 }
 
 export default Whiteboard;
