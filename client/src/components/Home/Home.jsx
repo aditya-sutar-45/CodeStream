@@ -3,13 +3,13 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 import "../../css/Home.css";
 import HomeCanvas from "./HomeCanvas";
-import Header from "./Header";
+import NavHeader from "./NavHeader";
 
 function Home() {
   return (
     <Box style={{ height: "100vh", overflow: "hidden" }}>
       {/* Header with Authentication */}
-      <Header />
+      <NavHeader />
 
       <HomeCanvas />
 

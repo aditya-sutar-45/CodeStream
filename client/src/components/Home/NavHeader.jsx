@@ -2,7 +2,7 @@ import Auth from "./Auth";
 import { Flex, Box } from "@radix-ui/themes";
 import HeaderLink from "../HeaderLink";
 
-function Header() {
+function NavHeader() {
   return (
     <Flex p="2" align="center">
       <HeaderLink />
@@ -12,4 +12,4 @@ function Header() {
     </Flex>
   );
 }
-export default Header;
+export default NavHeader;
