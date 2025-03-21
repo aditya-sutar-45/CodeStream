@@ -28,7 +28,7 @@ function HomeCanvas() {
 
       // Draw the text with animated color gradient
       ctx.fillStyle = gradient;
-      ctx.font = "bold 12.5rem 'Noto Sans'";
+      ctx.font = "bold 11rem 'Noto Sans'";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
