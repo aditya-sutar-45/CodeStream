@@ -11,6 +11,8 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import ForgotPasswordForm from "./components/Home/Auth/ForgotPasswordForm.jsx";
 import VerifyEmail from "./components/Home/Auth/VerifyEmail.jsx";
+import JoinRoom from "./components/RoomForms/JoinRoom.jsx";
+import CreateRoom from "./components/RoomForms/CreateRoom.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -19,7 +21,11 @@ const router = createBrowserRouter([
   { path: "/verify", element: <VerifyEmail /> },
   {
     element: <PrivateRoute />, // Wrap protected routes
-    children: [{ path: "/dashboard", element: <Dashboard /> }],
+    children: [
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/joinRoom", element: <JoinRoom /> },
+      { path: "/createRoom", element: <CreateRoom /> },
+    ],
   },
   { path: "*", element: <NotFoundPage /> },
 ]);

@@ -22,7 +22,7 @@ function Home() {
           </Text>
 
           <Flex justify="center">
-            <Link to={"/room"}>
+            <Link to={"/joinRoom"}>
               <Button size="4" mx="1" className="joinRoomButton">
                 Join Room
                 <ArrowRightIcon />
