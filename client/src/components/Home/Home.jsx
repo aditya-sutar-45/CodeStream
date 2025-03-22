@@ -11,14 +11,13 @@ function Home() {
       {/* Header with Authentication */}
       <NavHeader />
 
-
       {/* Additional Info */}
       <Box className="mainContainer">
         <HomeCanvas />
         <Box>
           <Text as="p" size="4" className="subtext">
             {/* Code together, create faster, and innovate seamlessly with Avani. */}
-            Code together, create faster, and innovate seamlessly in real time. 
+            Code together, create faster, and innovate seamlessly in real time.
           </Text>
 
           <Flex justify="center">
@@ -28,7 +27,7 @@ function Home() {
                 <ArrowRightIcon />
               </Button>
             </Link>
-            <Link to={"/room"}>
+            <Link to={"/createRoom"}>
               <Button size="4" mx="1" className="joinRoomButton">
                 Create Room
                 <ArrowRightIcon />
