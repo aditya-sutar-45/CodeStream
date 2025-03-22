@@ -1,12 +1,37 @@
-.gradientCanvas {
-  position: fixed; /* Stays fixed while scrolling */
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1; /* Canvas stays behind everything */
-  pointer-events: none; /* Ensures mouse events pass through */
+
+
+
+.animated-text h1 {
+  font-size: 12rem;
+  margin-bottom: 15rem;
+  font-family: "Noto Sans", sans-serif;
+  background-image: linear-gradient(45deg, #ff5847 20%, #c27eec 84%, #9177ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: hue 15s infinite linear;
+  -webkit-animation: hue 5s infinite linear;
 }
+
+@keyframes hue {
+  from {
+    filter: hue-rotate(0deg);
+  }
+  to {
+    filter: hue-rotate(-360deg);
+  }
+}
+
+@-webkit-keyframes hue {
+  from {
+    -webkit-filter: hue-rotate(0deg);
+  }
+  to {
+    -webkit-filter: hue-rotate(-360deg);
+  }
+}
+
 
 .mainContainer {
   position: relative; /* Ensures content is above canvas */
@@ -15,7 +40,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 6rem;
   align-items: center;
   text-align: center;
   width: 100%;
