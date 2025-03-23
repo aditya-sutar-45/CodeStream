@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import {
-  Heading,
+  // Heading,
   Box,
-  Card,
+  // Card,
   Flex,
   Avatar,
   Text,
@@ -15,9 +15,9 @@ import { InfoCircledIcon } from "@radix-ui/react-icons";
 import NavHeader from "./Home/NavHeader";
 
 export default function UserProfile() {
-  const [name, setName] = useState("John Doe");
-  const [bio, setBio] = useState("Software Developer at XYZ");
-  const [isEditing, setIsEditing] = useState(false);
+  // const [name, setName] = useState("John Doe");
+  // const [bio, setBio] = useState("Software Developer at XYZ");
+  // const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
   const { currentUser, username, logout } = useAuth();
   const navigate = useNavigate();
@@ -36,7 +36,6 @@ export default function UserProfile() {
     <Box style={{ height: "100vh", overflow: "hidden" }}>
       <NavHeader />
       <Flex justify="center" align="center" height="80vh">
-
         {error && (
           <Callout.Root color="red" style={{ marginTop: "16px" }}>
             <Callout.Icon>
@@ -47,21 +46,53 @@ export default function UserProfile() {
         )}
 
         <Box mt="4">
-          <Avatar size="9" radius="full" fallback={username[0].toUpperCase()} style={{ width: "250px", height: "250px", marginLeft: "-90%", marginTop: "-90%", }} />
-
+          <Avatar
+            size="9"
+            radius="full"
+            fallback={username[0].toUpperCase()}
+            style={{
+              width: "250px",
+              height: "250px",
+              marginLeft: "-90%",
+              marginTop: "-90%",
+            }}
+          />
         </Box>
-          <Box mt="400px">
-            <Flex gap="4" justify="center" style={{ marginLeft: "58.5%", marginBottom: "190%" }}>
-              <Button color="crimson" style={{ width: "250%", marginLeft: "-250.5%" }} my="1">
-                Edit Profile
-              </Button>
-              <Button style={{ width: "250%", marginLeft: "2.5%" }} my="1">
-                Delete Profile
-              </Button>
-            </Flex>
-          </Box>
-        
-        <Box textAlign="centre" style={{ marginBottom: "20%", display: "flex", flexDirection: "column", gap: "5px", textAlign: "left", marginLeft: "-46.5%", paddingLeft: "20%" }}>
+        <Box mt="400px">
+          <Flex
+            gap="4"
+            justify="center"
+            style={{ marginLeft: "58.5%", marginBottom: "190%" }}
+          >
+            <Button
+              color="crimson"
+              style={{ width: "250%", marginLeft: "-250.5%" }}
+              my="1"
+            >
+              Edit Profile
+            </Button>
+            <Button
+              onClick={handleLogout}
+              style={{ width: "250%", marginLeft: "2.5%" }}
+              my="1"
+            >
+              Logout
+            </Button>
+          </Flex>
+        </Box>
+
+        <Box
+          textAlign="centre"
+          style={{
+            marginBottom: "20%",
+            display: "flex",
+            flexDirection: "column",
+            gap: "5px",
+            textAlign: "left",
+            marginLeft: "-46.5%",
+            paddingLeft: "20%",
+          }}
+        >
           <Text as="div" size="9" weight="bold">
             {username}
           </Text>
@@ -71,8 +102,14 @@ export default function UserProfile() {
         </Box>
       </Flex>
 
-      <div style={{height: "2px", width: "65%", backgroundColor: "gray", margin: "-16% 18%"}} />
-
+      <div
+        style={{
+          height: "2px",
+          width: "65%",
+          backgroundColor: "gray",
+          margin: "-16% 18%",
+        }}
+      />
     </Box>
   );
 }
