@@ -56,12 +56,13 @@
 .gifContainer {
   display: flex;
   justify-content: center;
-  
+  margin: 0;
 }
 
 .animatedGif {
-  width: 120px; /* Adjust size as needed */
-  height: auto;
+  height: 20vh; /* Adjust size as needed */
+  width: auto;
+  margin: 0;
 }
 
 
