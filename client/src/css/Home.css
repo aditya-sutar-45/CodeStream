@@ -4,7 +4,6 @@
   align-items: center;
   text-align: center;
   width: 100%;
-  margin-top: 12vh;
   /* Apply the animation here */
   animation: hue 5s infinite linear;
   -webkit-animation: hue 5s infinite linear;

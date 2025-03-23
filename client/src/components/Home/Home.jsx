@@ -12,7 +12,7 @@ function Home() {
       <NavHeader />
 
       {/* Additional Info */}
-      <Flex justify="center" align="center" wrap="nowrap" direction="column" className="mainContainer">
+      <Flex justify="center" align="center" wrap="nowrap" direction="column" height="100vh" className="mainContainer">
         <HomeCanvas />
 
         {/* Animated GIF */}
