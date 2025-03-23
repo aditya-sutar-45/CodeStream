@@ -1,25 +1,35 @@
-
-
+.animated-text {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 2rem;
+  
+  /* Apply the animation here */
+  animation: hue 5s infinite linear;
+  -webkit-animation: hue 5s infinite linear;
+}
 
 .animated-text h1 {
   font-size: 12rem;
-  margin-bottom: 15rem;
   font-family: "Noto Sans", sans-serif;
   background-image: linear-gradient(45deg, #ff5847 20%, #c27eec 84%, #9177ff);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  animation: hue 15s infinite linear;
-  -webkit-animation: hue 5s infinite linear;
+  margin: 0;
 }
 
+/* Fix hue rotation */
 @keyframes hue {
   from {
     filter: hue-rotate(0deg);
   }
   to {
-    filter: hue-rotate(-360deg);
+    filter: hue-rotate(360deg);
   }
 }
 
@@ -28,31 +38,32 @@
     -webkit-filter: hue-rotate(0deg);
   }
   to {
-    -webkit-filter: hue-rotate(-360deg);
+    -webkit-filter: hue-rotate(360deg);
   }
 }
 
 
-.mainContainer {
-  position: relative; /* Ensures content is above canvas */
-  z-index: 1; /* Higher z-index than canvas */
-  height: 100vh;
+/* Fix subtext & button positioning */
+.contentWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
-  width: 100%;
+  gap: 2rem;
+  margin-top: 2rem; /* Controls spacing properly */
 }
 
 .subtext {
   font-size: 24px;
   font-weight: 500;
   color: #ffffff80;
-  margin-bottom: 1.5rem;
+  margin-top: 14rem; /* Add space below "Flow with Code" */
+  margin-bottom: 2rem; /* Space before buttons */
+  text-align: center;
 }
 
+
 .joinRoomButton {
+  margin-top: 1rem;
   background-color: #7b2cbf;
   color: white;
   font-weight: 600;
