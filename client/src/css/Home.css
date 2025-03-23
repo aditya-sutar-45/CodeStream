@@ -1,12 +1,10 @@
 .animated-text {
   position: relative;
-  display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   width: 100%;
-  margin-bottom: 2rem;
-  
+  margin-top: 12vh;
   /* Apply the animation here */
   animation: hue 5s infinite linear;
   -webkit-animation: hue 5s infinite linear;
@@ -20,7 +18,7 @@
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  margin: 0;
+  
 }
 
 /* Fix hue rotation */
@@ -45,9 +43,6 @@
 
 /* Fix subtext & button positioning */
 .contentWrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 2rem;
   margin-top: 2rem; /* Controls spacing properly */
 }
@@ -56,9 +51,18 @@
   font-size: 24px;
   font-weight: 500;
   color: #ffffff80;
-  margin-top: 14rem; /* Add space below "Flow with Code" */
   margin-bottom: 2rem; /* Space before buttons */
   text-align: center;
+}
+.gifContainer {
+  display: flex;
+  justify-content: center;
+  
+}
+
+.animatedGif {
+  width: 120px; /* Adjust size as needed */
+  height: auto;
 }
 
 

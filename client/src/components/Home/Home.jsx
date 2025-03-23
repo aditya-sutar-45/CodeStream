@@ -12,11 +12,16 @@ function Home() {
       <NavHeader />
 
       {/* Additional Info */}
-      <Box className="mainContainer">
+      <Flex justify="center" align="center" wrap="nowrap" direction="column" className="mainContainer">
         <HomeCanvas />
-        <Box>
+
+        {/* Animated GIF */}
+        <Box className="gifContainer" width="100vw">
+          <img src="/cat.gif" alt="Animated Logo" className="animatedGif" />
+        </Box>
+
+        <Box width="100vw">
           <Text as="p" size="4" className="subtext">
-            {/* Code together, create faster, and innovate seamlessly with Avani. */}
             Code together, create faster, and innovate seamlessly in real time.
           </Text>
 
@@ -35,7 +40,7 @@ function Home() {
             </Link>
           </Flex>
         </Box>
-      </Box>
+      </Flex>
     </Box>
   );
 }
