@@ -11,10 +11,20 @@ import {
 import NavHeader from "../Home/NavHeader";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function CreateRoom() {
+  const [roomName, setRoomName] = useState("");
+  const [roomPassword, setRoomPassword] = useState("");
+
   const navigate = useNavigate();
   const { username } = useAuth();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(roomName, roomPassword);
+  };
+
   return (
     <>
       <NavHeader />
@@ -24,7 +34,7 @@ function CreateRoom() {
             Create a Room
           </Heading>
           <Separator size="4" />
-          <form action="" style={{ marginTop: "1rem" }}>
+          <form action="" onSubmit={handleSubmit} style={{ marginTop: "1rem" }}>
             <Text>
               Creating room as: <Strong>{username}</Strong>
             </Text>
@@ -33,13 +43,19 @@ function CreateRoom() {
                 <Text as="div" size="2" mb="1" weight="bold">
                   Room Name:
                 </Text>
-                <TextField.Root placeholder="Enter room name" />
+                <TextField.Root
+                  value={roomName}
+                  onChange={(e) => setRoomName(e.target.value)}
+                  placeholder="Enter room name"
+                />
               </label>
               <label>
                 <Text as="div" size="2" mb="1" weight="bold">
                   Password:
                 </Text>
                 <TextField.Root
+                  value={roomPassword}
+                  onChange={(e) => setRoomPassword(e.target.value)}
                   placeholder="Enter room password"
                   type="password"
                 />
@@ -48,6 +64,7 @@ function CreateRoom() {
 
             <Flex gap="3" mt="4" justify="end">
               <Button
+                type="button"
                 variant="soft"
                 color="gray"
                 onClick={() => {
@@ -56,14 +73,7 @@ function CreateRoom() {
               >
                 Cancel
               </Button>
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/room");
-                }}
-              >
-                Create
-              </Button>
+              <Button type="submit">Create</Button>
             </Flex>
           </form>
         </Container>

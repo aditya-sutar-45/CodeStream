@@ -4,7 +4,7 @@ import HeaderLink from "../HeaderLink";
 
 function NavHeader() {
   return (
-    <Flex p="2" align="center" position="fixed" style={{zIndex: 1}} width="100%">
+    <Flex p="2" align="center" position="fixed" style={{zIndex: 1000}} width="100%">
       <HeaderLink />
       <Box style={{ marginLeft: "auto" }}>
         <Auth />

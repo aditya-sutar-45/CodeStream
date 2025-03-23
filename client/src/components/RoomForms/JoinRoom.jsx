@@ -11,10 +11,19 @@ import {
 import NavHeader from "../Home/NavHeader";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function JoinRoom() {
+  const [roomId, setRoomId] = useState("");
+  const [roomPassword, setRoomPassword] = useState("");
+
   const navigate = useNavigate();
   const { username } = useAuth();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(roomId, roomPassword);
+  };
   return (
     <>
       <NavHeader />
@@ -24,7 +33,7 @@ function JoinRoom() {
             Join a Room
           </Heading>
           <Separator size="4" />
-          <form action="" style={{ marginTop: "1rem" }}>
+          <form onSubmit={handleSubmit} action="" style={{ marginTop: "1rem" }}>
             <Text>
               Joining room as: <Strong>{username}</Strong>
             </Text>
@@ -33,13 +42,19 @@ function JoinRoom() {
                 <Text as="div" size="2" mb="1" weight="bold">
                   Room ID:
                 </Text>
-                <TextField.Root placeholder="Enter room ID" />
+                <TextField.Root
+                  value={roomId}
+                  onChange={(e) => setRoomId(e.target.value)}
+                  placeholder="Enter room ID"
+                />
               </label>
               <label>
                 <Text as="div" size="2" mb="1" weight="bold">
                   Password:
                 </Text>
                 <TextField.Root
+                  value={roomPassword}
+                  onChange={(e) => setRoomPassword(e.target.value)}
                   placeholder="Enter room password"
                   type="password"
                 />
@@ -50,20 +65,14 @@ function JoinRoom() {
               <Button
                 variant="soft"
                 color="gray"
+                type="button"
                 onClick={() => {
                   navigate("/");
                 }}
               >
                 Cancel
               </Button>
-              <Button
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/room");
-                }}
-              >
-                Join
-              </Button>
+              <Button type="submit">Join</Button>
             </Flex>
           </form>
         </Container>
