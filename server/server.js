@@ -1,13 +1,24 @@
 import express from "express";
+import {createServer} from "http";
+import { Server } from "socket.io";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
 import ExpressError from "./utils/ExpressError.js";
 import cors from "cors";
+import handleSocket from "./handleSocket.js";
 
 dotenv.config();
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
+
 const PORT = process.env.PORT || 6969;
 
 app.use(express.json());
@@ -32,8 +43,10 @@ app.use((err, req, res, next) => {
   });
 });
 
+handleSocket(io);
+
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log("listening to port:", PORT);
   });
 });

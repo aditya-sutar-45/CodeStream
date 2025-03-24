@@ -12,6 +12,13 @@ import NavHeader from "../Home/NavHeader";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { io } from "socket.io-client";
+
+const socket = io.connect("http://localhost:3000", {
+  transports: ["websocket"],
+  autoConnect: true,
+  reconnectionAttempts: 5,
+});
 
 function CreateRoom() {
   const [roomName, setRoomName] = useState("");
@@ -20,9 +27,16 @@ function CreateRoom() {
   const navigate = useNavigate();
   const { username } = useAuth();
 
+  const createRoom = () => {
+    // emit room creation
+    // socket.emit("createRoom")
+    socket.emit("createRoom", {username, roomName, roomPassword});
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(roomName, roomPassword);
+    createRoom();
   };
 
   return (
