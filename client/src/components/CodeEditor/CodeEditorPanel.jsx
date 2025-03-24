@@ -10,6 +10,7 @@ import ThemeSelect from "./ThemeSelect";
 import { defineMonacoThemes } from "../../utils/themes";
 import { THEMES } from "../../utils/themes";
 import HeaderLink from "../HeaderLink";
+import MemberList from "./MemberList";
 
 function CodeEditorPanel() {
   const editorRef = useRef();
@@ -67,6 +68,7 @@ function CodeEditorPanel() {
                 themes={THEMES}
                 onSelect={onSelectTheme}
               />
+              <MemberList />
             </Flex>
             <CodeEditor
               onMount={onMount}
