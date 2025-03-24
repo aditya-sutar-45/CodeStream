@@ -16,7 +16,7 @@ import CreateRoom from "./components/RoomForms/CreateRoom.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
-  { path: "/room", element: <Room /> },
+  // { path: "/room", element: <Room /> },
   { path: "/forgot-password", element: <ForgotPasswordForm /> },
   { path: "/verify", element: <VerifyEmail /> },
   {
@@ -25,6 +25,7 @@ const router = createBrowserRouter([
       { path: "/dashboard", element: <Dashboard /> },
       { path: "/joinRoom", element: <JoinRoom /> },
       { path: "/createRoom", element: <CreateRoom /> },
+      {path: "/rooms/:id", element: <Room/>},
     ],
   },
   { path: "*", element: <NotFoundPage /> },

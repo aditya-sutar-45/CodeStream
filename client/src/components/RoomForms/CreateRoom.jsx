@@ -27,10 +27,14 @@ function CreateRoom() {
   const navigate = useNavigate();
   const { username } = useAuth();
 
+  socket.on("roomCreated", (roomId) => {
+    navigate(`/rooms/${roomId}`);
+  });
+
   const createRoom = () => {
     // emit room creation
     // socket.emit("createRoom")
-    socket.emit("createRoom", {username, roomName, roomPassword});
+    socket.emit("createRoom", { username, roomName, roomPassword });
   };
 
   const handleSubmit = (e) => {

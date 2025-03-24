@@ -11,15 +11,32 @@ import { defineMonacoThemes } from "../../utils/themes";
 import { THEMES } from "../../utils/themes";
 import HeaderLink from "../HeaderLink";
 import MemberList from "./MemberList";
+import { io } from "socket.io-client";
+import { useParams } from "react-router-dom";
+
+const socket = io("http://localhost:3000");
 
 function CodeEditorPanel() {
   const editorRef = useRef();
+  const [room, setRoom] = useState(null);
+  const [roomError, setRoomError] = useState(null);
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
   const [languages, setLanguages] = useState({});
   const [theme, setTheme] = useState("vs-dark");
+  const {id} = useParams();
 
   useEffect(() => {
+    socket.emit("getRoomInfo", {roomId: id});
+
+    socket.on("roomInfo", (roomData) => {
+      setRoom(roomData); 
+    })
+
+    socket.on("roomError", (errorMessage) => {
+      setRoomError(errorMessage);
+    })
+
     const updateLanguageVersions = async () => {
       const updatedVersions = {};
       for (const lang in LANGUAGE_VERSIONS) {
@@ -29,7 +46,12 @@ function CodeEditorPanel() {
       setLanguages(Object.entries(updatedVersions));
     };
     updateLanguageVersions();
-  }, []);
+
+    return () => {
+      socket.off("roomInfo");
+      socket.off("roomError");
+    }
+  }, [id]);
 
   useEffect(() => {
     window.monaco?.editor.setTheme(theme);
@@ -50,6 +72,9 @@ function CodeEditorPanel() {
     setTheme(theme);
   };
 
+  if (roomError) return <p>Error: {roomError}</p>
+  if (!room) return <p>Loading.....</p> 
+
   return (
     <Box height="100vh" width="100%">
       <PanelGroup direction="vertical">
@@ -68,7 +93,7 @@ function CodeEditorPanel() {
                 themes={THEMES}
                 onSelect={onSelectTheme}
               />
-              <MemberList />
+              <MemberList users={room.users}/>
             </Flex>
             <CodeEditor
               onMount={onMount}
