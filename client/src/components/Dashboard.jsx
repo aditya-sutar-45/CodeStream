@@ -57,7 +57,7 @@ export default function UserProfile() {
 
             <Flex
               width="40%"
-              overflow="scroll"
+              overflow="hidden"
               height="100%"
               justify="start"
               mx="3"
