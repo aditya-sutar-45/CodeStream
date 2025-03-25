@@ -12,13 +12,7 @@ import NavHeader from "../Home/NavHeader";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { io } from "socket.io-client";
-
-const socket = io.connect("http://localhost:3000", {
-  transports: ["websocket"],
-  autoConnect: true,
-  reconnectionAttempts: 5,
-});
+import socket from "../../socket";
 
 function CreateRoom() {
   const [roomName, setRoomName] = useState("");
