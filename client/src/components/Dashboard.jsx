@@ -32,8 +32,12 @@ export default function UserProfile() {
     <Box style={{ overflow: "hidden" }}>
       <NavHeader />
       <Flex height="100%" width="100%" justify="center">
-        <Box height="100vh" width="95vw">
-          <Flex mt="3rem" height="50vh" justify="between" align="center">
+        <Box
+          height="100vh"
+          width="75vw"
+          style={{ backgroundColor: "var(--gray-2)" }}
+        >
+          <Flex mt="3rem" height="50vh" justify="center" gap="2rem" align="center">
             {error && (
               <Callout.Root color="red" style={{ marginTop: "1rem" }}>
                 <Callout.Icon>
@@ -43,7 +47,7 @@ export default function UserProfile() {
               </Callout.Root>
             )}
 
-            <Box width="40%" style={{ textAlign: "end" }} mx="3">
+            <Box width="40%" style={{ textAlign: "center" }} mx="3">
               <Avatar
                 size="9"
                 src="https://images.unsplash.com/photo-1481214110143-ed630356e1bb?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -98,4 +102,4 @@ export default function UserProfile() {
       </Flex>
     </Box>
   );
-}    
+}
