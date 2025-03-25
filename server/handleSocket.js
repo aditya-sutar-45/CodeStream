@@ -2,6 +2,7 @@ import {
   getRoomInfo,
   handleCreateRoom,
   handleDisconnect,
+  handleJoinRoom,
 } from "./controllers/rooms.js";
 
 const rooms = [];
@@ -12,6 +13,10 @@ const handleSocket = (io) => {
 
     socket.on("createRoom", (data) => {
       handleCreateRoom(socket, rooms, data);
+    });
+
+    socket.on("joinRoom", (data) => {
+      handleJoinRoom(socket, rooms, data);
     });
 
     socket.on("getRoomInfo", ({ roomId }) => {

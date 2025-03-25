@@ -34,6 +34,41 @@ export const handleCreateRoom = (
   socket.emit("roomCreated", roomId);
 };
 
+export const handleJoinRoom = (
+  socket,
+  rooms,
+  { username, roomId, roomPassword }
+) => {
+  console.log(
+    `${username}, wants to join a room with\nroom id: ${roomId}\npassword: ${roomPassword}`
+  );
+
+  const exisitingRoom = rooms.find((room) => room.roomId === roomId);
+  if (!exisitingRoom) {
+    socket.emit("roomError", `room with ${roomId} does not exist`);
+    return;
+  }
+
+  if (roomPassword !== exisitingRoom.roomPassword) {
+    socket.emit("roomError", "Incorrect roomId/ password");
+    return;
+  }
+
+  const userAlreadyInRoom = exisitingRoom.users.some(
+    (user) => user.username === username
+  );
+  if (userAlreadyInRoom) {
+    socket.emit("roomError", "you have already joined this room");
+    return;
+  }
+
+  socket.join(roomId);
+  exisitingRoom.users.push({ socketId: socket.id, username });
+
+  socket.emit("roomJoined", roomId);
+  socket.to(roomId).emit("roomInfo", exisitingRoom);
+};
+
 export const getRoomInfo = (socket, roomId, rooms) => {
   const room = rooms.find((room) => room.roomId === roomId);
 
@@ -53,6 +88,8 @@ export const handleDisconnect = (socket, rooms, io) => {
     if (room.users.length === 0) {
       rooms.splice(index, 1);
       console.log(`room ${room.roomId} deleted`);
+    } else {
+      io.to(room.roomId).emit("roomInfo", room);
     }
     console.log(rooms);
   });
