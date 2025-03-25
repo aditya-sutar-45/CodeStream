@@ -1,14 +1,27 @@
+import {
+  getRoomInfo,
+  handleCreateRoom,
+  handleDisconnect,
+} from "./controllers/rooms.js";
+
+const rooms = [];
+
 const handleSocket = (io) => {
   io.on("connection", (socket) => {
     console.log(`user connected: ${socket.id}`);
 
-    socket.on("createRoom", ({ username, roomName, roomPassword }) => {
-      console.log(
-        `${username}, wants to create a room with\nroom name: ${roomName}\npassword: ${roomPassword}`
-      );
+    socket.on("createRoom", (data) => {
+      handleCreateRoom(socket, rooms, data);
+    });
+
+    socket.on("getRoomInfo", ({ roomId }) => {
+      getRoomInfo(socket, roomId, rooms);
+    });
+
+    socket.on("disconnect", () => {
+      handleDisconnect(socket, rooms, io);
     });
   });
 };
 
 export default handleSocket;
-
