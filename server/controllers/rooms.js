@@ -9,6 +9,13 @@ export const handleCreateRoom = (
     `${username}, wants to create a room with\nroom name: ${roomName}\npassword: ${roomPassword}`
   );
 
+  const exisitingRoom = rooms.find((room) => room.owner.username === username);
+  console.log(exisitingRoom);
+  if (exisitingRoom) {
+    socket.emit("roomError", "you are already hosting a room");
+    return;
+  }
+
   const roomId = uuid();
 
   const newRoom = {
