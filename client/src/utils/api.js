@@ -18,9 +18,15 @@ export const getLanguageVersion = async (language) => {
 
 export const executeCode = async (language, sourceCode) => {
   try {
+    const version = LANGUAGE_VERSIONS[language] || await getLanguageVersion(language);
+
+    if (!version) {
+      throw new Error(`no valid version found for language: ${language}`);
+    }
+    
     const res = await API.post("/piston/execute", {
       language,
-      version: LANGUAGE_VERSIONS[language] || "latest",
+      version,
       files: [{ name: "main", content: sourceCode }],
       stdin: "", // Add empty stdin
       args: [], // Add empty args
