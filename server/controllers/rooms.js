@@ -80,6 +80,34 @@ export const getRoomInfo = (socket, roomId, rooms) => {
   socket.emit("roomInfo", room);
 };
 
+export const handleLeaveRoom = (socket, rooms, roomId, io, callback) => {
+  console.log(`user leaving: ${socket.id}`);
+
+  const roomIndex = rooms.findIndex((room) => room.roomId === roomId);
+  if (roomIndex === -1) return;
+  const room = rooms[roomIndex];
+
+  const userIndex = room.users.findIndex((user) => user.socketId === socket.id);
+  if (userIndex === -1) return;
+
+  // removing users
+  room.users.splice(userIndex, 1);
+
+  if (room.users.length === 0) {
+    console.log(`rooms ${roomId} deleted`);
+    rooms.splice(roomIndex, 1);
+  } else {
+    io.to(room.roomId).emit("roomInfo", room);
+  }
+
+  socket.leave(room.roomId);
+  console.log(rooms);
+  socket.emit("leftRoom", roomId);
+  console.log(`user: ${socket.id} left the room`);
+
+  if (callback) callback();
+};
+
 export const handleDisconnect = (socket, rooms, io) => {
   console.log(`user disconnected: ${socket.id}`);
 
