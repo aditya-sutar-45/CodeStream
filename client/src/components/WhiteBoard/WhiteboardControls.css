@@ -1,0 +1,193 @@
+/* WhiteboardControls.css */
+
+/* Main container styling */
+.whiteboard-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+  }
+  
+  /* Toolbar styling (Top Center) */
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    padding: 12px;
+    border-radius: 8px;
+    
+  }
+  
+  /* Custom button styling */
+  .custom-button {
+    background: #6a0dad; /* Nice purple color */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    height: 45px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Neumorphism effect */
+  }
+  
+  /* .custom-button:hover { */
+    /* box-shadow: 0 0 15px #a855f7; Glow on hover */
+    /* transform: rotate(3deg); Rotate slightly */
+  /* } */
+  
+  .custom-button:active {
+    transform: scale(0.9); /* Shrink slightly */
+    /* animation: shake 0.2s ease-in-out; Shake on click */ 
+  }
+/* PENCIL */
+  .pencil-icon {
+    width: 30px; /* Adjust size as needed */
+    height: 33px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .move-pencil {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  .pencil-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Tooltip Styling */
+  .tooltip {
+    position: absolute;
+    bottom: -45px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-style: "Noto Sans", sans-serif;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  }
+  
+  /* Show tooltip on hover */
+  .pencil-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+
+  .text-icon {
+    width: 30px; /* Adjust size as needed */
+    height: 33px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .move-text {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  .tooltip {
+    position: absolute;
+    bottom: -45px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-style: "Noto Sans", sans-serif;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+  }
+  
+  /* Show tooltip on hover */
+  .text-button:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .shapes-icon{
+    width: 30px; /* Adjust size as needed */
+    height: 33px;
+    transition: transform 0.3s ease-in-out;
+  }
+  .move-shapes {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  .eraser-icon{
+    width: 30px; /* Adjust size as needed */
+    height: 33px;
+    transition: transform 0.3s ease-in-out;
+  }
+  .move-eraser{
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  .hand-icon{
+    width: 30px; /* Adjust size as needed */
+    height: 33px;
+    transition: transform 0.3s ease-in-out;
+  }
+  .move-hand{
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    50% { transform: rotate(10deg); }
+    75% { transform: rotate(-5deg); }
+  }
+  
+  
+  /* Shake Animation */
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    50% { transform: translateX(3px); }
+    75% { transform: translateX(-3px); }
+    100% { transform: translateX(0); }
+  }
+  
+  /* Zoom Controls (Bottom-Right Alignment) */
+  .zoom-controls {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: row; /* ✅ Changed to row */
+    gap: 5px;
+    background: #333;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .zoom-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #333;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .zoom-percentage {
+    color: white;
+    font-size: 13px;
+    min-width: 50px;
+    text-align: center;
+  }
+  
