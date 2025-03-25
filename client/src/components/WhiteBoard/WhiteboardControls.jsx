@@ -1,71 +1,114 @@
+import { useState } from "react";
 import { Button, Switch } from "@radix-ui/themes";
-import {
-  EraserIcon,
-  Pencil1Icon,
-  SquareIcon,
-  TextIcon,
-  ZoomInIcon,
-  ZoomOutIcon,
-} from "@radix-ui/react-icons";
+import "./WhiteboardControls.css";
 
 function WhiteboardControls({ setDarkTheme }) {
+  const [darkTheme, setDarkThemeState] = useState(false); // Define theme state
+  const [zoomLevel, setZoomLevel] = useState(100);
+  const [activeTool, setActiveTool] = useState(null);
+
+  const handleZoomIn = () => {
+    setZoomLevel((prev) => Math.min(prev + 10, 300));
+  };
+
+  const handleZoomOut = () => {
+    setZoomLevel((prev) => Math.max(prev - 10, 10));
+  };
+
   return (
-    <div style={{ position: "relative" }}>
+    <div className="whiteboard-container">
       {/* Toolbar at the top */}
-      <div
-        style={{
-          display: "flex",
-          gap: "8px",
-          position: "absolute",
-          top: "10px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          background: "#333", // Solid dark background
-          padding: "10px",
-          borderRadius: "8px",
-        }}
-      >
+      <div className="toolbar">
         <Switch
-          onCheckedChange={() => {
-            setDarkTheme((currentTheme) => !currentTheme);
+          checked={darkTheme} // Uses correct boolean value
+          onCheckedChange={(checked) => {
+            setDarkThemeState(checked); // Update internal state
+            setDarkTheme(checked); // Also update external theme state
           }}
+          style={{ marginTop: "6px" }}
         />
-        <Button>
-          <Pencil1Icon />
+
+        {/* Pencil Button */}
+        <Button
+          onMouseEnter={() => setActiveTool("pencil")}
+          onMouseLeave={() => setActiveTool(null)}
+          onClick={() => setActiveTool("pencil")}
+          className="custom-button pencil-button"
+        >
+          <img
+            src={activeTool === "pencil" ? "/pencil.gif" : "/pencil-static.png"}
+            alt="Pencil"
+            className="pencil-icon"
+          />
+          <div className="tooltip">Draw Tool</div> {/* Tooltip added here */}
         </Button>
 
-        <Button mx="1">
-          <TextIcon />
+        {/* Text Button */}
+        <Button
+          onMouseEnter={() => setActiveTool("text")}
+          onMouseLeave={() => setActiveTool(null)}
+          onClick={() => setActiveTool("text")}
+          className="custom-button text-button"
+        >
+          <img
+            src={activeTool === "text" ? "/text.gif" : "/text-static.png"}
+            alt="Text"
+            className="text-icon"
+          />
+          <div className="tooltip">Text Tool</div>
+
         </Button>
 
-        <Button>
-          <SquareIcon />
+        {/* Shapes Button */}
+        <Button
+          onMouseEnter={() => setActiveTool("shapes")}
+          onMouseLeave={() => setActiveTool(null)}
+          onClick={() => setActiveTool("shapes")}
+          className="custom-button"
+        >
+          <img
+            src={activeTool === "shapes" ? "/shapes.gif" : "/shapes-static.png"}
+            alt="Shapes"
+            className="shapes-icon"
+          />
         </Button>
 
-        <Button mx="1">
-          <EraserIcon />
+        {/* Eraser Button */}
+        <Button
+          onMouseEnter={() => setActiveTool("eraser")}
+          onMouseLeave={() => setActiveTool(null)}
+          onClick={() => setActiveTool("eraser")}
+          className="custom-button"
+        >
+          <img
+            src={activeTool === "eraser" ? "/eraser.gif" : "/eraser-static.png"}
+            alt="Eraser"
+            className="eraser-icon"
+          />
+        </Button>
+          {/* hand icon */}
+        <Button
+          onMouseEnter={() => setActiveTool("hand")}
+          onMouseLeave={() => setActiveTool(null)}
+          onClick={() => setActiveTool("hand")}
+          className="custom-button"
+        >
+          <img
+            src={activeTool === "hand" ? "/hand.gif" : "/hand-static.png"}
+            alt="hand"
+            className="hand-icon"
+          />
         </Button>
       </div>
 
-      {/* Zoom controls at bottom-left */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "10px",
-          left: "10px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "5px",
-          background: "#333", // Solid dark background
-          padding: "10px",
-          borderRadius: "8px",
-        }}
-      >
-        <Button>
-          <ZoomInIcon />
+      {/* Zoom Controls */}
+      <div className="zoom-controls">
+        <Button onClick={handleZoomOut} className="custom-button">
+          −
         </Button>
-        <Button>
-          <ZoomOutIcon />
+        <span className="zoom-percentage">{zoomLevel}%</span>
+        <Button onClick={handleZoomIn} className="custom-button">
+          +
         </Button>
       </div>
     </div>
