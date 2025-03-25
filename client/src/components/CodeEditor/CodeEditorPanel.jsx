@@ -41,7 +41,7 @@ function CodeEditorPanel() {
       const updatedVersions = {};
       for (const lang in LANGUAGE_VERSIONS) {
         updatedVersions[lang] = await getLanguageVersion(lang);
-        LANGUAGE_VERSIONS[lang] = await getLanguageVersion(lang);
+        LANGUAGE_VERSIONS[lang] = updateLanguageVersions[lang];
       }
       setLanguages(Object.entries(updatedVersions));
     };
