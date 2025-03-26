@@ -9,7 +9,7 @@ import { defineMonacoThemes } from "../../utils/themes";
 import { THEMES } from "../../utils/themes";
 import EditorHeader from "./Header/EditorHeader";
 
-function CodeEditorPanel({ room, roomError }) {
+function CodeEditorPanel({ room }) {
   const editorRef = useRef();
   const [value, setValue] = useState("");
   const [language, setLanguage] = useState("javascript");
@@ -46,9 +46,6 @@ function CodeEditorPanel({ room, roomError }) {
   const onSelectTheme = (theme) => {
     setTheme(theme);
   };
-
-  if (roomError) return <p>Error: {roomError}</p>;
-  if (!room) return <p>Loading.....</p>;
 
   return (
     <Box height="100vh" width="100%">

@@ -27,10 +27,10 @@ function Auth() {
         <Link
           onClick={(e) => {
             e.preventDefault();
-            navigate("/dashboard");
+            navigate("/user/dashboard");
           }}
         >
-          <Avatar fallback={username[0]} />
+          <Avatar fallback={username[0]} radius="full" />
         </Link>
       ) : (
         <Dialog.Root>

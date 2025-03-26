@@ -7,7 +7,12 @@ import { ArrowLeftIcon } from "@radix-ui/react-icons";
 function NavHeader() {
   const navigate = useNavigate();
   const isHome = useMatch("/");
-  const isRoom = useMatch("/rooms/:id");
+
+  const match = useMatch("/rooms/:id"); // Ensure this is always called
+  const isRoom =
+    match?.params?.id && !["create", "join"].includes(match.params.id);
+
+  const shouldShowBackButton = !isHome && !isRoom;
 
   return (
     <Flex
@@ -17,7 +22,7 @@ function NavHeader() {
       style={{ zIndex: 1000 }}
       width="100%"
     >
-      {!(isHome || isRoom) && (
+      {shouldShowBackButton && (
         <IconButton
           mr="2"
           variant="outline"
@@ -26,7 +31,7 @@ function NavHeader() {
             navigate("/");
           }}
         >
-         <ArrowLeftIcon/> 
+          <ArrowLeftIcon />
         </IconButton>
       )}
       <HeaderLink />
