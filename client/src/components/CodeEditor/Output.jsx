@@ -12,9 +12,9 @@ function Output({ editorRef, language }) {
     if (!sourceCode) return;
     try {
       setIsLoading(true);
-      const { run: result } = await executeCode(language, sourceCode);
-      setOutput(result.output.split("\n"));
-      result.stderr ? setIsError(true) : setIsError(false);
+      const result = await executeCode(language, sourceCode);
+      setOutput(result.run.stdout.split("\n")); // Use result.run.stdout
+      result.run.stderr ? setIsError(true) : setIsError(false);
     } catch (err) {
       console.log(err);
     } finally {

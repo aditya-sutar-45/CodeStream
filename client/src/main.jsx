@@ -22,9 +22,9 @@ const router = createBrowserRouter([
   {
     element: <PrivateRoute />, // Wrap protected routes
     children: [
-      { path: "/dashboard", element: <Dashboard /> },
-      { path: "/joinRoom", element: <JoinRoom /> },
-      { path: "/createRoom", element: <CreateRoom /> },
+      { path: "/user/dashboard", element: <Dashboard /> },
+      { path: "/rooms/join", element: <JoinRoom /> },
+      { path: "/rooms/create", element: <CreateRoom /> },
       {path: "/rooms/:id", element: <Room/>},
     ],
   },

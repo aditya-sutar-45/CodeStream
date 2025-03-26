@@ -12,23 +12,22 @@ import NavHeader from "../Home/NavHeader";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { io } from "socket.io-client";
-
-const socket = io.connect("http://localhost:3000", {
-  transports: ["websocket"],
-  autoConnect: true,
-  reconnectionAttempts: 5,
-});
+import socket from "../../socket";
 
 function CreateRoom() {
   const [roomName, setRoomName] = useState("");
   const [roomPassword, setRoomPassword] = useState("");
+  const [roomError, setRoomError] = useState("");
 
   const navigate = useNavigate();
   const { username } = useAuth();
 
   socket.on("roomCreated", (roomId) => {
     navigate(`/rooms/${roomId}`);
+  });
+
+  socket.on("roomError", (error) => {
+    setRoomError(error);
   });
 
   const createRoom = () => {
@@ -57,6 +56,9 @@ function CreateRoom() {
               Creating room as: <Strong>{username}</Strong>
             </Text>
             <Flex direction="column" gap="3">
+              {roomError && (
+                <Text color="red">Error in Creating room: {roomError}</Text>
+              )}
               <label>
                 <Text as="div" size="2" mb="1" weight="bold">
                   Room Name:

@@ -9,7 +9,7 @@ import {
 } from "@radix-ui/themes";
 import { HamburgerMenuIcon, PersonIcon } from "@radix-ui/react-icons";
 
-function MemberList({ users }) {
+function MemberList({ users, roomName }) {
   return (
     <HoverCard.Root>
       <Popover.Root>
@@ -24,7 +24,7 @@ function MemberList({ users }) {
           <Text>Members List</Text>
         </HoverCard.Content>
         <Popover.Content>
-          <Heading m="2">Members</Heading>
+          <Heading m="2">{roomName}</Heading>
           <Separator size="4" />
           <Flex
             justify="center"
@@ -46,7 +46,7 @@ function MemberList({ users }) {
                 >
                   <PersonIcon height="20" width="20" />
                   <Text as="p" size="3">
-                    thebottomfragger
+                    {user.username}
                   </Text>
                 </Flex>
               ))}
