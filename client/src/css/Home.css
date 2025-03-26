@@ -4,38 +4,37 @@
   align-items: center;
   text-align: center;
   width: 100%;
-  /* Apply the animation here */
-  animation: hue 5s infinite linear;
-  -webkit-animation: hue 5s infinite linear;
+  animation: gradient-shift 8s infinite linear alternate;
 }
 
 .animated-text h1 {
   font-size: 12rem;
   font-family: "Noto Sans", sans-serif;
-  background-image: linear-gradient(45deg, #ff5847 20%, #c27eec 84%, #9177ff);
+  background-image: linear-gradient(90deg, 
+    #ff0000 10%,  /* Red */
+    #ff15e9 25%,  /* Deep Pink (now correctly blended) */
+    #ff69b4 40%,  /* Hot Pink */
+    /* #ffd700 50%,  (Balanced in the middle) */
+    #8a2be2 65%,  /* Blue Violet (Purple) */
+    #6a0dad 80%,  /* Dark Purple */
+    #ff0000 95%   /* Red again to loop properly */
+  );
+  background-size: 200% 200%;  /* Increased size so all colors appear */
+  background-position: center; /* Centers gradient so pink is always visible */
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  
+  animation: gradient-shift 8s infinite linear alternate;
 }
 
-/* Fix hue rotation */
-@keyframes hue {
-  from {
-    filter: hue-rotate(0deg);
+/* Gradient Animation */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
   }
-  to {
-    filter: hue-rotate(360deg);
-  }
-}
-
-@-webkit-keyframes hue {
-  from {
-    -webkit-filter: hue-rotate(0deg);
-  }
-  to {
-    -webkit-filter: hue-rotate(360deg);
+  100% {
+    background-position: 100% 50%;
   }
 }
 
@@ -43,16 +42,17 @@
 /* Fix subtext & button positioning */
 .contentWrapper {
   gap: 2rem;
-  margin-top: 2rem; /* Controls spacing properly */
+  margin-top: 2rem;
 }
 
 .subtext {
   font-size: 24px;
   font-weight: 500;
   color: #ffffff80;
-  margin-bottom: 2rem; /* Space before buttons */
+  margin-bottom: 2rem;
   text-align: center;
 }
+
 .gifContainer {
   display: flex;
   justify-content: center;
@@ -60,11 +60,10 @@
 }
 
 .animatedGif {
-  height: 15vh; /* Adjust size as needed */
+  height: 15vh;
   width: auto;
   margin: 0;
 }
-
 
 .joinRoomButton {
   margin-top: 1rem;
