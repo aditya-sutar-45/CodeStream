@@ -17,7 +17,7 @@ function Home() {
 
         {/* Animated GIF */}
         <Box className="gifContainer" width="100vw">
-          <img src="/cat.gif" alt="Animated Logo" className="animatedGif" />
+          <img src="/images/icons/whiteboard/cat.gif" alt="Animated Logo" className="animatedGif" />
         </Box>
 
         <Box width="100vw">

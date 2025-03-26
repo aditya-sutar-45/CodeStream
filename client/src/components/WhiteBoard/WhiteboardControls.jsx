@@ -25,7 +25,7 @@ function WhiteboardControls({ setDarkTheme }) {
             setDarkThemeState(checked); // Update internal state
             setDarkTheme(checked); // Also update external theme state
           }}
-          style={{ marginTop: "6px" }}
+          style={{ marginTop: "10px" }}
         />
 
         {/* Pencil Button */}
@@ -36,7 +36,7 @@ function WhiteboardControls({ setDarkTheme }) {
           className="custom-button pencil-button"
         >
           <img
-            src={activeTool === "pencil" ? "/pencil.gif" : "/pencil-static.png"}
+            src={activeTool === "pencil" ? "/images/icons/whiteboard/pencil.gif" : "/images/icons/whiteboard/pencil-static.png"}
             alt="Pencil"
             className="pencil-icon"
           />
@@ -51,7 +51,7 @@ function WhiteboardControls({ setDarkTheme }) {
           className="custom-button text-button"
         >
           <img
-            src={activeTool === "text" ? "/text.gif" : "/text-static.png"}
+            src={activeTool === "text" ? "/images/icons/whiteboard/text.gif" : "/images/icons/whiteboard/text-static.png"}
             alt="Text"
             className="text-icon"
           />
@@ -67,7 +67,7 @@ function WhiteboardControls({ setDarkTheme }) {
           className="custom-button"
         >
           <img
-            src={activeTool === "shapes" ? "/shapes.gif" : "/shapes-static.png"}
+            src={activeTool === "shapes" ? "/images/icons/whiteboard/shapes.gif" : "/images/icons/whiteboard/shapes-static.png"}
             alt="Shapes"
             className="shapes-icon"
           />
@@ -81,7 +81,7 @@ function WhiteboardControls({ setDarkTheme }) {
           className="custom-button"
         >
           <img
-            src={activeTool === "eraser" ? "/eraser.gif" : "/eraser-static.png"}
+            src={activeTool === "eraser" ? "/images/icons/whiteboard/eraser.gif" : "/images/icons/whiteboard/eraser-static.png"}
             alt="Eraser"
             className="eraser-icon"
           />
@@ -94,7 +94,7 @@ function WhiteboardControls({ setDarkTheme }) {
           className="custom-button"
         >
           <img
-            src={activeTool === "hand" ? "/hand.gif" : "/hand-static.png"}
+            src={activeTool === "hand" ? "/images/icons/whiteboard/hand.gif" : "/images/icons/whiteboard/hand-static.png"}
             alt="hand"
             className="hand-icon"
           />
