@@ -31,3 +31,17 @@ class Program {
     }
 }`,
 };
+
+export const EVENTS = {
+  ROOM: {
+    CREATE: "createRoom",
+    CREATED: "roomCreated",
+    JOIN: "joinRoom",
+    JOINED: "roomJoined",
+    GET_INFO: "getRoomInfo",
+    INFO: "roomInfo",
+    LEAVE: "leaveRoom",
+    LEFT: "leftRoom",
+    ERROR: "roomError",
+  }
+}

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import socket from "../socket";
 import { useParams } from "react-router-dom";
 import NotFoundPage from "./NotFoundPage";
+import { EVENTS } from "../utils/constants";
 
 function Room() {
   const [room, setRoom] = useState(null);
@@ -12,19 +13,19 @@ function Room() {
   const { id } = useParams();
 
   useEffect(() => {
-    socket.emit("getRoomInfo", { roomId: id });
+    socket.emit(EVENTS.ROOM.GET_INFO, { roomId: id });
 
-    socket.on("roomInfo", (roomData) => {
+    socket.on(EVENTS.ROOM.INFO, (roomData) => {
       setRoom(roomData);
     });
 
-    socket.on("roomError", (errorMessage) => {
+    socket.on(EVENTS.ROOM.ERROR, (errorMessage) => {
       setRoomError(errorMessage);
     });
 
     return () => {
-      socket.off("roomInfo");
-      socket.off("roomError");
+      socket.off(EVENTS.ROOM.INFO);
+      socket.off(EVENTS.ROOM.ERROR);
     };
   }, [id]);
 

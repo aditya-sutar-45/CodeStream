@@ -7,6 +7,7 @@ import MemberList from "./MemberList";
 import socket from "../../../socket";
 import { ExitIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
+import { EVENTS } from "../../../utils/constants";
 
 function EditorHeader({
   language,
@@ -37,7 +38,7 @@ function EditorHeader({
         color="red"
         mx="1"
         onClick={() => {
-          socket.emit("leaveRoom", room.roomId, () => {
+          socket.emit(EVENTS.ROOM.LEAVE, room.roomId, () => {
             navigate("/");
           });
         }}

@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import { EVENTS } from "../utils/constants.js";
 
 export const handleCreateRoom = (
   socket,
@@ -12,7 +13,7 @@ export const handleCreateRoom = (
   const exisitingRoom = rooms.find((room) => room.owner.username === username);
   console.log(exisitingRoom);
   if (exisitingRoom) {
-    socket.emit("roomError", "you are already hosting a room");
+    socket.emit(EVENTS.ROOM.ERROR, "you are already hosting a room");
     return;
   }
 
@@ -31,7 +32,7 @@ export const handleCreateRoom = (
   socket.join(roomId);
 
   console.log(`room created by ${username} with id: ${roomId}`);
-  socket.emit("roomCreated", roomId);
+  socket.emit(EVENTS.ROOM.CREATED, roomId);
 };
 
 export const handleJoinRoom = (
@@ -45,12 +46,12 @@ export const handleJoinRoom = (
 
   const exisitingRoom = rooms.find((room) => room.roomId === roomId);
   if (!exisitingRoom) {
-    socket.emit("roomError", `room with ${roomId} does not exist`);
+    socket.emit(EVENTS.ROOM.ERROR, `room with ${roomId} does not exist`);
     return;
   }
 
   if (roomPassword !== exisitingRoom.roomPassword) {
-    socket.emit("roomError", "Incorrect roomId/ password");
+    socket.emit(EVENTS.ROOM.ERROR, "Incorrect roomId/ password");
     return;
   }
 
@@ -58,26 +59,26 @@ export const handleJoinRoom = (
     (user) => user.username === username
   );
   if (userAlreadyInRoom) {
-    socket.emit("roomError", "you have already joined this room");
+    socket.emit(EVENTS.ROOM.ERROR, "you have already joined this room");
     return;
   }
 
   socket.join(roomId);
   exisitingRoom.users.push({ socketId: socket.id, username });
 
-  socket.emit("roomJoined", roomId);
-  socket.to(roomId).emit("roomInfo", exisitingRoom);
+  socket.emit(EVENTS.ROOM.JOINED, roomId);
+  socket.to(roomId).emit(EVENTS.ROOM.INFO, exisitingRoom);
 };
 
 export const getRoomInfo = (socket, roomId, rooms) => {
   const room = rooms.find((room) => room.roomId === roomId);
 
   if (!room) {
-    socket.emit("roomError", "room not found!");
+    socket.emit(EVENTS.ROOM.ERROR, "room not found!");
     return;
   }
 
-  socket.emit("roomInfo", room);
+  socket.emit(EVENTS.ROOM.INFO, room);
 };
 
 export const handleLeaveRoom = (socket, rooms, roomId, io, callback) => {
@@ -97,12 +98,12 @@ export const handleLeaveRoom = (socket, rooms, roomId, io, callback) => {
     console.log(`rooms ${roomId} deleted`);
     rooms.splice(roomIndex, 1);
   } else {
-    io.to(room.roomId).emit("roomInfo", room);
+    io.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
   }
 
   socket.leave(room.roomId);
   console.log(rooms);
-  socket.emit("leftRoom", roomId);
+  socket.emit(EVENTS.ROOM.LEFT, roomId);
   console.log(`user: ${socket.id} left the room`);
 
   if (callback) callback();
@@ -117,10 +118,8 @@ export const handleDisconnect = (socket, rooms, io) => {
       rooms.splice(index, 1);
       console.log(`room ${room.roomId} deleted`);
     } else {
-      io.to(room.roomId).emit("roomInfo", room);
+      io.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
     }
     console.log(rooms);
   });
-
-  io.emit("roomList", rooms);
 };

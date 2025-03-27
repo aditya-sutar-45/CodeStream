@@ -13,6 +13,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import socket from "../../socket";
+import { EVENTS } from "../../utils/constants";
 
 function CreateRoom() {
   const [roomName, setRoomName] = useState("");
@@ -22,18 +23,18 @@ function CreateRoom() {
   const navigate = useNavigate();
   const { username } = useAuth();
 
-  socket.on("roomCreated", (roomId) => {
+  socket.on(EVENTS.ROOM.CREATED, (roomId) => {
     navigate(`/rooms/${roomId}`);
   });
 
-  socket.on("roomError", (error) => {
+  socket.on(EVENTS.ROOM.ERROR, (error) => {
     setRoomError(error);
   });
 
   const createRoom = () => {
     // emit room creation
     // socket.emit("createRoom")
-    socket.emit("createRoom", { username, roomName, roomPassword });
+    socket.emit(EVENTS.ROOM.CREATE, { username, roomName, roomPassword });
   };
 
   const handleSubmit = (e) => {

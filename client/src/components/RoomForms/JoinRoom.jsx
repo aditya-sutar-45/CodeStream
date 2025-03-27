@@ -13,6 +13,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import socket from "../../socket";
+import { EVENTS } from "../../utils/constants";
 
 function JoinRoom() {
   const [roomId, setRoomId] = useState("");
@@ -22,16 +23,16 @@ function JoinRoom() {
   const navigate = useNavigate();
   const { username } = useAuth();
 
-  socket.on("roomJoined", (roomId) => {
+  socket.on(EVENTS.ROOM.JOINED, (roomId) => {
     navigate(`/rooms/${roomId}`);
   });
 
-  socket.on("roomError", (error) => {
+  socket.on(EVENTS.ROOM.ERROR, (error) => {
     setRoomError(error);
   });
 
   const joinRoom = () => {
-    socket.emit("joinRoom", { username, roomId, roomPassword });
+    socket.emit(EVENTS.ROOM.JOIN, { username, roomId, roomPassword });
   };
 
   const handleSubmit = (e) => {
@@ -54,7 +55,7 @@ function JoinRoom() {
             </Text>
             <Flex direction="column" gap="3">
               {roomError && (
-                <Text color="red">Error in Creating room: {roomError}</Text>
+                <Text color="red">Error in Joining room: {roomError}</Text>
               )}
               <label>
                 <Text as="div" size="2" mb="1" weight="bold">
