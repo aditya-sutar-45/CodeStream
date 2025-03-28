@@ -14,6 +14,7 @@ import axios from "axios";
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [username, setUsername] = useState("User");
+  const [profilePic, setProfilePic] = useState("");
   const [loading, setLoading] = useState(true);
 
   async function signup(email, password, username) {
@@ -97,6 +98,7 @@ export function AuthProvider({ children }) {
               `http://localhost:3000/user/${user.uid}`
             );
             setUsername(data.username);
+            setProfilePic(data.profilePic);
           } catch (err) {
             console.error("error in fetching username: ", err.message);
           }
@@ -143,6 +145,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     username,
+    profilePic,
     login,
     signup,
     logout,

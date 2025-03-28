@@ -30,5 +30,5 @@ export const getUserById = catchAsync(async (req, res) => {
   const { uid } = req.params;
   const user = await User.findOne({ firebaseUid: uid });
   if (!user) throw new ExpressError("user not found!", 404);
-  res.json({ username: user.username });
+  res.json(user);
 });

@@ -17,6 +17,10 @@ const UserSchema = new Schema({
     required: true,
     unique: true,
   },
+  profilePic: {
+    type: String,
+    default: `/images/defaultProfilePics/${Math.floor(Math.random() * (10 - 1 + 1)) + 1}.png`,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
