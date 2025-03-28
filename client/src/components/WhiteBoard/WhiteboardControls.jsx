@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Button, Switch } from "@radix-ui/themes";
+import { Button, Switch, Tooltip } from "@radix-ui/themes";
 import "./WhiteboardControls.css";
+
 
 function WhiteboardControls({ setDarkTheme }) {
   const [darkTheme, setDarkThemeState] = useState(false); // Define theme state
@@ -10,7 +11,7 @@ function WhiteboardControls({ setDarkTheme }) {
   const handleZoomIn = () => {
     setZoomLevel((prev) => Math.min(prev + 10, 300));
   };
-
+  
   const handleZoomOut = () => {
     setZoomLevel((prev) => Math.max(prev - 10, 10));
   };
@@ -26,6 +27,7 @@ function WhiteboardControls({ setDarkTheme }) {
             setDarkTheme(checked); // Also update external theme state
           }}
           style={{ marginTop: "10px" }}
+          
         />
 
         {/* Pencil Button */}
@@ -35,12 +37,17 @@ function WhiteboardControls({ setDarkTheme }) {
           onClick={() => setActiveTool("pencil")}
           className="custom-button pencil-button"
         >
-          <img
-            src={activeTool === "pencil" ? "/images/icons/whiteboard/pencil.gif" : "/images/icons/whiteboard/pencil-static.png"}
-            alt="Pencil"
-            className="pencil-icon"
-          />
-          <div className="tooltip">Draw Tool</div> {/* Tooltip added here */}
+          <Tooltip content="Pencil">
+            <img
+              src={
+                activeTool === "pencil"
+                  ? "/images/icons/whiteboard/pencil.gif"
+                  : "/images/icons/whiteboard/pencil-static.png"
+              }
+              alt="Pencil"
+              className="pencil-icon"
+            />
+          </Tooltip>
         </Button>
 
         {/* Text Button */}
@@ -50,13 +57,17 @@ function WhiteboardControls({ setDarkTheme }) {
           onClick={() => setActiveTool("text")}
           className="custom-button text-button"
         >
-          <img
-            src={activeTool === "text" ? "/images/icons/whiteboard/text.gif" : "/images/icons/whiteboard/text-static.png"}
-            alt="Text"
-            className="text-icon"
-          />
-          <div className="tooltip">Text Tool</div>
-
+          <Tooltip content="Text">
+            <img
+              src={
+                activeTool === "text"
+                  ? "/images/icons/whiteboard/text.gif"
+                  : "/images/icons/whiteboard/text-static.png"
+              }
+              alt="Text"
+              className="text-icon"
+            />
+          </Tooltip>
         </Button>
 
         {/* Shapes Button */}
@@ -66,11 +77,17 @@ function WhiteboardControls({ setDarkTheme }) {
           onClick={() => setActiveTool("shapes")}
           className="custom-button"
         >
-          <img
-            src={activeTool === "shapes" ? "/images/icons/whiteboard/shapes.gif" : "/images/icons/whiteboard/shapes-static.png"}
-            alt="Shapes"
-            className="shapes-icon"
-          />
+          <Tooltip content="Shapes">
+            <img
+              src={
+                activeTool === "shapes"
+                  ? "/images/icons/whiteboard/shapes.gif"
+                  : "/images/icons/whiteboard/shapes-static.png"
+              }
+              alt="Shapes"
+              className="shapes-icon"
+            />
+          </Tooltip>
         </Button>
 
         {/* Eraser Button */}
@@ -80,24 +97,36 @@ function WhiteboardControls({ setDarkTheme }) {
           onClick={() => setActiveTool("eraser")}
           className="custom-button"
         >
-          <img
-            src={activeTool === "eraser" ? "/images/icons/whiteboard/eraser.gif" : "/images/icons/whiteboard/eraser-static.png"}
-            alt="Eraser"
-            className="eraser-icon"
-          />
+          <Tooltip content="Eraser">
+            <img
+              src={
+                activeTool === "eraser"
+                  ? "/images/icons/whiteboard/eraser.gif"
+                  : "/images/icons/whiteboard/eraser-static.png"
+              }
+              alt="Eraser"
+              className="eraser-icon"
+            />
+          </Tooltip>
         </Button>
-          {/* hand icon */}
+        {/* hand icon */}
         <Button
           onMouseEnter={() => setActiveTool("hand")}
           onMouseLeave={() => setActiveTool(null)}
           onClick={() => setActiveTool("hand")}
           className="custom-button"
         >
-          <img
-            src={activeTool === "hand" ? "/images/icons/whiteboard/hand.gif" : "/images/icons/whiteboard/hand-static.png"}
-            alt="hand"
-            className="hand-icon"
-          />
+          <Tooltip content="Grab">
+            <img
+              src={
+                activeTool === "hand"
+                  ? "/images/icons/whiteboard/hand.gif"
+                  : "/images/icons/whiteboard/hand-static.png"
+              }
+              alt="hand"
+              className="hand-icon"
+            />
+          </Tooltip>
         </Button>
       </div>
 
