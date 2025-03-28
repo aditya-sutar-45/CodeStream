@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Text, Tooltip } from "@radix-ui/themes";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
-import "../../css/Home.css";
+import "./Home.css";
 import HomeCanvas from "./HomeCanvas";
 import NavHeader from "./NavHeader";
 

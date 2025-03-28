@@ -43,5 +43,14 @@ export const EVENTS = {
     LEAVE: "leaveRoom",
     LEFT: "leftRoom",
     ERROR: "roomError",
+  },
+};
+
+export const DEFAULT_PROFILE_PIC_URLS = () => {
+  const urls = [];
+  for (let i = 1; i < 10; i++) {
+    urls.push(`/images/defaultProfilePics/${i}.png`);
   }
-}
+
+  return urls;
+};

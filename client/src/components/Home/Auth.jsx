@@ -1,14 +1,17 @@
-import { Dialog, Flex, Button, Link } from "@radix-ui/themes";
+import { Dialog, Callout, Flex, Button, Link } from "@radix-ui/themes";
+import { ExitIcon, InfoCircledIcon } from "@radix-ui/react-icons";
 import SignUpForm from "./Auth/SignUpForm";
 import { useState } from "react";
 import LoginForm from "./Auth/LoginForm";
 import { useAuth } from "../../hooks/useAuth.js";
-import { useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import ProfilePicture from "../ProfilePicture.jsx";
 
 function Auth() {
+  const isDashboard = useMatch("/user/dashboard");
   const [login, setLogin] = useState(true);
-  const { currentUser, username } = useAuth();
+  const [error, setError] = useState("");
+  const { currentUser, username, logout } = useAuth();
   const navigate = useNavigate();
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -22,17 +25,39 @@ function Auth() {
     setLogin((prev) => !prev);
   };
 
+  async function handleLogout() {
+    setError("");
+    try {
+      await logout();
+      navigate("/");
+    } catch (e) {
+      setError("Failed to log out! " + e.message);
+    }
+  }
+
   return (
     <>
+      {error && (
+        <Callout.Root color="red" style={{ marginTop: "1rem" }}>
+          <Callout.Icon>
+            <InfoCircledIcon />
+          </Callout.Icon>
+          <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>
+      )}
       {currentUser ? (
-        <Link
-          onClick={(e) => {
-            e.preventDefault();
-            navigate("/user/dashboard");
-          }}
-        >
-        <ProfilePicture username={username} styles={{}} />
-        </Link>
+        !isDashboard ? (
+          <Link
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/user/dashboard");
+            }}
+          >
+            <ProfilePicture username={username} styles={{}} />
+          </Link>
+        ) : (
+          <Button onClick={handleLogout}>Logout<ExitIcon/></Button>
+        )
       ) : (
         <Dialog.Root>
           <Dialog.Trigger>

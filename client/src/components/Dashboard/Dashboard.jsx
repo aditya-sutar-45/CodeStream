@@ -1,32 +1,16 @@
-import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 import {
   Box,
   Flex,
   Heading,
   Button,
-  Callout,
   Separator,
 } from "@radix-ui/themes";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
-import NavHeader from "./Home/NavHeader";
-import ProfilePicture from "./ProfilePicture";
+import NavHeader from "../Home/NavHeader";
+import DashboardAvatar from "./DashboardAvatar";
 
 export default function UserProfile() {
-  const [error, setError] = useState("");
-  const { currentUser, username, logout } = useAuth();
-  const navigate = useNavigate();
-
-  async function handleLogout() {
-    setError("");
-    try {
-      await logout();
-      navigate("/");
-    } catch (e) {
-      setError("Failed to log out! " + e.message);
-    }
-  }
+  const { currentUser, username} = useAuth();
 
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -44,22 +28,8 @@ export default function UserProfile() {
             gap="2rem"
             align="center"
           >
-            {error && (
-              <Callout.Root color="red" style={{ marginTop: "1rem" }}>
-                <Callout.Icon>
-                  <InfoCircledIcon />
-                </Callout.Icon>
-                <Callout.Text>{error}</Callout.Text>
-              </Callout.Root>
-            )}
 
-            <Box width="40%" style={{ textAlign: "center" }} mx="3">
-              <ProfilePicture
-                username={username}
-                styles={{ width: "20rem", height: "20rem" }}
-                size="9"
-              />
-            </Box>
+            <DashboardAvatar username={username}/>
 
             {/* <Separator orientation="vertical" style={{height: "90%"}} /> */}
 
@@ -90,12 +60,12 @@ export default function UserProfile() {
                   {currentUser.email}
                 </Heading>
                 <Flex justify="start" gap="2" mt="6rem">
-                  <Button color="crimson" style={{ width: "8rem" }}>
+                  <Button style={{ width: "8rem" }}>
                     Edit Profile
                   </Button>
 
-                  <Button onClick={handleLogout} style={{ width: "8rem" }}>
-                    Logout
+                  <Button color="red" style={{ width: "8rem" }}>
+                   Delete Account 
                   </Button>
                 </Flex>
               </Box>
