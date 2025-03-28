@@ -19,7 +19,7 @@ function NavHeader() {
       p="2"
       align="center"
       position="fixed"
-      style={{ zIndex: 1000 }}
+      style={{ zIndex: 1000}}
       width="100%"
     >
       {shouldShowBackButton && (

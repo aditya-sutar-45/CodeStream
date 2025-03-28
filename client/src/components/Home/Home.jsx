@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Flex, Text, Tooltip } from "@radix-ui/themes";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { Link } from "react-router-dom";
 import "../../css/Home.css";
@@ -12,12 +12,25 @@ function Home() {
       <NavHeader />
 
       {/* Additional Info */}
-      <Flex justify="center" align="center" wrap="nowrap" direction="column" height="100vh" className="mainContainer">
+      <Flex
+        justify="center"
+        align="center"
+        wrap="nowrap"
+        direction="column"
+        height="100vh"
+        className="mainContainer"
+      >
         <HomeCanvas />
 
         {/* Animated GIF */}
         <Box className="gifContainer" width="100vw">
-          <img src="/images/icons/whiteboard/cat.gif" alt="Animated Logo" className="animatedGif" />
+          <Tooltip content="meow :3">
+            <img
+              src="/images/icons/whiteboard/cat.gif"
+              alt="Animated Logo"
+              className="animatedGif"
+            />
+          </Tooltip>
         </Box>
 
         <Box width="100vw">

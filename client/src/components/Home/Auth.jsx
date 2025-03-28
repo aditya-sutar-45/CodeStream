@@ -1,9 +1,10 @@
-import { Dialog, Flex, Button, Link, Avatar } from "@radix-ui/themes";
+import { Dialog, Flex, Button, Link } from "@radix-ui/themes";
 import SignUpForm from "./Auth/SignUpForm";
 import { useState } from "react";
 import LoginForm from "./Auth/LoginForm";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useNavigate } from "react-router-dom";
+import ProfilePicture from "../ProfilePicture.jsx";
 
 function Auth() {
   const [login, setLogin] = useState(true);
@@ -30,7 +31,7 @@ function Auth() {
             navigate("/user/dashboard");
           }}
         >
-          <Avatar fallback={username[0]} radius="full" />
+        <ProfilePicture username={username} styles={{}} />
         </Link>
       ) : (
         <Dialog.Root>

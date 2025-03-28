@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import {
   Box,
   Flex,
-  Avatar,
   Heading,
   Button,
   Callout,
@@ -12,6 +11,7 @@ import {
 } from "@radix-ui/themes";
 import { InfoCircledIcon } from "@radix-ui/react-icons";
 import NavHeader from "./Home/NavHeader";
+import ProfilePicture from "./ProfilePicture";
 
 export default function UserProfile() {
   const [error, setError] = useState("");
@@ -37,7 +37,13 @@ export default function UserProfile() {
           width="75vw"
           style={{ backgroundColor: "var(--gray-2)" }}
         >
-          <Flex mt="3rem" height="50vh" justify="center" gap="2rem" align="center">
+          <Flex
+            mt="3rem"
+            height="50vh"
+            justify="center"
+            gap="2rem"
+            align="center"
+          >
             {error && (
               <Callout.Root color="red" style={{ marginTop: "1rem" }}>
                 <Callout.Icon>
@@ -48,12 +54,10 @@ export default function UserProfile() {
             )}
 
             <Box width="40%" style={{ textAlign: "center" }} mx="3">
-              <Avatar
+              <ProfilePicture
+                username={username}
+                styles={{ width: "20rem", height: "20rem" }}
                 size="9"
-                src="https://images.unsplash.com/photo-1481214110143-ed630356e1bb?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                radius="full"
-                fallback={username[0].toUpperCase()}
-                style={{ width: "20rem", height: "20rem" }}
               />
             </Box>
 
