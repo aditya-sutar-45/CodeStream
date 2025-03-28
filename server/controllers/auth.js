@@ -37,8 +37,13 @@ export const updateUser = catchAsync(async (req, res) => {
   const { uid } = req.params;
   const updates = req.body;
 
-  const user = await User.findByIdAndUpdate({ firebaseUid: uid }, updates, {
+  const user = await User.findOneAndUpdate({ firebaseUid: uid }, updates, {
     new: true,
   });
+
+  if (!user) {
+    throw new ExpressError("user not found!", 404);
+  }
+
   res.json(user);
 });

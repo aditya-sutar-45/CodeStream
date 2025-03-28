@@ -146,6 +146,7 @@ export function AuthProvider({ children }) {
     currentUser,
     username,
     profilePic,
+    setProfilePic,
     login,
     signup,
     logout,
