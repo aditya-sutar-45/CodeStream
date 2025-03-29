@@ -1,4 +1,4 @@
-import { Flex, IconButton } from "@radix-ui/themes";
+import { Flex, IconButton, Tooltip } from "@radix-ui/themes";
 import HeaderLink from "../../HeaderLink";
 import LanguageSelect from "./LanguageSelect";
 import ThemeSelect from "./ThemeSelect";
@@ -34,7 +34,9 @@ function EditorHeader({
       />
       <RoomId room={room} />
       <MemberList users={room.users} roomName={room.roomName} />
+      <Tooltip content="Exit">
       <IconButton
+      
         color="red"
         mx="1"
         onClick={() => {
@@ -42,9 +44,12 @@ function EditorHeader({
             navigate("/");
           });
         }}
+      
       >
         <ExitIcon />
+        
       </IconButton>
+      </Tooltip>
     </Flex>
   );
 }
