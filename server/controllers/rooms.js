@@ -1,7 +1,8 @@
 import { v4 as uuid } from "uuid";
+import bcrypt from "bcrypt";
 import { EVENTS } from "../utils/constants.js";
 
-export const handleCreateRoom = (
+export const handleCreateRoom = async (
   socket,
   rooms,
   { username, roomName, roomPassword }
@@ -18,10 +19,11 @@ export const handleCreateRoom = (
   }
 
   const roomId = uuid();
+  const hashedPassword = await bcrypt.hash(roomPassword, 10);
 
   const newRoom = {
     roomId,
-    roomPassword,
+    roomPassword: hashedPassword,
     roomName,
     owner: { socketId: socket.id, username },
     users: [{ socketId: socket.id, username }],
@@ -35,7 +37,7 @@ export const handleCreateRoom = (
   socket.emit(EVENTS.ROOM.CREATED, roomId);
 };
 
-export const handleJoinRoom = (
+export const handleJoinRoom = async (
   socket,
   rooms,
   { username, roomId, roomPassword }
@@ -50,7 +52,11 @@ export const handleJoinRoom = (
     return;
   }
 
-  if (roomPassword !== exisitingRoom.roomPassword) {
+  const passwordMatch = await bcrypt.compare(
+    roomPassword,
+    exisitingRoom.roomPassword
+  );
+  if (!passwordMatch) {
     socket.emit(EVENTS.ROOM.ERROR, "Incorrect roomId/ password");
     return;
   }
@@ -91,11 +97,18 @@ export const handleLeaveRoom = (socket, rooms, roomId, io, callback) => {
   const userIndex = room.users.findIndex((user) => user.socketId === socket.id);
   if (userIndex === -1) return;
 
+  const isOwner = room.owner.socketId === socket.id;
+
   // removing users
   room.users.splice(userIndex, 1);
 
-  if (room.users.length === 0) {
+  if (isOwner || room.users.length === 0) {
     console.log(`rooms ${roomId} deleted`);
+    room.users.forEach((user) => {
+      io.to(user.socketId).emit(EVENTS.ROOM.LEFT, roomId);
+    });
+    io.to(room.roomId).emit(EVENTS.ROOM.DELETED, roomId);
+    socket.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
     rooms.splice(roomIndex, 1);
   } else {
     io.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
@@ -113,13 +126,28 @@ export const handleDisconnect = (socket, rooms, io) => {
   console.log(`user disconnected: ${socket.id}`);
 
   rooms.forEach((room, index) => {
-    room.users = room.users.filter((user) => user.socketId !== socket.id);
-    if (room.users.length === 0) {
-      rooms.splice(index, 1);
-      console.log(`room ${room.roomId} deleted`);
-    } else {
-      io.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
+    const userIndex = room.users.findIndex(
+      (user) => user.socketId === socket.id
+    );
+
+    if (userIndex !== -1) {
+      const isOwner = room.owner.socketId === socket.id;
+      room.users.splice(userIndex, 1);
+
+      if (isOwner || room.users.length === 0) {
+        console.log(`rooms ${room.roomId} deleted`);
+
+        room.users.forEach((user) => {
+          io.to(user.socketId).emit(EVENTS.ROOM.LEFT, room.roomId);
+        });
+        io.to(room.roomId).emit(EVENTS.ROOM.DELETED, room.roomId);
+        socket.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
+        rooms.splice(index, 1);
+      } else {
+        io.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
+      }
     }
+
     console.log(rooms);
   });
 };

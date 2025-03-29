@@ -3,7 +3,7 @@ import CodeEditorPanel from "./CodeEditor/CodeEditorPanel";
 import Whiteboard from "./WhiteBoard/Whiteboard";
 import { useEffect, useState } from "react";
 import socket from "../socket";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import NotFoundPage from "./NotFoundPage";
 import { EVENTS } from "../utils/constants";
 
@@ -11,12 +11,18 @@ function Room() {
   const [room, setRoom] = useState(null);
   const [roomError, setRoomError] = useState(null);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.emit(EVENTS.ROOM.GET_INFO, { roomId: id });
 
     socket.on(EVENTS.ROOM.INFO, (roomData) => {
       setRoom(roomData);
+    });
+
+    socket.on(EVENTS.ROOM.DELETED, () => {
+      console.log("room deleted");
+      navigate("/");
     });
 
     socket.on(EVENTS.ROOM.ERROR, (errorMessage) => {
@@ -27,7 +33,7 @@ function Room() {
       socket.off(EVENTS.ROOM.INFO);
       socket.off(EVENTS.ROOM.ERROR);
     };
-  }, [id]);
+  }, [id, navigate]);
 
   const [whiteBoardSize, setWhiteBoardSize] = useState({
     width: window.innerWidth,

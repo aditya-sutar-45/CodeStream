@@ -13,11 +13,13 @@ const handleSocket = (io) => {
   io.on("connection", (socket) => {
     console.log(`user connected: ${socket.id}`);
 
-    socket.on(EVENTS.ROOM.CREATE, (data) =>
+    socket.on(EVENTS.ROOM.CREATE, async (data) =>
       handleCreateRoom(socket, rooms, data)
     );
 
-    socket.on(EVENTS.ROOM.JOIN, (data) => handleJoinRoom(socket, rooms, data));
+    socket.on(EVENTS.ROOM.JOIN, async (data) =>
+      handleJoinRoom(socket, rooms, data)
+    );
 
     socket.on(EVENTS.ROOM.GET_INFO, ({ roomId }) =>
       getRoomInfo(socket, roomId, rooms)

@@ -42,6 +42,7 @@ export const EVENTS = {
     INFO: "roomInfo",
     LEAVE: "leaveRoom",
     LEFT: "leftRoom",
+    DELETED: "roomDeleted",
     ERROR: "roomError",
   },
 };
