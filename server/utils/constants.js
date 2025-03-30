@@ -11,6 +11,10 @@ export const EVENTS = {
     INFO: "roomInfo",
     ERROR: "roomError",
   },
+  CODE: {
+    SYNC: "codeSync",
+    UPDATE: "codeUpdate",
+  },
   USER: {
     DISCONNECT: "disconnect",
   },

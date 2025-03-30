@@ -151,3 +151,16 @@ export const handleDisconnect = (socket, rooms, io) => {
     console.log(rooms);
   });
 };
+
+export const handleCodeSync = (socket, rooms, data) => {
+  const {roomId, code, language} = data;
+  const room = rooms.find((room) => room.roomId === roomId); 
+  if(!room) return;
+
+  room.code = code;
+  room.language = language;
+
+  socket
+    .to(roomId)
+    .emit(EVENTS.CODE.UPDATE, { code, language, userId: socket.id });
+}

@@ -45,6 +45,10 @@ export const EVENTS = {
     DELETED: "roomDeleted",
     ERROR: "roomError",
   },
+  CODE: {
+    SYNC: "codeSync",
+    UPDATE: "codeUpdate",
+  }
 };
 
 export const DEFAULT_PROFILE_PIC_URLS = () => {

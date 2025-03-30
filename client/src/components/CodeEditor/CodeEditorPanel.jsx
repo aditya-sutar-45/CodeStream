@@ -67,6 +67,7 @@ function CodeEditorPanel({ room }) {
               value={value}
               setValue={setValue}
               language={language}
+              roomId={room.roomId}
             />
           </Box>
         </Panel>

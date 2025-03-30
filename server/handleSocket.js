@@ -1,5 +1,6 @@
 import {
   getRoomInfo,
+  handleCodeSync,
   handleCreateRoom,
   handleDisconnect,
   handleJoinRoom,
@@ -32,6 +33,8 @@ const handleSocket = (io) => {
     socket.on(EVENTS.USER.DISCONNECT, () =>
       handleDisconnect(socket, rooms, io)
     );
+
+    socket.on(EVENTS.CODE.SYNC, (data) => handleCodeSync(socket, rooms, data));
   });
 };
 
