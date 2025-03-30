@@ -1,6 +1,7 @@
 import {
   Container,
   Heading,
+  Box,
   Flex,
   Text,
   TextField,
@@ -39,7 +40,16 @@ function CreateRoom() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(roomName, roomPassword);
+    if (!roomName) {
+      setRoomError("room name cannot be empty!!");
+      return;
+    }
+
+    if (!roomPassword) {
+      setRoomError("room password cannot be empty!!");
+      return;
+    }
+
     createRoom();
   };
 
@@ -58,7 +68,10 @@ function CreateRoom() {
             </Text>
             <Flex direction="column" gap="3">
               {roomError && (
-                <Text color="red">Error in Creating room: {roomError}</Text>
+                <Box>
+                  <Text as="span">Error in Creating room: </Text>
+                  <Text as="span" color="red">{roomError}</Text>
+                </Box>
               )}
               <label>
                 <Text as="div" size="2" mb="1" weight="bold">
