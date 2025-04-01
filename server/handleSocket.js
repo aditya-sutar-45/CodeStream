@@ -4,6 +4,7 @@ import {
   handleCreateRoom,
   handleDisconnect,
   handleJoinRoom,
+  handleLanguageSync,
   handleLeaveRoom,
 } from "./controllers/rooms.js";
 import { EVENTS } from "./utils/constants.js";
@@ -35,6 +36,10 @@ const handleSocket = (io) => {
     );
 
     socket.on(EVENTS.CODE.SYNC, (data) => handleCodeSync(socket, rooms, data));
+
+    socket.on(EVENTS.CODE.LANUGAGE_CHANGE, (data) =>
+      handleLanguageSync(socket, rooms, data)
+    );
   });
 };
 

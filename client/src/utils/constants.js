@@ -48,6 +48,8 @@ export const EVENTS = {
   CODE: {
     SYNC: "codeSync",
     UPDATE: "codeUpdate",
+    LANUGAGE_CHANGE: "lanugageChange",
+    LANGUAGE_UPDATE: "languageUpdate",
   }
 };
 

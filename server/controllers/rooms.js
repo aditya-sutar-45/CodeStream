@@ -153,14 +153,25 @@ export const handleDisconnect = (socket, rooms, io) => {
 };
 
 export const handleCodeSync = (socket, rooms, data) => {
-  const {roomId, code, language} = data;
+  const {roomId, code} = data;
   const room = rooms.find((room) => room.roomId === roomId); 
   if(!room) return;
 
   room.code = code;
+
+  socket
+    .to(roomId)
+    .emit(EVENTS.CODE.UPDATE, { code, userId: socket.id });
+}
+
+export const handleLanguageSync = (socket, rooms, data) => {
+  const {roomId, language} = data;
+  const room = rooms.find((room) => room.roomId === roomId);
+  if (!room) return;
+
   room.language = language;
 
   socket
     .to(roomId)
-    .emit(EVENTS.CODE.UPDATE, { code, language, userId: socket.id });
+    .emit(EVENTS.CODE.LANGUAGE_UPDATE, { language, userId: socket.id });
 }

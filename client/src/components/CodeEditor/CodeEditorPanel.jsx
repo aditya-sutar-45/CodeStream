@@ -2,12 +2,17 @@ import { Box } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import CodeEditor from "./CodeEditor";
-import { CODE_SNIPPETS, LANGUAGE_VERSIONS } from "../../utils/constants";
+import {
+  CODE_SNIPPETS,
+  EVENTS,
+  LANGUAGE_VERSIONS,
+} from "../../utils/constants";
 import { getLanguageVersion } from "../../utils/api";
 import Output from "./Output";
 import { defineMonacoThemes } from "../../utils/themes";
 import { THEMES } from "../../utils/themes";
 import EditorHeader from "./Header/EditorHeader";
+import socket from "../../socket";
 
 function CodeEditorPanel({ room }) {
   const editorRef = useRef();
@@ -26,7 +31,18 @@ function CodeEditorPanel({ room }) {
       setLanguages(Object.entries(updatedVersions));
     };
     updateLanguageVersions();
-  });
+
+    if (!socket) return;
+    const handleLanguageUpdate = (data) => {
+      if (data.userId !== socket.id) {
+        setLanguage(data.language);
+      }
+    };
+    socket.on(EVENTS.CODE.LANGUAGE_UPDATE, handleLanguageUpdate);
+    return () => {
+      socket.off(EVENTS.CODE.LANGUAGE_UPDATE, handleLanguageUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     window.monaco?.editor.setTheme(theme);
@@ -40,7 +56,20 @@ function CodeEditorPanel({ room }) {
 
   const onSelectLanguage = (language) => {
     setLanguage(language);
+    const roomId = room.roomId;
+    if (socket && room.roomId) {
+      socket.emit(EVENTS.CODE.LANUGAGE_CHANGE, {
+        roomId,
+        language,
+      });
+    }
     setValue(CODE_SNIPPETS[language]);
+    if (socket && roomId) {
+      socket.emit(EVENTS.CODE.SYNC, {
+        roomId,
+        code: CODE_SNIPPETS[language],
+      });
+    }
   };
 
   const onSelectTheme = (theme) => {
