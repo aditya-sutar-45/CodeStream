@@ -33,6 +33,13 @@ export const getUserById = catchAsync(async (req, res) => {
   res.json(user);
 });
 
+export const getUserByUsername = catchAsync(async (req, res) => {
+  const { username } = req.params;
+  const user = await User.findOne({ username: username });
+  if (!user) throw new ExpressError("user not found!", 404);
+  res.json(user);
+});
+
 export const updateUser = catchAsync(async (req, res) => {
   const { uid } = req.params;
   const updates = req.body;

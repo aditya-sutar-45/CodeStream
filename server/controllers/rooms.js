@@ -12,7 +12,6 @@ export const handleCreateRoom = async (
   );
 
   const exisitingRoom = rooms.find((room) => room.owner.username === username);
-  console.log(exisitingRoom);
   if (exisitingRoom) {
     socket.emit(EVENTS.ROOM.ERROR, "you are already hosting a room");
     return;

@@ -33,7 +33,7 @@ function EditorHeader({
         onSelect={onSelectTheme}
       />
       <RoomId room={room} />
-      <MemberList users={room.users} roomName={room.roomName} />
+      <MemberList room={room} />
       <Tooltip content="Exit">
       <IconButton
       
