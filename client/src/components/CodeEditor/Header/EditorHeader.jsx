@@ -21,7 +21,7 @@ function EditorHeader({
   const navigate = useNavigate();
   return (
     <Flex p="1">
-      <HeaderLink />
+      {/* <HeaderLink /> */}
       <LanguageSelect
         language={language}
         languages={languages}
@@ -35,20 +35,17 @@ function EditorHeader({
       <RoomId room={room} />
       <MemberList room={room} />
       <Tooltip content="Exit">
-      <IconButton
-      
-        color="red"
-        mx="1"
-        onClick={() => {
-          socket.emit(EVENTS.ROOM.LEAVE, room.roomId, () => {
-            navigate("/");
-          });
-        }}
-      
-      >
-        <ExitIcon />
-        
-      </IconButton>
+        <IconButton
+          color="red"
+          mx="1"
+          onClick={() => {
+            socket.emit(EVENTS.ROOM.LEAVE, room.roomId, () => {
+              navigate("/");
+            });
+          }}
+        >
+          <ExitIcon />
+        </IconButton>
       </Tooltip>
     </Flex>
   );

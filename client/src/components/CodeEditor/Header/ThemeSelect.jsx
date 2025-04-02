@@ -2,7 +2,7 @@ import { DropdownMenu, Button, Box} from "@radix-ui/themes";
 
 function ThemeSelect({currentSelectedTheme, themes, onSelect}) {
   return (
-    <Box px="1">
+    <Box mx="1">
       {/* <Box p="1" mx="1">
         <Text size="4" align="left" weight="medium">
           Themes 

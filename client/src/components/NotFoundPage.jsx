@@ -1,4 +1,4 @@
-import { Flex, Box, Button } from "@radix-ui/themes";
+import { Flex, Box, Button, Heading, Text } from "@radix-ui/themes";
 import { Link } from "react-router-dom";
 import "./Home/Home.css";
 
@@ -8,20 +8,19 @@ function NotFoundPage() {
       <div className="animated-text">
         <h1 style={{ height: "41.5vh", fontSize: "15rem" }}>404</h1>
       </div>
-      <Box style={{ textAlign: "center", fontSize: "1.4rem", fontFamily: "Noto Sans" }}>
-        <h2 style={{ marginBottom: "0.6rem" }}>OOPS! PAGE NOT FOUND</h2>
-        <h3 className="subtext" style={{ fontWeight: "normal" }}>Sorry, The page you’re looking for doesn’t exist</h3>
+      <Box
+        style={{
+          textAlign: "center",
+          fontSize: "1.4rem",
+          fontFamily: "Noto Sans",
+        }}
+      >
+        <Heading style={{ marginBottom: "0.6rem" }}>Page Not Found!</Heading>
+        <Text as="div" className="subtext">
+          Sorry, The page you are looking for does not exist
+        </Text>
         <Link to={"/"}>
-          <Button style={{
-            backgroundColor: "#8a2be2", /* Blue Violet */
-            color: "white",
-            padding: "10px 20px",
-            fontSize: "1rem",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            transition: "background 0.3s ease"
-          }}>Back</Button>
+          <Button>Back</Button>
         </Link>
       </Box>
     </Flex>

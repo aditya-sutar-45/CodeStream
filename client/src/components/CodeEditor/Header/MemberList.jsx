@@ -1,11 +1,11 @@
 import {
   Popover,
-  Button,
   Heading,
   Text,
   Flex,
   Avatar,
   Tooltip,
+  IconButton,
 } from "@radix-ui/themes";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useAuth } from "../../../hooks/useAuth";
@@ -46,9 +46,9 @@ function MemberList({ room }) {
     <Popover.Root>
       <Tooltip content="all members">
         <Popover.Trigger>
-          <Button variant="soft">
+          <IconButton mx="1" variant="soft">
             <HamburgerMenuIcon width="16" height="16" />
-          </Button>
+          </IconButton>
         </Popover.Trigger>
       </Tooltip>
       <Popover.Content>
