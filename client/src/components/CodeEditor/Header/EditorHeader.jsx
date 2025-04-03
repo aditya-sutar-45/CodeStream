@@ -1,5 +1,4 @@
 import { Flex, IconButton, Tooltip } from "@radix-ui/themes";
-import HeaderLink from "../../HeaderLink";
 import LanguageSelect from "./LanguageSelect";
 import ThemeSelect from "./ThemeSelect";
 import RoomId from "./RoomId";
