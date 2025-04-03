@@ -2,7 +2,7 @@ import { Box, DropdownMenu, Button } from "@radix-ui/themes";
 
 function LanguageSelect({ languages, language, onSelect }) {
   return (
-    <Box mx="1" ml="auto">
+    <Box mx="1">
       {/* <Box p="1" mx="1">
         <Text size="4" align="left" weight="medium">
           {languages.length > 0

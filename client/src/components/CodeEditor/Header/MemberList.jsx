@@ -46,7 +46,7 @@ function MemberList({ room }) {
     <Popover.Root>
       <Tooltip content="all members">
         <Popover.Trigger>
-          <IconButton mx="1" variant="soft">
+          <IconButton mx="1" ml="auto" variant="soft">
             <HamburgerMenuIcon width="16" height="16" />
           </IconButton>
         </Popover.Trigger>

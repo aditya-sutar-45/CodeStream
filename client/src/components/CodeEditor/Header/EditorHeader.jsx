@@ -19,7 +19,7 @@ function EditorHeader({
 }) {
   const navigate = useNavigate();
   return (
-    <Flex p="1">
+    <Flex p="2" justify="start" align="center" width="100%">
       {/* <HeaderLink /> */}
       <LanguageSelect
         language={language}

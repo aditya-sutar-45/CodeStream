@@ -101,9 +101,7 @@ function CodeEditorPanel({ room }) {
           </Box>
         </Panel>
 
-        <PanelResizeHandle
-          style={{ backgroundColor: "var(--accent-10)", padding: "1px" }}
-        />
+        <PanelResizeHandle style={{backgroundColor: "gray", padding: "1px"}}/>
 
         {/* output window */}
         <Panel defaultSize={40} maxSize={75}>
