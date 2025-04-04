@@ -8,10 +8,20 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import { CopyIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import toast, {Toaster} from "react-hot-toast";
 
 function RoomId({ room }) {
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(room.roomId).then(() => {
+      toast.success("room id copied to clipboard");
+    })
+  };
+
+  const truncatedId = (id) => id.length > 8 ? id.slice(0, 8) + "...." : id;
+
   return (
     <Popover.Root>
+      <Toaster />
       <Tooltip content="room info">
         <Popover.Trigger>
           <IconButton mx="1" variant="soft">
@@ -33,16 +43,15 @@ function RoomId({ room }) {
             <DataList.Label minWidth="88px">ID</DataList.Label>
             <DataList.Value>
               <Flex align="center" gap="2">
-                <Code variant="ghost">{room.roomId}</Code>
+                <Tooltip content={room.roomId}>
+                  <Code variant="ghost">{truncatedId(room.roomId)}</Code>
+                </Tooltip>
                 <IconButton
                   size="1"
                   aria-label="Copy value"
                   color="gray"
                   variant="ghost"
-                  onClick={() => {
-                    navigator.clipboard.writeText(room.roomId);
-                    alert("copied room id to clipboard");
-                  }}
+                  onClick={copyToClipboard}
                 >
                   <CopyIcon />
                 </IconButton>
