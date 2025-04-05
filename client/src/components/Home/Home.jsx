@@ -5,11 +5,13 @@ import "./Home.css";
 import HomeCanvas from "./HomeCanvas";
 import NavHeader from "./NavHeader";
 import { BackgroundBeams } from "./BackgroundBeams";
+import { Toaster } from "react-hot-toast";
 
 function Home() {
   return (
     <>
       <Box>
+        <Toaster />
         {/* Header with Authentication */}
         <NavHeader />
 
@@ -58,8 +60,16 @@ function Home() {
           </Box>
         </Flex>
       </Box>
-      <Box style={{position: "fixed", inset: "0", zIndex: "0", pointerEvents: "none", height: "100vh"}}>
-        <BackgroundBeams/>
+      <Box
+        style={{
+          position: "fixed",
+          inset: "0",
+          zIndex: "0",
+          pointerEvents: "none",
+          height: "100vh",
+        }}
+      >
+        <BackgroundBeams />
       </Box>
     </>
   );

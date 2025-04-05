@@ -1,7 +1,6 @@
 import {
   Container,
   Heading,
-  Box,
   Flex,
   Text,
   TextField,
@@ -12,9 +11,10 @@ import {
 import NavHeader from "../Home/NavHeader";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import socket from "../../socket";
 import { EVENTS } from "../../utils/constants";
+import toast from "react-hot-toast";
 
 function CreateRoom() {
   const [roomName, setRoomName] = useState("");
@@ -53,6 +53,11 @@ function CreateRoom() {
     createRoom();
   };
 
+  useEffect(() => {
+    if (!roomError) return;
+    toast.error(roomError);
+  }, [roomError]);
+
   return (
     <>
       <NavHeader />
@@ -67,12 +72,6 @@ function CreateRoom() {
               Creating room as: <Strong>{username}</Strong>
             </Text>
             <Flex direction="column" gap="3">
-              {roomError && (
-                <Box>
-                  <Text as="span">Error in Creating room: </Text>
-                  <Text as="span" color="red">{roomError}</Text>
-                </Box>
-              )}
               <label>
                 <Text as="div" size="2" mb="1" weight="bold">
                   Room Name:

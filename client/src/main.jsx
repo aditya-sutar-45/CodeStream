@@ -13,6 +13,7 @@ import ForgotPasswordForm from "./components/Home/Auth/ForgotPasswordForm.jsx";
 import VerifyEmail from "./components/Home/Auth/VerifyEmail.jsx";
 import JoinRoom from "./components/RoomForms/JoinRoom.jsx";
 import CreateRoom from "./components/RoomForms/CreateRoom.jsx";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
@@ -42,6 +43,7 @@ createRoot(document.getElementById("root")).render(
         panelBackground="translucent"
         grayColor="slate"
       >
+        <Toaster />
         <RouterProvider router={router} />
       </Theme>
     </AuthProvider>

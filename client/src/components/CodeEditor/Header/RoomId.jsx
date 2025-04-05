@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "@radix-ui/themes";
 import { CopyIcon, InfoCircledIcon } from "@radix-ui/react-icons";
-import toast, {Toaster} from "react-hot-toast";
+import toast from "react-hot-toast";
 
 function RoomId({ room }) {
   const copyToClipboard = () => {
@@ -21,7 +21,6 @@ function RoomId({ room }) {
 
   return (
     <Popover.Root>
-      <Toaster />
       <Tooltip content="room info">
         <Popover.Trigger>
           <IconButton mx="1" variant="soft">
