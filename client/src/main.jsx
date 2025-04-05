@@ -13,22 +13,19 @@ import ForgotPasswordForm from "./components/Home/Auth/ForgotPasswordForm.jsx";
 import VerifyEmail from "./components/Home/Auth/VerifyEmail.jsx";
 import JoinRoom from "./components/RoomForms/JoinRoom.jsx";
 import CreateRoom from "./components/RoomForms/CreateRoom.jsx";
-import { BackgroundBeams } from "./components/BackgroundBeams.jsx";
-import Test from "./components/Test.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   // { path: "/room", element: <Room /> },
   { path: "/forgot-password", element: <ForgotPasswordForm /> },
   { path: "/verify", element: <VerifyEmail /> },
-  {path: "/backgroundBeams", element: <Test/>},
   {
     element: <PrivateRoute />, // Wrap protected routes
     children: [
       { path: "/user/dashboard", element: <Dashboard /> },
       { path: "/rooms/join", element: <JoinRoom /> },
       { path: "/rooms/create", element: <CreateRoom /> },
-      {path: "/rooms/:id", element: <Room/>},
+      { path: "/rooms/:id", element: <Room /> },
     ],
   },
   { path: "*", element: <NotFoundPage /> },
