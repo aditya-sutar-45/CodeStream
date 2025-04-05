@@ -28,6 +28,7 @@ function Room() {
     });
 
     socket.on(EVENTS.ROOM.ERROR, (errorMessage) => {
+      toast.error(errorMessage);
       setRoomError(errorMessage);
     });
 
