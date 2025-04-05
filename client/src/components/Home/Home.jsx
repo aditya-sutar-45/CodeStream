@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import "./Home.css";
 import HomeCanvas from "./HomeCanvas";
 import NavHeader from "./NavHeader";
-import { BackgroundBeams } from "../BackgroundBeams";
+import { BackgroundBeams } from "./BackgroundBeams";
 
 function Home() {
   return (
@@ -58,7 +58,7 @@ function Home() {
           </Box>
         </Flex>
       </Box>
-      <Box style={{position: "fixed", inset: "0", zIndex: "0", pointerEvents: "none"}}>
+      <Box style={{position: "fixed", inset: "0", zIndex: "0", pointerEvents: "none", height: "100vh"}}>
         <BackgroundBeams/>
       </Box>
     </>
