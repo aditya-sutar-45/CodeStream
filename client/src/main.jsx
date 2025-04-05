@@ -13,12 +13,15 @@ import ForgotPasswordForm from "./components/Home/Auth/ForgotPasswordForm.jsx";
 import VerifyEmail from "./components/Home/Auth/VerifyEmail.jsx";
 import JoinRoom from "./components/RoomForms/JoinRoom.jsx";
 import CreateRoom from "./components/RoomForms/CreateRoom.jsx";
+import { BackgroundBeams } from "./components/BackgroundBeams.jsx";
+import Test from "./components/Test.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   // { path: "/room", element: <Room /> },
   { path: "/forgot-password", element: <ForgotPasswordForm /> },
   { path: "/verify", element: <VerifyEmail /> },
+  {path: "/backgroundBeams", element: <Test/>},
   {
     element: <PrivateRoute />, // Wrap protected routes
     children: [

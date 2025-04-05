@@ -1,3 +1,7 @@
+.mainContainer {
+  position: relative;
+  z-index: 1;
+}
 .animated-text {
   position: relative;
   justify-content: center;
