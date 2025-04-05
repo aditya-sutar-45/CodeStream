@@ -6,6 +6,7 @@ import {
   handleJoinRoom,
   handleLanguageSync,
   handleLeaveRoom,
+  handleShutdown,
 } from "./controllers/rooms.js";
 import { EVENTS } from "./utils/constants.js";
 
@@ -41,6 +42,9 @@ const handleSocket = (io) => {
       handleLanguageSync(socket, rooms, data)
     );
   });
+
+  process.on("SIGINT", () => handleShutdown(io, rooms));
+  process.on("SIGTERM", () => handleShutdown(io, rooms));
 };
 
 export default handleSocket;

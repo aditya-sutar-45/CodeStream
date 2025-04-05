@@ -20,4 +20,7 @@ export const EVENTS = {
   USER: {
     DISCONNECT: "disconnect",
   },
+  SERVER: {
+    SHUTDOWN: "serverShutdown",
+  },
 };

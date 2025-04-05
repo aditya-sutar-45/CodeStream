@@ -6,6 +6,7 @@ import socket from "../socket";
 import { useNavigate, useParams } from "react-router-dom";
 import NotFoundPage from "./NotFoundPage";
 import { EVENTS } from "../utils/constants";
+import toast from "react-hot-toast";
 
 function Room() {
   const [room, setRoom] = useState(null);
@@ -22,6 +23,7 @@ function Room() {
 
     socket.on(EVENTS.ROOM.DELETED, () => {
       console.log("room deleted");
+      setRoom(null);
       navigate("/");
     });
 
@@ -29,9 +31,24 @@ function Room() {
       setRoomError(errorMessage);
     });
 
+    socket.on(EVENTS.SERVER.SHUTDOWN, () => {
+      toast.error("server has shut down. you've been disconnected.");
+      setRoom(null);
+      navigate("/");
+    });
+
+    socket.on(EVENTS.USER.DISCONNECT, () => {
+      toast.error("lost connection to the server!");
+      setRoom(null);
+      navigate("/");
+    });
+
     return () => {
       socket.off(EVENTS.ROOM.INFO);
       socket.off(EVENTS.ROOM.ERROR);
+      socket.off(EVENTS.ROOM.DELETED);
+      socket.off(EVENTS.SERVER.SHUTDOWN);
+      socket.off(EVENTS.USER.DISCONNECT);
     };
   }, [id, navigate]);
 

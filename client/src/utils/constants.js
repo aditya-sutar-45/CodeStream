@@ -50,7 +50,13 @@ export const EVENTS = {
     UPDATE: "codeUpdate",
     LANUGAGE_CHANGE: "lanugageChange",
     LANGUAGE_UPDATE: "languageUpdate",
-  }
+  },
+  USER: {
+    DISCONNECT: "disconnect",
+  },
+  SERVER: {
+    SHUTDOWN: "serverShutdown",
+  },
 };
 
 export const DEFAULT_PROFILE_PIC_URLS = () => {

@@ -15,6 +15,7 @@ import { DEFAULT_PROFILE_PIC_URLS } from "../../utils/constants";
 import axios from "axios";
 import { useAuth } from "../../hooks/useAuth";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const urls = DEFAULT_PROFILE_PIC_URLS();
 
@@ -34,10 +35,12 @@ function DashboardAvatar({ username }) {
       )
       .then(() => {
         setProfilePic(url);
+        toast.success("profile picture updated!");
         setIsOpen(false);
       })
       .catch((error) => {
         console.error("error: ", error.message);
+        toast.error(error);
       });
   };
   return (

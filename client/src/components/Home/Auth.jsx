@@ -6,6 +6,7 @@ import LoginForm from "./Auth/LoginForm";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useMatch, useNavigate } from "react-router-dom";
 import ProfilePicture from "../ProfilePicture.jsx";
+import toast from "react-hot-toast";
 
 function Auth() {
   const isDashboard = useMatch("/user/dashboard");
@@ -30,8 +31,10 @@ function Auth() {
     try {
       await logout();
       navigate("/");
+      toast.success("logged out :(");
     } catch (e) {
       setError("Failed to log out! " + e.message);
+      toast.error(e);
     }
   }
 
@@ -56,7 +59,10 @@ function Auth() {
             <ProfilePicture username={username} styles={{}} />
           </Link>
         ) : (
-          <Button onClick={handleLogout}>Logout<ExitIcon/></Button>
+          <Button onClick={handleLogout}>
+            Logout
+            <ExitIcon />
+          </Button>
         )
       ) : (
         <Dialog.Root>
