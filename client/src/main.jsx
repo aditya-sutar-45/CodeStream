@@ -25,7 +25,7 @@ const router = createBrowserRouter([
       { path: "/user/dashboard", element: <Dashboard /> },
       { path: "/rooms/join", element: <JoinRoom /> },
       { path: "/rooms/create", element: <CreateRoom /> },
-      {path: "/rooms/:id", element: <Room/>},
+      { path: "/rooms/:id", element: <Room /> },
     ],
   },
   { path: "*", element: <NotFoundPage /> },
