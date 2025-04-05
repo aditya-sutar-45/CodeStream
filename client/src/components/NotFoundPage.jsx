@@ -1,8 +1,11 @@
 import { Flex, Box, Button, Heading, Text } from "@radix-ui/themes";
-import { Link } from "react-router-dom";
+import { Link, useMatch, useParams } from "react-router-dom";
 import "./Home/Home.css";
 
 function NotFoundPage() {
+  const isRoomError = useMatch("/rooms/:id");
+  const { id } = useParams();
+
   return (
     <Flex direction="column" height="90vh" justify="center" align="center">
       <div className="animated-text">
@@ -15,9 +18,13 @@ function NotFoundPage() {
           fontFamily: "Noto Sans",
         }}
       >
-        <Heading style={{ marginBottom: "0.6rem" }}>Page Not Found!</Heading>
+        <Heading style={{ marginBottom: "0.6rem" }}>
+          {isRoomError ? "Room Not Found!" : "Page Not Found!"}
+        </Heading>
         <Text as="div" className="subtext">
-          Sorry, The page you are looking for does not exist
+          {isRoomError
+            ? `Room with id: ${id} does not exist :(`
+            : "The page your are looking for does not exist!"}
         </Text>
         <Link to={"/"}>
           <Button>Back</Button>
