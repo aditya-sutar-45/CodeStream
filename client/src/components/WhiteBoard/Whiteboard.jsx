@@ -2,7 +2,10 @@ import { Box } from "@radix-ui/themes";
 import { useEffect, useRef, useState, useCallback } from "react";
 import rough from "roughjs/bin/rough";
 import WhiteboardControls from "./WhiteboardControls";
-import { isPointInsideBox, isPointNearLine } from "../../utils/whiteboard";
+import {
+  isPointInsideBox,
+  isPointNearLine,
+} from "../../utils/whiteboard/helpers";
 
 function Whiteboard() {
   const containerRef = useRef(null);
