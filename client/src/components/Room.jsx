@@ -53,10 +53,6 @@ function Room() {
     };
   }, [id, navigate]);
 
-  const [whiteBoardSize, setWhiteBoardSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
 
   if (roomError) return <NotFoundPage />;
   if (!room) return <p>Loading.....</p>;
@@ -67,15 +63,8 @@ function Room() {
         <CodeEditorPanel room={room} roomError={roomError} />
       </Panel>
       <PanelResizeHandle style={{ padding: "3px" }} />
-      <Panel
-        defaultSize={0}
-        maxSize={75}
-        onLayout={(width, height) => setWhiteBoardSize({ width, height })}
-      >
-        <Whiteboard
-          width={whiteBoardSize.width}
-          height={whiteBoardSize.height}
-        />
+      <Panel defaultSize={0} maxSize={75}>
+        <Whiteboard />
       </Panel>
     </PanelGroup>
   );

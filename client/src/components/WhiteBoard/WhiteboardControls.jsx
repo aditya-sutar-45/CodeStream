@@ -1,60 +1,92 @@
-import { useState } from "react";
 import { Button, Switch, Tooltip } from "@radix-ui/themes";
+import { useState } from "react";
 import "./WhiteboardControls.css";
 
+function WhiteboardControls({
+  setDarkTheme,
+  darkTheme,
+  setActiveTool,
+  activeTool,
+  setPencilColor,
+  pencilColor,
+}) {
+  const [showShapeOptions, setShowShapeOptions] = useState(false);
+  const [showColorOptions, setShowColorOptions] = useState(false);
 
-function WhiteboardControls({ setDarkTheme }) {
-  const [darkTheme, setDarkThemeState] = useState(false); // Define theme state
-  const [zoomLevel, setZoomLevel] = useState(100);
-  const [activeTool, setActiveTool] = useState(null);
+  const handleShapeSelect = (shape) => {
+    setActiveTool(shape);
+    setShowShapeOptions(false);
+    setShowColorOptions(false);
+  };
 
-  const handleZoomIn = () => {
-    setZoomLevel((prev) => Math.min(prev + 10, 300));
+  const handlePencilClick = () => {
+    setActiveTool("pencil");
+    setShowColorOptions(!showColorOptions);
+    setShowShapeOptions(false);
   };
-  
-  const handleZoomOut = () => {
-    setZoomLevel((prev) => Math.max(prev - 10, 10));
-  };
+
+  const colors = [
+    { name: "black", hex: "#000000" },
+    { name: "white", hex: "#ffffff" },
+    { name: "blue", hex: "#007bff" },
+    { name: "green", hex: "#28a745" },
+    { name: "purple", hex: "#6f42c1" },
+    { name: "red", hex: "#dc3545" },
+  ];
 
   return (
     <div className="whiteboard-container">
-      {/* Toolbar at the top */}
       <div className="toolbar">
         <Switch
-          checked={darkTheme} // Uses correct boolean value
-          onCheckedChange={(checked) => {
-            setDarkThemeState(checked); // Update internal state
-            setDarkTheme(checked); // Also update external theme state
-          }}
+          checked={darkTheme}
+          onCheckedChange={(checked) => setDarkTheme(checked)}
           style={{ marginTop: "10px" }}
-          
         />
 
         {/* Pencil Button */}
-        <Button
-          onMouseEnter={() => setActiveTool("pencil")}
-          onMouseLeave={() => setActiveTool(null)}
-          onClick={() => setActiveTool("pencil")}
-          className="custom-button pencil-button"
-        >
-          <Tooltip content="Pencil">
-            <img
-              src={
-                activeTool === "pencil"
-                  ? "/images/icons/whiteboard/pencil.gif"
-                  : "/images/icons/whiteboard/pencil-static.png"
-              }
-              alt="Pencil"
-              className="pencil-icon"
-            />
-          </Tooltip>
-        </Button>
+        <div className="custom-button pencil-wrapper">
+          <Button
+            onClick={handlePencilClick}
+            className="custom-button pencil-button"
+          >
+            <Tooltip content="Pencil">
+              <img
+                src={
+                  activeTool === "pencil"
+                    ? "/images/icons/whiteboard/pencil.gif"
+                    : "/images/icons/whiteboard/pencil-static.png"
+                }
+                alt="Pencil"
+                className="pencil-icon"
+              />
+            </Tooltip>
+          </Button>
+
+          {showColorOptions && activeTool === "pencil" && (
+            <div className="color-options">
+              {colors.map((color) => (
+                <button
+                  key={color.name}
+                  className={`color-circle ${
+                    pencilColor === color.hex ? "selected" : ""
+                  }`}
+                  style={{ backgroundColor: color.hex }}
+                  onClick={() => {
+                    setPencilColor(color.hex);
+                  }}
+                />
+              ))}
+            </div>
+          )}
+        </div>
 
         {/* Text Button */}
         <Button
-          onMouseEnter={() => setActiveTool("text")}
-          onMouseLeave={() => setActiveTool(null)}
-          onClick={() => setActiveTool("text")}
+          onClick={() => {
+            setActiveTool("text");
+            setShowColorOptions(false);
+            setShowShapeOptions(false);
+          }}
           className="custom-button text-button"
         >
           <Tooltip content="Text">
@@ -70,31 +102,48 @@ function WhiteboardControls({ setDarkTheme }) {
           </Tooltip>
         </Button>
 
-        {/* Shapes Button */}
-        <Button
-          onMouseEnter={() => setActiveTool("shapes")}
-          onMouseLeave={() => setActiveTool(null)}
-          onClick={() => setActiveTool("shapes")}
-          className="custom-button"
-        >
-          <Tooltip content="Shapes">
-            <img
-              src={
-                activeTool === "shapes"
-                  ? "/images/icons/whiteboard/shapes.gif"
-                  : "/images/icons/whiteboard/shapes-static.png"
-              }
-              alt="Shapes"
-              className="shapes-icon"
-            />
-          </Tooltip>
-        </Button>
+        {/* Shapes Dropdown */}
+        <div className="custom-button shape-dropdown-wrapper">
+          <Button
+            onClick={() => {
+              setShowShapeOptions(!showShapeOptions);
+              setShowColorOptions(false);
+            }}
+            className="custom-button"
+          >
+            <Tooltip content="Shapes">
+              <img
+                src={
+                  ["rectangle", "ellipse", "line"].includes(activeTool)
+                    ? "/images/icons/whiteboard/shapes.gif"
+                    : "/images/icons/whiteboard/shapes-static.png"
+                }
+                alt="Shapes"
+                className="shapes-icon"
+              />
+            </Tooltip>
+          </Button>
+
+          {showShapeOptions && (
+            <div className="shape-options">
+              <button onClick={() => handleShapeSelect("rectangle")}>
+                🟥 Rectangle
+              </button>
+              <button onClick={() => handleShapeSelect("ellipse")}>
+                ⭕ Ellipse
+              </button>
+              <button onClick={() => handleShapeSelect("line")}>📏 Line</button>
+            </div>
+          )}
+        </div>
 
         {/* Eraser Button */}
         <Button
-          onMouseEnter={() => setActiveTool("eraser")}
-          onMouseLeave={() => setActiveTool(null)}
-          onClick={() => setActiveTool("eraser")}
+          onClick={() => {
+            setActiveTool("eraser");
+            setShowColorOptions(false);
+            setShowShapeOptions(false);
+          }}
           className="custom-button"
         >
           <Tooltip content="Eraser">
@@ -109,11 +158,14 @@ function WhiteboardControls({ setDarkTheme }) {
             />
           </Tooltip>
         </Button>
-        {/* hand icon */}
+
+        {/* Hand Button */}
         <Button
-          onMouseEnter={() => setActiveTool("hand")}
-          onMouseLeave={() => setActiveTool(null)}
-          onClick={() => setActiveTool("hand")}
+          onClick={() => {
+            setActiveTool("hand");
+            setShowColorOptions(false);
+            setShowShapeOptions(false);
+          }}
           className="custom-button"
         >
           <Tooltip content="Grab">
@@ -123,21 +175,10 @@ function WhiteboardControls({ setDarkTheme }) {
                   ? "/images/icons/whiteboard/hand.gif"
                   : "/images/icons/whiteboard/hand-static.png"
               }
-              alt="hand"
+              alt="Hand"
               className="hand-icon"
             />
           </Tooltip>
-        </Button>
-      </div>
-
-      {/* Zoom Controls */}
-      <div className="zoom-controls">
-        <Button onClick={handleZoomOut} className="custom-button">
-          −
-        </Button>
-        <span className="zoom-percentage">{zoomLevel}%</span>
-        <Button onClick={handleZoomIn} className="custom-button">
-          +
         </Button>
       </div>
     </div>
