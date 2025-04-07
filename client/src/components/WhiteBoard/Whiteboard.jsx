@@ -1,6 +1,5 @@
-// foo
 import { Box } from "@radix-ui/themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import rough from "roughjs/bin/rough";
 import WhiteboardControls from "./WhiteboardControls";
 
@@ -26,7 +25,68 @@ function Whiteboard() {
     y: 0,
     value: "",
   });
-  const [history, setHistory] = useState([[]]);
+  const historyRef = useRef([[]]);
+
+  const drawElement = useCallback(
+    (rc, ctx, el) => {
+      switch (el.type) {
+        case "pencil":
+          ctx.strokeStyle = el.color || "#000000";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          for (let i = 1; i < el.points.length; i++) {
+            const from = el.points[i - 1];
+            const to = el.points[i];
+            ctx.moveTo(from.x, from.y);
+            ctx.lineTo(to.x, to.y);
+          }
+          ctx.stroke();
+          break;
+
+        case "line":
+          rc.line(el.start.x, el.start.y, el.end.x, el.end.y);
+          break;
+        case "rectangle":
+          rc.rectangle(
+            el.start.x,
+            el.start.y,
+            el.end.x - el.start.x,
+            el.end.y - el.start.y
+          );
+          break;
+        case "ellipse":
+          rc.ellipse(
+            (el.start.x + el.end.x) / 2,
+            (el.start.y + el.end.y) / 2,
+            Math.abs(el.end.x - el.start.x),
+            Math.abs(el.end.y - el.start.y)
+          );
+          break;
+        case "text":
+          ctx.fillStyle = darkTheme ? "white" : "black";
+          ctx.font = "20px Arial";
+          ctx.fillText(el.value, el.x, el.y);
+          break;
+      }
+    },
+    [darkTheme]
+  );
+
+  const redrawMainCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    ctx.save();
+    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
+    ctx.clearRect(
+      -offset.x / scale,
+      -offset.y / scale,
+      canvas.width / scale,
+      canvas.height / scale
+    );
+    const rc = rough.canvas(canvas);
+    elementsRef.current.forEach((el) => drawElement(rc, ctx, el));
+    ctx.restore();
+  }, [scale, offset.x, offset.y, drawElement]);
 
   // Resize and initial draw
   useEffect(() => {
@@ -47,7 +107,7 @@ function Whiteboard() {
     const resizeObserver = new ResizeObserver(resizeCanvas);
     resizeObserver.observe(containerRef.current);
     return () => resizeObserver.disconnect();
-  }, [scale, offset]);
+  }, [scale, offset, redrawMainCanvas]);
 
   // Zoom handlers
   useEffect(() => {
@@ -88,25 +148,22 @@ function Whiteboard() {
     const handleUndo = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === "z") {
         e.preventDefault();
-        setHistory((prevHistory) => {
-          if (prevHistory.length > 1) {
-            const newHistory = prevHistory.slice(0, -1);
-            const lastState = newHistory[newHistory.length - 1];
-            elementsRef.current = lastState;
-            redrawMainCanvas();
-            return newHistory;
-          } else {
-            elementsRef.current = [];
-            redrawMainCanvas();
-            return [[]];
-          }
-        });
+        if (historyRef.current.length > 1) {
+          historyRef.current = historyRef.current.slice(0, -1);
+          const lastState = historyRef.current[historyRef.current.length - 1];
+          elementsRef.current = lastState;
+          redrawMainCanvas();
+        } else {
+          elementsRef.current = [];
+          historyRef.current = [[]];
+          redrawMainCanvas();
+        }
       }
     };
 
     window.addEventListener("keydown", handleUndo);
     return () => window.removeEventListener("keydown", handleUndo);
-  }, []);
+  }, [redrawMainCanvas]);
 
   const getMouseCoords = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -181,7 +238,7 @@ function Whiteboard() {
     if (currentElement) {
       const updatedElements = [...elementsRef.current, currentElement];
       elementsRef.current = updatedElements;
-      setHistory((prev) => [...prev, updatedElements]);
+      historyRef.current.push(updatedElements);
     }
 
     setCurrentElement(null);
@@ -205,7 +262,7 @@ function Whiteboard() {
 
     const updatedElements = [...elementsRef.current, newText];
     elementsRef.current = updatedElements;
-    setHistory((prev) => [...prev, updatedElements]);
+    historyRef.current.push(updatedElements);
 
     setTextInput({ visible: false, x: 0, y: 0, value: "" });
     redrawMainCanvas();
@@ -229,24 +286,11 @@ function Whiteboard() {
     });
 
     elementsRef.current = filtered;
-    setHistory((prev) => [...prev, filtered]);
-    redrawMainCanvas();
-  };
 
-  const redrawMainCanvas = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(
-      -offset.x / scale,
-      -offset.y / scale,
-      canvas.width / scale,
-      canvas.height / scale
-    );
-    const rc = rough.canvas(canvas);
-    elementsRef.current.forEach((el) => drawElement(rc, ctx, el));
-    ctx.restore();
+    // Push snapshot to history
+    historyRef.current.push([...filtered]);
+
+    redrawMainCanvas();
   };
 
   const drawTempCanvas = (el) => {
@@ -277,48 +321,6 @@ function Whiteboard() {
       canvas.height / scale
     );
     ctx.restore();
-  };
-
-  const drawElement = (rc, ctx, el) => {
-    switch (el.type) {
-      case "pencil":
-        ctx.strokeStyle = el.color || "#000000";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        for (let i = 1; i < el.points.length; i++) {
-          const from = el.points[i - 1];
-          const to = el.points[i];
-          ctx.moveTo(from.x, from.y);
-          ctx.lineTo(to.x, to.y);
-        }
-        ctx.stroke();
-        break;
-
-      case "line":
-        rc.line(el.start.x, el.start.y, el.end.x, el.end.y);
-        break;
-      case "rectangle":
-        rc.rectangle(
-          el.start.x,
-          el.start.y,
-          el.end.x - el.start.x,
-          el.end.y - el.start.y
-        );
-        break;
-      case "ellipse":
-        rc.ellipse(
-          (el.start.x + el.end.x) / 2,
-          (el.start.y + el.end.y) / 2,
-          Math.abs(el.end.x - el.start.x),
-          Math.abs(el.end.y - el.start.y)
-        );
-        break;
-      case "text":
-        ctx.fillStyle = darkTheme ? "white" : "black";
-        ctx.font = "20px Arial";
-        ctx.fillText(el.value, el.x, el.y);
-        break;
-    }
   };
 
   return (
