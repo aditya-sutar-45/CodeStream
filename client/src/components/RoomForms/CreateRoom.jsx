@@ -9,12 +9,15 @@ import {
   Separator,
 } from "@radix-ui/themes";
 import NavHeader from "../Home/NavHeader";
+import { Box } from "@radix-ui/themes";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import socket from "../../socket";
 import { EVENTS } from "../../utils/constants";
 import toast from "react-hot-toast";
+import "../Home/Home.css";
+import { BackgroundBeams } from "../Home/BackgroundBeams";
 
 function CreateRoom() {
   const [roomName, setRoomName] = useState("");
@@ -61,7 +64,7 @@ function CreateRoom() {
   return (
     <>
       <NavHeader />
-      <Flex align="center" justify="center" height="100vh">
+      <Flex align="center" justify="center" height="100vh" className="mainContainer">
         <Container size="2">
           <Heading mb="1rem" align={"center"} size="9">
             Create a Room
@@ -111,6 +114,17 @@ function CreateRoom() {
           </form>
         </Container>
       </Flex>
+      <Box
+        style={{
+          position: "fixed",
+          inset: "0",
+          zIndex: "0",
+          pointerEvents: "none",
+          height: "100vh",
+        }}
+      >
+        <BackgroundBeams/>
+      </Box>
     </>
   );
 }
