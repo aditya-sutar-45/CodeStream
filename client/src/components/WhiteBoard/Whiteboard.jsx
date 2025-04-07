@@ -2,30 +2,31 @@ import { Box } from "@radix-ui/themes";
 import { useEffect, useRef, useState, useCallback } from "react";
 import rough from "roughjs/bin/rough";
 import WhiteboardControls from "./WhiteboardControls";
+import { isPointInsideBox, isPointNearLine } from "../../utils/whiteboard";
 
 function Whiteboard() {
-  const [pencilColor, setPencilColor] = useState("#000000");
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const tempCanvasRef = useRef(null);
   const inputRef = useRef(null);
+  const elementsRef = useRef([]);
+  const panStart = useRef({ x: 0, y: 0 });
+  const historyRef = useRef([[]]);
 
+  const [pencilColor, setPencilColor] = useState("#000000");
   const [activeTool, setActiveTool] = useState("pencil");
   const [darkTheme, setDarkTheme] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentElement, setCurrentElement] = useState(null);
-  const elementsRef = useRef([]);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
-  const panStart = useRef({ x: 0, y: 0 });
   const [textInput, setTextInput] = useState({
     visible: false,
     x: 0,
     y: 0,
     value: "",
   });
-  const historyRef = useRef([[]]);
 
   const drawElement = useCallback(
     (rc, ctx, el) => {
@@ -376,6 +377,8 @@ function Whiteboard() {
         <input
           ref={inputRef}
           style={{
+            backgroundColor: "white",
+            color: "black",
             position: "absolute",
             left: textInput.x,
             top: textInput.y,
@@ -399,32 +402,6 @@ function Whiteboard() {
         />
       )}
     </Box>
-  );
-}
-
-function isPointNearLine(point, start, end, threshold) {
-  const A = point.x - start.x;
-  const B = point.y - start.y;
-  const C = end.x - start.x;
-  const D = end.y - start.y;
-
-  const dot = A * C + B * D;
-  const len_sq = C * C + D * D;
-  const param = len_sq ? dot / len_sq : -1;
-
-  const xx = param < 0 ? start.x : param > 1 ? end.x : start.x + param * C;
-  const yy = param < 0 ? start.y : param > 1 ? end.y : start.y + param * D;
-
-  return Math.hypot(point.x - xx, point.y - yy) < threshold;
-}
-
-function isPointInsideBox(point, start, end, padding = 0) {
-  const minX = Math.min(start.x, end.x) - padding;
-  const maxX = Math.max(start.x, end.x) + padding;
-  const minY = Math.min(start.y, end.y) - padding;
-  const maxY = Math.max(start.y, end.y) + padding;
-  return (
-    point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY
   );
 }
 
