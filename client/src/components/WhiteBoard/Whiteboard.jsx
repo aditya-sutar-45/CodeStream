@@ -4,7 +4,7 @@ import WhiteboardControls from "./WhiteboardControls";
 
 function Whiteboard({ width, height }) {
   const canvasRef = useRef(null);
-  const [darkTheme, setDarkTheme] = useState(false); // ✅ Manages theme state
+  const [darkTheme, setDarkTheme] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -24,11 +24,10 @@ function Whiteboard({ width, height }) {
         textAlign: "center",
         width: "100%",
         height: "100vh",
-        backgroundColor: darkTheme ? "black" : "white", // ✅ Applies dark mode
+        backgroundColor: darkTheme ? "black" : "white",
         transition: "background 0.3s ease-in-out",
       }}
     >
-      {/* ✅ Pass darkTheme state to WhiteboardControls */}
       <WhiteboardControls setDarkTheme={setDarkTheme} darkTheme={darkTheme} />
 
       <canvas
