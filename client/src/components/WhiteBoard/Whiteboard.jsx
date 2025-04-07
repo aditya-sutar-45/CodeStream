@@ -4,7 +4,7 @@ import rough from "roughjs/bin/rough";
 import WhiteboardControls from "./WhiteboardControls";
 
 function Whiteboard() {
-  const [pencilColor, setPencilColor] = useState("#000000");  
+  const [pencilColor, setPencilColor] = useState("#000000");
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const tempCanvasRef = useRef(null);
@@ -19,7 +19,12 @@ function Whiteboard() {
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
   const panStart = useRef({ x: 0, y: 0 });
-  const [textInput, setTextInput] = useState({ visible: false, x: 0, y: 0, value: "" });
+  const [textInput, setTextInput] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    value: "",
+  });
   const [history, setHistory] = useState([[]]);
 
   // Resize and initial draw
@@ -135,7 +140,6 @@ function Whiteboard() {
 
     setIsDrawing(true);
     if (activeTool === "pencil") {
-      
       setCurrentElement({ type: "pencil", points: [pos], color: pencilColor });
     } else if (["rectangle", "ellipse", "line"].includes(activeTool)) {
       setCurrentElement({ type: activeTool, start: pos, end: pos });
@@ -210,7 +214,9 @@ function Whiteboard() {
     const radius = 10;
     const filtered = elementsRef.current.filter((el) => {
       if (el.type === "pencil") {
-        return !el.points.some((p) => Math.hypot(p.x - pos.x, p.y - pos.y) < radius);
+        return !el.points.some(
+          (p) => Math.hypot(p.x - pos.x, p.y - pos.y) < radius
+        );
       } else if (el.type === "line") {
         return !isPointNearLine(pos, el.start, el.end, radius);
       } else if (["rectangle", "ellipse"].includes(el.type)) {
@@ -231,7 +237,12 @@ function Whiteboard() {
     const ctx = canvas.getContext("2d");
     ctx.save();
     ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(-offset.x / scale, -offset.y / scale, canvas.width / scale, canvas.height / scale);
+    ctx.clearRect(
+      -offset.x / scale,
+      -offset.y / scale,
+      canvas.width / scale,
+      canvas.height / scale
+    );
     const rc = rough.canvas(canvas);
     elementsRef.current.forEach((el) => drawElement(rc, ctx, el));
     ctx.restore();
@@ -242,7 +253,12 @@ function Whiteboard() {
     const ctx = canvas.getContext("2d");
     ctx.save();
     ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(-offset.x / scale, -offset.y / scale, canvas.width / scale, canvas.height / scale);
+    ctx.clearRect(
+      -offset.x / scale,
+      -offset.y / scale,
+      canvas.width / scale,
+      canvas.height / scale
+    );
     const rc = rough.canvas(canvas);
     drawElement(rc, ctx, el);
     ctx.restore();
@@ -253,7 +269,12 @@ function Whiteboard() {
     const ctx = canvas.getContext("2d");
     ctx.save();
     ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(-offset.x / scale, -offset.y / scale, canvas.width / scale, canvas.height / scale);
+    ctx.clearRect(
+      -offset.x / scale,
+      -offset.y / scale,
+      canvas.width / scale,
+      canvas.height / scale
+    );
     ctx.restore();
   };
 
@@ -271,15 +292,25 @@ function Whiteboard() {
         }
         ctx.stroke();
         break;
-  
+
       case "line":
         rc.line(el.start.x, el.start.y, el.end.x, el.end.y);
         break;
       case "rectangle":
-        rc.rectangle(el.start.x, el.start.y, el.end.x - el.start.x, el.end.y - el.start.y);
+        rc.rectangle(
+          el.start.x,
+          el.start.y,
+          el.end.x - el.start.x,
+          el.end.y - el.start.y
+        );
         break;
       case "ellipse":
-        rc.ellipse((el.start.x + el.end.x) / 2, (el.start.y + el.end.y) / 2, Math.abs(el.end.x - el.start.x), Math.abs(el.end.y - el.start.y));
+        rc.ellipse(
+          (el.start.x + el.end.x) / 2,
+          (el.start.y + el.end.y) / 2,
+          Math.abs(el.end.x - el.start.x),
+          Math.abs(el.end.y - el.start.y)
+        );
         break;
       case "text":
         ctx.fillStyle = darkTheme ? "white" : "black";
@@ -300,10 +331,24 @@ function Whiteboard() {
         overflow: "hidden",
       }}
     >
-      <WhiteboardControls setDarkTheme={setDarkTheme} darkTheme={darkTheme} setActiveTool={setActiveTool} activeTool={activeTool}  pencilColor={pencilColor}
-  setPencilColor={setPencilColor}/>
+      <WhiteboardControls
+        setDarkTheme={setDarkTheme}
+        darkTheme={darkTheme}
+        setActiveTool={setActiveTool}
+        activeTool={activeTool}
+        pencilColor={pencilColor}
+        setPencilColor={setPencilColor}
+      />
 
-      <canvas ref={canvasRef} style={{ width: "100%", height: "100%", position: "absolute", zIndex: 1 }} />
+      <canvas
+        ref={canvasRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "absolute",
+          zIndex: 1,
+        }}
+      />
       <canvas
         ref={tempCanvasRef}
         onMouseDown={handleMouseDown}
@@ -315,7 +360,12 @@ function Whiteboard() {
           height: "100%",
           position: "absolute",
           zIndex: 2,
-          cursor: activeTool === "eraser" ? "cell" : activeTool === "hand" ? "grab" : "crosshair",
+          cursor:
+            activeTool === "eraser"
+              ? "cell"
+              : activeTool === "hand"
+              ? "grab"
+              : "crosshair",
         }}
       />
 
@@ -333,7 +383,9 @@ function Whiteboard() {
             outline: "none",
           }}
           value={textInput.value}
-          onChange={(e) => setTextInput({ ...textInput, value: e.target.value })}
+          onChange={(e) =>
+            setTextInput({ ...textInput, value: e.target.value })
+          }
           onBlur={handleTextSubmit}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -368,7 +420,9 @@ function isPointInsideBox(point, start, end, padding = 0) {
   const maxX = Math.max(start.x, end.x) + padding;
   const minY = Math.min(start.y, end.y) - padding;
   const maxY = Math.max(start.y, end.y) + padding;
-  return point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY;
+  return (
+    point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY
+  );
 }
 
 export default Whiteboard;
