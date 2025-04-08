@@ -49,30 +49,29 @@ function Whiteboard() {
 
   // Main draw function
   const drawElement = useCallback(
-  (rc, ctx, el) => {
-    switch (el.type) {
-      case "pencil":
-        drawPencil(ctx, el);
-        break;
-      case "line":
-        drawLine(rc, el);
-        break;
-      case "rectangle":
-        drawRectangle(rc, el);
-        break;
-      case "ellipse":
-        drawEllipse(rc, el);
-        break;
-      case "text":
-        drawText(ctx, el, darkTheme);
-        break;
-      default:
-        break;
-    }
-  },
-  [darkTheme]
-);
-
+    (rc, ctx, el) => {
+      switch (el.type) {
+        case "pencil":
+          drawPencil(ctx, el);
+          break;
+        case "line":
+          drawLine(rc, el);
+          break;
+        case "rectangle":
+          drawRectangle(rc, el);
+          break;
+        case "ellipse":
+          drawEllipse(rc, el);
+          break;
+        case "text":
+          drawText(ctx, el, darkTheme);
+          break;
+        default:
+          break;
+      }
+    },
+    [darkTheme]
+  );
 
   const redrawMainCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -81,7 +80,6 @@ function Whiteboard() {
     drawElements(canvas, ctx, elementsRef.current, drawElement);
     ctx.restore();
   }, [scale, offset, drawElement]);
-
 
   useEffect(() => {
     const resize = () =>
@@ -100,9 +98,9 @@ function Whiteboard() {
   }, [scale, offset, redrawMainCanvas]);
 
   useEffect(() => {
-  const cleanupZoom = setupZoomHandlers(setScale, setOffset, canvasRef);
-  return cleanupZoom;
-}, []);
+    const cleanupZoom = setupZoomHandlers(setScale, setOffset, canvasRef);
+    return cleanupZoom;
+  }, []);
 
   useEffect(() => {
     const cleanupUndo = setupUndoHandler(
@@ -150,14 +148,14 @@ function Whiteboard() {
           stroke: "black", // customize if needed
           strokeWidth: 1,
           roughness: 1,
-          seed, 
+          seed,
         },
       });
     } else if (activeTool === "eraser") {
-      eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
+      // eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
+      setIsDrawing(true);
     }
   };
-
 
   const handleMouseMove = (e) => {
     if (isPanning) {
@@ -168,7 +166,14 @@ function Whiteboard() {
       return;
     }
 
+    if (activeTool === "eraser") {
+      const pos = getMouseCoords(e, canvasRef, offset, scale);
+      eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
+      return;
+    }
+
     if (!isDrawing || !currentElement) return;
+
     const pos = getMouseCoords(e, canvasRef, offset, scale);
 
     if (currentElement.type === "pencil") {
