@@ -1,34 +1,26 @@
 /* Main container styling */
 .whiteboard-container {
     position: relative;
-    width: 100%;
     /* height: 100vh; */
   }
   
   /* Toolbar styling (Top Center) */
   .toolbar {
-    display: flex;
-    gap: 12px;
-    position: absolute;
     top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     background: #333;
-    padding: 12px;
-    border-radius: 8px;
+    /* padding: 12px; */
+    /* border-radius: 8px; */
     z-index: 10; 
   }
   
   /* Custom button styling */
   .custom-button {
-    background: #6a0dad; /* Nice purple color */
-    color: white;
-    border: none;
+    /* background: #6a0dad; Nice purple color */
+    /* color: white; */
     border-radius: 8px;
     padding: 12px;
     height: 45px;
     transition: all 0.3s ease-in-out;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Neumorphism effect */
   }
   /* .custom-button:hover { 
      box-shadow: 0 0 15px #a855f7; Glow on hover 
@@ -36,11 +28,11 @@
    } */
   
   .custom-button:active {
-    transform: scale(0.9); /* Shrink slightly */
+    transform: scale(0.9);
     /* animation: shake 0.2s ease-in-out; Shake on click */ 
   }
 /* PENCIL */
-  .pencil-icon {
+  .icon {
     width: 30px; /* Adjust size as needed */
     height: 33px;
     transition: transform 0.3s ease-in-out;
@@ -50,7 +42,7 @@
     animation: wiggle 0.5s ease-in-out;
   }
 
-  .pencil-button {
+  .whiteboard-control-button {
     position: relative;
     display: flex;
     align-items: center;
@@ -132,9 +124,6 @@
     position: absolute;
     top: 100%;
     left: 0;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 4px;
     z-index: 10;
     display: flex;
     flex-direction: column;
