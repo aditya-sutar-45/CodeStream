@@ -50,6 +50,13 @@ function Whiteboard() {
   const [selectedElementIndex, setSelectedElementIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
+  const cursorMap = {
+    eraser: "cell",
+    hand: "grab",
+    select: "default",
+    text: "text",
+  };
+
   // Main draw function
   const drawElement = useCallback(
     (rc, ctx, el, index) => {
@@ -354,16 +361,7 @@ function Whiteboard() {
         onMouseLeave={handleMouseUp}
         className="tempCanvas"
         style={{
-          cursor:
-            activeTool === "eraser"
-              ? "cell"
-              : activeTool === "hand"
-              ? "grab"
-              : activeTool === "select"
-              ? "default"
-              : activeTool === "text"
-              ? "text"
-              : "crosshair",
+          cursor: cursorMap[activeTool] || "crosshair",
         }}
       />
 
