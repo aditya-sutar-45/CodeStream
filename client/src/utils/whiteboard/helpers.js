@@ -133,15 +133,18 @@ export const drawEllipse = (rc, el, isSelected = false) => {
     const ctx = rc.canvas.getContext("2d");
     ctx.save();
     ctx.strokeStyle = "blue";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1;
     ctx.setLineDash([4, 2]);
-    ctx.beginPath();
-    ctx.ellipse(centerX, centerY, width / 2, height / 2, 0, 0, 2 * Math.PI);
-    ctx.stroke();
+
+    const x = Math.min(el.start.x, el.end.x);
+    const y = Math.min(el.start.y, el.end.y);
+    ctx.strokeRect(x - 4, y - 4, width + 8, height + 8);
+
     ctx.setLineDash([]);
     ctx.restore();
   }
 };
+
 
 export const drawText = (ctx, el, darkTheme, isSelected = false) => {
   ctx.fillStyle = darkTheme ? "white" : "black";
