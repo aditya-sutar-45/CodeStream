@@ -10,6 +10,9 @@ import {
   drawText,
   isPointInsideBox,
   isPointNearLine,
+  getContextWithTransform,
+  clearCanvasWithTransform,
+  drawElements,
 } from "../../utils/whiteboard/helpers";
 
 function Whiteboard() {
@@ -64,19 +67,11 @@ function Whiteboard() {
 
   const redrawMainCanvas = useCallback(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(
-      -offset.x / scale,
-      -offset.y / scale,
-      canvas.width / scale,
-      canvas.height / scale
-    );
-    const rc = rough.canvas(canvas);
-    elementsRef.current.forEach((el) => drawElement(rc, ctx, el));
+    const ctx = getContextWithTransform(canvas, scale, offset);
+    clearCanvasWithTransform(ctx, canvas, scale, offset);
+    drawElements(canvas, ctx, elementsRef.current, drawElement);
     ctx.restore();
-  }, [scale, offset.x, offset.y, drawElement]);
+  }, [scale, offset, drawElement]);
 
   // Resize and initial draw
   useEffect(() => {

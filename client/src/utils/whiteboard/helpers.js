@@ -64,3 +64,25 @@ export const drawText = (ctx, el, darkTheme) => {
   ctx.font = "20px Arial";
   ctx.fillText(el.value, el.x, el.y);
 };
+
+export const getContextWithTransform = (canvas, scale, offset) => {
+  const ctx = canvas.getContext("2d");
+  ctx.save();
+  ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
+  return ctx;
+};
+
+export const clearCanvasWithTransform = (ctx, canvas, scale, offset) => {
+  ctx.clearRect(
+    -offset.x / scale,
+    -offset.y / scale,
+    canvas.width / scale,
+    canvas.height / scale
+  );
+};
+
+export const drawElements = (rough, canvas, ctx, elements, drawElement) => {
+  const rc = rough.canvas(canvas);
+  elements.forEach((el) => drawElement(rc, ctx, el));
+};
+
