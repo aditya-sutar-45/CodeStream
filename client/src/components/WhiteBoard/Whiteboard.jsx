@@ -186,7 +186,7 @@ function Whiteboard() {
       return;
     }
 
-    if (activeTool === "eraser") {
+    if (activeTool === "eraser" && isDrawing) {
       const pos = getMouseCoords(e, canvasRef, offset, scale);
       eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
       return;
