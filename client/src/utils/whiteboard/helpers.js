@@ -1,4 +1,4 @@
-import rough from "roughjs/bundled/rough.esm.js";
+import rough from "roughjs";
 
 export function isPointNearLine(point, start, end, threshold) {
   const A = point.x - start.x;
@@ -223,7 +223,6 @@ export function isInsideElement(pos, el) {
     return pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY;
   }
 
-  // 🔥 Add support for pencil strokes
   if (el.type === "pencil") {
     for (let i = 0; i < el.points.length - 1; i++) {
       const p1 = el.points[i];
