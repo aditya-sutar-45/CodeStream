@@ -98,9 +98,9 @@ function Whiteboard() {
   }, [scale, offset, redrawMainCanvas]);
 
   useEffect(() => {
-    const cleanupZoom = setupZoomHandlers(setScale);
-    return cleanupZoom;
-  }, []);
+  const cleanupZoom = setupZoomHandlers(setScale, setOffset, canvasRef);
+  return cleanupZoom;
+}, []);
 
   useEffect(() => {
     const cleanupUndo = setupUndoHandler(

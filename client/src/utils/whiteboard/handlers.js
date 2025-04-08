@@ -19,7 +19,7 @@ export const resizeCanvasToContainer = (
   redrawMainCanvas();
 };
 
-export const setupZoomHandlers = (setScale) => {
+export const setupZoomHandlers = (setScale, setOffset, canvasRef) => {
   const handleZoomKeys = (e) => {
     if (e.ctrlKey) {
       if (e.key === "+") {
@@ -35,14 +35,45 @@ export const setupZoomHandlers = (setScale) => {
   const handleWheel = (e) => {
     if (e.ctrlKey) {
       e.preventDefault();
-      const direction = e.deltaY > 0 ? -1 : 1;
-      setScale((prev) => Math.max(0.2, Math.min(5, prev + direction * 0.1)));
+      
+      // Get canvas element and its bounding rectangle
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      
+      const rect = canvas.getBoundingClientRect();
+      
+      // Mouse position in screen coordinates
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+      
+      // Current scale and offset
+      setScale(prevScale => {
+        setOffset(prevOffset => {
+          // Convert mouse position to world space before zoom
+          const worldX = (mouseX - prevOffset.x) / prevScale;
+          const worldY = (mouseY - prevOffset.y) / prevScale;
+          
+          // Calculate new scale
+          const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1; // Zoom in or out by 10%
+          const newScale = Math.max(0.2, Math.min(5, prevScale * zoomFactor));
+          
+          // Calculate new offset to keep mouse position fixed
+          const newOffsetX = mouseX - worldX * newScale;
+          const newOffsetY = mouseY - worldY * newScale;
+          
+          return { x: newOffsetX, y: newOffsetY };
+        });
+        
+        // Return new scale for setScale
+        const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+        return Math.max(0.2, Math.min(5, prevScale * zoomFactor));
+      });
     }
   };
 
   window.addEventListener("keydown", handleZoomKeys);
   window.addEventListener("wheel", handleWheel, { passive: false });
-
+  
   return () => {
     window.removeEventListener("keydown", handleZoomKeys);
     window.removeEventListener("wheel", handleWheel);
