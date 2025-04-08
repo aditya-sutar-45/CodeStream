@@ -27,17 +27,29 @@ export function isPointInsideBox(point, start, end, padding = 0) {
 }
 
 export const drawPencil = (ctx, el) => {
+  const points = el.points;
+  if (points.length < 2) return;
+
   ctx.strokeStyle = el.color || "#000000";
   ctx.lineWidth = 2;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+
   ctx.beginPath();
-  for (let i = 1; i < el.points.length; i++) {
-    const from = el.points[i - 1];
-    const to = el.points[i];
-    ctx.moveTo(from.x, from.y);
-    ctx.lineTo(to.x, to.y);
+  ctx.moveTo(points[0].x, points[0].y);
+
+  for (let i = 1; i < points.length - 1; i++) {
+    const midPointX = (points[i].x + points[i + 1].x) / 2;
+    const midPointY = (points[i].y + points[i + 1].y) / 2;
+    ctx.quadraticCurveTo(points[i].x, points[i].y, midPointX, midPointY);
   }
+
+  // Draw last line
+  const last = points[points.length - 1];
+  ctx.lineTo(last.x, last.y);
   ctx.stroke();
 };
+
 
 export const drawLine = (rc, el) => {
   rc.line(el.start.x, el.start.y, el.end.x, el.end.y, {
