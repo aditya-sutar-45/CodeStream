@@ -50,7 +50,6 @@ export const drawPencil = (ctx, el) => {
   ctx.stroke();
 };
 
-
 export const drawLine = (rc, el, isSelected = false) => {
   rc.line(el.start.x, el.start.y, el.end.x, el.end.y, {
     ...el.options,
@@ -143,7 +142,6 @@ export const drawText = (ctx, el, darkTheme, isSelected = false) => {
   }
 };
 
-
 export const getContextWithTransform = (canvas, scale, offset) => {
   const ctx = canvas.getContext("2d");
   ctx.save();
@@ -164,7 +162,6 @@ export const drawElements = (canvas, ctx, elements, drawFn) => {
   const rc = rough.canvas(canvas);
   elements.forEach((el, index) => drawFn(rc, ctx, el, index));
 };
-
 
 export const getMouseCoords = (e, canvasRef, offset, scale) => {
   const rect = canvasRef.current.getBoundingClientRect();
