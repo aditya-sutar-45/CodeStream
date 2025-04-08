@@ -170,10 +170,9 @@ export const getMouseCoords = (e, canvasRef, offset, scale) => {
     y: (e.clientY - rect.top - offset.y) / scale,
   };
 };
-
 export function isInsideElement(pos, el) {
   if (el.type === "text") {
-    const width = el.value.length * 8;
+    const width = el.value.length * 10;
     const height = 20;
     return (
       pos.x >= el.x &&
@@ -183,15 +182,59 @@ export function isInsideElement(pos, el) {
     );
   }
 
-  const startX = el.start?.x ?? el.x;
-  const endX = el.end?.x ?? el.x;
-  const startY = el.start?.y ?? el.y;
-  const endY = el.end?.y ?? el.y;
+  if (["rectangle", "ellipse", "line"].includes(el.type)) {
+    const x1 = el.start.x;
+    const y1 = el.start.y;
+    const x2 = el.end.x;
+    const y2 = el.end.y;
+    const minX = Math.min(x1, x2);
+    const maxX = Math.max(x1, x2);
+    const minY = Math.min(y1, y2);
+    const maxY = Math.max(y1, y2);
 
-  const minX = Math.min(startX, endX);
-  const maxX = Math.max(startX, endX);
-  const minY = Math.min(startY, endY);
-  const maxY = Math.max(startY, endY);
+    return pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY;
+  }
 
-  return pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY;
+  // 🔥 Add support for pencil strokes
+  if (el.type === "pencil") {
+    for (let i = 0; i < el.points.length - 1; i++) {
+      const p1 = el.points[i];
+      const p2 = el.points[i + 1];
+      if (isNearLine(pos, p1, p2, 5)) return true;
+    }
+  }
+
+  return false;
+}
+
+// Helper for checking if a point is near a line segment
+function isNearLine(point, start, end, threshold = 5) {
+  const { x, y } = point;
+  const { x: x1, y: y1 } = start;
+  const { x: x2, y: y2 } = end;
+
+  const A = x - x1;
+  const B = y - y1;
+  const C = x2 - x1;
+  const D = y2 - y1;
+
+  const dot = A * C + B * D;
+  const len_sq = C * C + D * D;
+  const param = len_sq !== 0 ? dot / len_sq : -1;
+
+  let xx, yy;
+  if (param < 0) {
+    xx = x1;
+    yy = y1;
+  } else if (param > 1) {
+    xx = x2;
+    yy = y2;
+  } else {
+    xx = x1 + param * C;
+    yy = y1 + param * D;
+  }
+
+  const dx = x - xx;
+  const dy = y - yy;
+  return dx * dx + dy * dy <= threshold * threshold;
 }

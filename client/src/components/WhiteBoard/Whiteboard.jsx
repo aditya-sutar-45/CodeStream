@@ -145,9 +145,23 @@ function Whiteboard() {
         const el = elementsRef.current[i];
         if (isInsideElement(pos, el)) {
           setSelectedElementIndex(i);
+          let elX = 0,
+            elY = 0;
+
+          if (el.type === "text") {
+            elX = el.x;
+            elY = el.y;
+          } else if (["rectangle", "ellipse", "line"].includes(el.type)) {
+            elX = el.start.x;
+            elY = el.start.y;
+          } else if (el.type === "pencil") {
+            elX = el.points[0].x;
+            elY = el.points[0].y;
+          }
+
           setDragOffset({
-            x: pos.x - (el.x || el.start?.x),
-            y: pos.y - (el.y || el.start?.y),
+            x: pos.x - elX,
+            y: pos.y - elY,
           });
 
           setIsDrawing(true); // <- ADD THIS LINE
@@ -218,6 +232,12 @@ function Whiteboard() {
 
         el.start = { x: dx, y: dy };
         el.end = { x: dx + width, y: dy + height };
+      } else if (el.type === "pencil") {
+        const movedPoints = el.points.map((pt) => ({
+          x: pt.x - (el.points[0].x - dx),
+          y: pt.y - (el.points[0].y - dy),
+        }));
+        el.points = movedPoints;
       }
 
       elements[selectedElementIndex] = el;
