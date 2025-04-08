@@ -49,29 +49,30 @@ function Whiteboard() {
 
   // Main draw function
   const drawElement = useCallback(
-    (rc, ctx, el) => {
-      switch (el.type) {
-        case "pencil":
-          drawPencil(ctx, el);
-          break;
-        case "line":
-          drawLine(rc, el);
-          break;
-        case "rectangle":
-          drawRectangle(rc, el);
-          break;
-        case "ellipse":
-          drawEllipse(rc, el);
-          break;
-        case "text":
-          drawText(ctx, el, darkTheme);
-          break;
-        default:
-          break;
-      }
-    },
-    [darkTheme]
-  );
+  (rc, ctx, el) => {
+    switch (el.type) {
+      case "pencil":
+        drawPencil(ctx, el);
+        break;
+      case "line":
+        drawLine(rc, el);
+        break;
+      case "rectangle":
+        drawRectangle(rc, el);
+        break;
+      case "ellipse":
+        drawEllipse(rc, el);
+        break;
+      case "text":
+        drawText(ctx, el, darkTheme);
+        break;
+      default:
+        break;
+    }
+  },
+  [darkTheme]
+);
+
 
   const redrawMainCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -80,6 +81,7 @@ function Whiteboard() {
     drawElements(canvas, ctx, elementsRef.current, drawElement);
     ctx.restore();
   }, [scale, offset, drawElement]);
+
 
   useEffect(() => {
     const resize = () =>
@@ -135,14 +137,27 @@ function Whiteboard() {
     }
 
     setIsDrawing(true);
+
     if (activeTool === "pencil") {
       setCurrentElement({ type: "pencil", points: [pos], color: pencilColor });
     } else if (["rectangle", "ellipse", "line"].includes(activeTool)) {
-      setCurrentElement({ type: activeTool, start: pos, end: pos });
+      const seed = Math.floor(Math.random() * 1000000); // 🔥 Add this
+      setCurrentElement({
+        type: activeTool,
+        start: pos,
+        end: pos,
+        options: {
+          stroke: "black", // customize if needed
+          strokeWidth: 1,
+          roughness: 1,
+          seed, 
+        },
+      });
     } else if (activeTool === "eraser") {
       eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
     }
   };
+
 
   const handleMouseMove = (e) => {
     if (isPanning) {

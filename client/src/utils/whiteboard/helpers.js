@@ -40,7 +40,9 @@ export const drawPencil = (ctx, el) => {
 };
 
 export const drawLine = (rc, el) => {
-  rc.line(el.start.x, el.start.y, el.end.x, el.end.y);
+  rc.line(el.start.x, el.start.y, el.end.x, el.end.y, {
+    ...el.options, // Use the options object to pass the seed
+  });
 };
 
 export const drawRectangle = (rc, el) => {
@@ -48,7 +50,8 @@ export const drawRectangle = (rc, el) => {
     el.start.x,
     el.start.y,
     el.end.x - el.start.x,
-    el.end.y - el.start.y
+    el.end.y - el.start.y,
+    el.options
   );
 };
 
@@ -57,7 +60,8 @@ export const drawEllipse = (rc, el) => {
     (el.start.x + el.end.x) / 2,
     (el.start.y + el.end.y) / 2,
     Math.abs(el.end.x - el.start.x),
-    Math.abs(el.end.y - el.start.y)
+    Math.abs(el.end.y - el.start.y),
+    el.options
   );
 };
 
