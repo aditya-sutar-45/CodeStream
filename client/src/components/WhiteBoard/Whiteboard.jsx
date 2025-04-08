@@ -116,10 +116,25 @@ function Whiteboard() {
     return cleanupUndo;
   }, [redrawMainCanvas]);
 
+  useEffect(() => {
+    const preventMiddleClickScroll = (e) => {
+      if (e.button === 1) {
+        e.preventDefault();
+      }
+    };
+
+    const canvas = canvasRef.current;
+    canvas.addEventListener("mousedown", preventMiddleClickScroll);
+
+    return () => {
+      canvas.removeEventListener("mousedown", preventMiddleClickScroll);
+    };
+  }, []);
+
   const handleMouseDown = (e) => {
     const pos = getMouseCoords(e, canvasRef, offset, scale);
 
-    if (activeTool === "hand") {
+    if (activeTool === "hand" || e.button === 1) {
       setIsPanning(true);
       panStart.current = { x: e.clientX, y: e.clientY };
       return;
@@ -196,7 +211,9 @@ function Whiteboard() {
   };
 
   const handleMouseMove = (e) => {
-    if (isPanning) {
+    if (e.buttons === 4 && !isPanning) return;
+
+    if (isPanning || e.buttons === 4) {
       const dx = e.clientX - panStart.current.x;
       const dy = e.clientY - panStart.current.y;
       setOffset((prev) => ({ x: prev.x + dx, y: prev.y + dy }));
@@ -266,8 +283,8 @@ function Whiteboard() {
     }
   };
 
-  const handleMouseUp = () => {
-    if (isPanning) {
+  const handleMouseUp = (e) => {
+    if (isPanning || e.button === 1) {
       setIsPanning(false);
       return;
     }
