@@ -26,7 +26,23 @@ export function isPointInsideBox(point, start, end, padding = 0) {
   );
 }
 
-export const drawPencil = (ctx, el) => {
+export function getPencilBoundingBox(points) {
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+
+  return {
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY,
+  };
+}
+
+export const drawPencil = (ctx, el, isSelected = false) => {
   const points = el.points;
   if (points.length < 2) return;
 
@@ -44,10 +60,19 @@ export const drawPencil = (ctx, el) => {
     ctx.quadraticCurveTo(points[i].x, points[i].y, midPointX, midPointY);
   }
 
-  // Draw last line
   const last = points[points.length - 1];
   ctx.lineTo(last.x, last.y);
   ctx.stroke();
+
+  if (isSelected) {
+    const { x, y, width, height } = getPencilBoundingBox(points);
+    ctx.save();
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 2]);
+    ctx.strokeRect(x - 4, y - 4, width + 8, height + 8);
+    ctx.restore();
+  }
 };
 
 export const drawLine = (rc, el, isSelected = false) => {
