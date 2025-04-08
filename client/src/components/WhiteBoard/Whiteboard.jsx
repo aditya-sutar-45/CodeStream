@@ -79,26 +79,34 @@ function Whiteboard() {
   }, [scale, offset, drawElement]);
 
   useEffect(() => {
-  const resize = () =>
-    resizeCanvasToContainer(canvasRef, tempCanvasRef, containerRef, redrawMainCanvas);
+    const resize = () =>
+      resizeCanvasToContainer(
+        canvasRef,
+        tempCanvasRef,
+        containerRef,
+        redrawMainCanvas
+      );
 
-  resize();
-  const observer = new ResizeObserver(resize);
-  observer.observe(containerRef.current);
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(containerRef.current);
 
-  return () => observer.disconnect();
-}, [scale, offset, redrawMainCanvas]);
+    return () => observer.disconnect();
+  }, [scale, offset, redrawMainCanvas]);
 
-useEffect(() => {
-  const cleanupZoom = setupZoomHandlers(setScale);
-  return cleanupZoom;
-}, []);
+  useEffect(() => {
+    const cleanupZoom = setupZoomHandlers(setScale);
+    return cleanupZoom;
+  }, []);
 
-useEffect(() => {
-  const cleanupUndo = setupUndoHandler(historyRef, elementsRef, redrawMainCanvas);
-  return cleanupUndo;
-}, [redrawMainCanvas]);
-
+  useEffect(() => {
+    const cleanupUndo = setupUndoHandler(
+      historyRef,
+      elementsRef,
+      redrawMainCanvas
+    );
+    return cleanupUndo;
+  }, [redrawMainCanvas]);
 
   const getMouseCoords = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
