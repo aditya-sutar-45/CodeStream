@@ -3,7 +3,6 @@ import { useState } from "react";
 import "./WhiteboardControls.css";
 import ToolButton from "./ToolButton";
 
-
 const SHAPES = [
   { name: "rectangle", label: "Rectangle" },
   { name: "ellipse", label: "Ellipse" },
@@ -63,9 +62,14 @@ function WhiteboardControls({
         width="30vw"
         className="toolbar"
       >
-        <Switch
-          checked={darkTheme}
-          onCheckedChange={setDarkTheme}
+        <Switch checked={darkTheme} onCheckedChange={setDarkTheme} />
+        {/* Select Tool */}
+        <ToolButton
+          tool="select"
+          activeTool={activeTool}
+          onClick={() => handleToolClick("select")}
+          tooltip="Select"
+          iconClass="select-icon"
         />
 
         {/* Pencil Tool */}

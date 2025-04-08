@@ -99,3 +99,28 @@ export const getMouseCoords = (e, canvasRef, offset, scale) => {
     y: (e.clientY - rect.top - offset.y) / scale,
   };
 };
+
+export function isInsideElement(pos, el) {
+  if (el.type === "text") {
+    const width = el.value.length * 8;
+    const height = 20;
+    return (
+      pos.x >= el.x &&
+      pos.x <= el.x + width &&
+      pos.y >= el.y - height &&
+      pos.y <= el.y
+    );
+  }
+
+  const startX = el.start?.x ?? el.x;
+  const endX = el.end?.x ?? el.x;
+  const startY = el.start?.y ?? el.y;
+  const endY = el.end?.y ?? el.y;
+
+  const minX = Math.min(startX, endX);
+  const maxX = Math.max(startX, endX);
+  const minY = Math.min(startY, endY);
+  const maxY = Math.max(startY, endY);
+
+  return pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY;
+}

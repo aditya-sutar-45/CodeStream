@@ -12,6 +12,7 @@ import {
   clearCanvasWithTransform,
   drawElements,
   getMouseCoords,
+  isInsideElement,
 } from "../../utils/whiteboard/helpers";
 import {
   resizeCanvasToContainer,
@@ -46,6 +47,8 @@ function Whiteboard() {
     y: 0,
     value: "",
   });
+  const [selectedElementIndex, setSelectedElementIndex] = useState(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
 
   // Main draw function
   const drawElement = useCallback(
@@ -134,6 +137,23 @@ function Whiteboard() {
       return;
     }
 
+    if (activeTool === "select") {
+      const pos = getMouseCoords(e, canvasRef, offset, scale);
+      for (let i = elementsRef.current.length - 1; i >= 0; i--) {
+        const el = elementsRef.current[i];
+        if (isInsideElement(pos, el)) {
+          setSelectedElementIndex(i);
+          setDragOffset({
+            x: pos.x - (el.x || el.start?.x),
+            y: pos.y - (el.y || el.start?.y),
+          });
+          setIsDrawing(true);
+          return;
+        }
+      }
+      setSelectedElementIndex(null);
+    }
+
     setIsDrawing(true);
 
     if (activeTool === "pencil") {
@@ -172,6 +192,30 @@ function Whiteboard() {
       return;
     }
 
+    if (activeTool === "select" && isDrawing && selectedElementIndex !== null) {
+      const pos = getMouseCoords(e, canvasRef, offset, scale);
+      const elements = [...elementsRef.current];
+      const el = { ...elements[selectedElementIndex] };
+
+      const dx = pos.x - dragOffset.x;
+      const dy = pos.y - dragOffset.y;
+
+      if (el.type === "text") {
+        el.x = dx;
+        el.y = dy;
+      } else if (["rectangle", "ellipse", "line"].includes(el.type)) {
+        const width = el.end.x - el.start.x;
+        const height = el.end.y - el.start.y;
+
+        el.start = { x: dx, y: dy };
+        el.end = { x: dx + width, y: dy + height };
+      }
+
+      elements[selectedElementIndex] = el;
+      elementsRef.current = elements;
+      redrawMainCanvas();
+    }
+
     if (!isDrawing || !currentElement) return;
 
     const pos = getMouseCoords(e, canvasRef, offset, scale);
@@ -203,6 +247,11 @@ function Whiteboard() {
       const updatedElements = [...elementsRef.current, currentElement];
       elementsRef.current = updatedElements;
       historyRef.current.push(updatedElements);
+    }
+    if (activeTool === "select" && isDrawing && selectedElementIndex !== null) {
+      historyRef.current.push([...elementsRef.current]);
+      setIsDrawing(false);
+      setSelectedElementIndex(null);
     }
 
     setCurrentElement(null);
