@@ -1,4 +1,5 @@
 import { Box } from "@radix-ui/themes";
+import "./Whiteboard.css";
 import { useEffect, useRef, useState, useCallback } from "react";
 import WhiteboardControls from "./WhiteboardControls";
 import {
@@ -20,6 +21,7 @@ import {
   clearTempCanvas,
   eraseAtPosition,
 } from "../../utils/whiteboard/handlers";
+import WhiteboardTextInput from "./WhiteboardTextInput";
 
 function Whiteboard() {
   const containerRef = useRef(null);
@@ -213,10 +215,10 @@ function Whiteboard() {
   return (
     <Box
       ref={containerRef}
+      position="relative"
+      width="100%"
+      height="100%"
       style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
         backgroundColor: darkTheme ? "black" : "white",
         overflow: "hidden",
       }}
@@ -230,26 +232,15 @@ function Whiteboard() {
         setPencilColor={setPencilColor}
       />
 
-      <canvas
-        ref={canvasRef}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          zIndex: 1,
-        }}
-      />
+      <canvas ref={canvasRef} className="whiteboardCanvas" />
       <canvas
         ref={tempCanvasRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        className="tempCanvas"
         style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          zIndex: 2,
           cursor:
             activeTool === "eraser"
               ? "cell"
@@ -260,31 +251,11 @@ function Whiteboard() {
       />
 
       {textInput.visible && (
-        <input
-          ref={inputRef}
-          style={{
-            backgroundColor: "white",
-            color: "black",
-            position: "absolute",
-            left: textInput.x,
-            top: textInput.y,
-            zIndex: 10,
-            fontSize: "20px",
-            border: "1px solid gray",
-            padding: "4px",
-            outline: "none",
-          }}
-          value={textInput.value}
-          onChange={(e) =>
-            setTextInput({ ...textInput, value: e.target.value })
-          }
-          onBlur={handleTextSubmit}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleTextSubmit();
-            }
-          }}
+        <WhiteboardTextInput
+          inputRef={inputRef}
+          textInput={textInput}
+          setTextInput={setTextInput}
+          handleTextSubmit={handleTextSubmit}
         />
       )}
     </Box>
