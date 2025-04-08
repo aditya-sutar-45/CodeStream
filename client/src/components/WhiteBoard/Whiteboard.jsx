@@ -3,6 +3,11 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import rough from "roughjs/bin/rough";
 import WhiteboardControls from "./WhiteboardControls";
 import {
+  drawPencil,
+  drawEllipse,
+  drawLine,
+  drawRectangle,
+  drawText,
   isPointInsideBox,
   isPointNearLine,
 } from "../../utils/whiteboard/helpers";
@@ -31,45 +36,26 @@ function Whiteboard() {
     value: "",
   });
 
+  // Main draw function
   const drawElement = useCallback(
     (rc, ctx, el) => {
       switch (el.type) {
         case "pencil":
-          ctx.strokeStyle = el.color || "#000000";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          for (let i = 1; i < el.points.length; i++) {
-            const from = el.points[i - 1];
-            const to = el.points[i];
-            ctx.moveTo(from.x, from.y);
-            ctx.lineTo(to.x, to.y);
-          }
-          ctx.stroke();
+          drawPencil(ctx, el);
           break;
-
         case "line":
-          rc.line(el.start.x, el.start.y, el.end.x, el.end.y);
+          drawLine(rc, el);
           break;
         case "rectangle":
-          rc.rectangle(
-            el.start.x,
-            el.start.y,
-            el.end.x - el.start.x,
-            el.end.y - el.start.y
-          );
+          drawRectangle(rc, el);
           break;
         case "ellipse":
-          rc.ellipse(
-            (el.start.x + el.end.x) / 2,
-            (el.start.y + el.end.y) / 2,
-            Math.abs(el.end.x - el.start.x),
-            Math.abs(el.end.y - el.start.y)
-          );
+          drawEllipse(rc, el);
           break;
         case "text":
-          ctx.fillStyle = darkTheme ? "white" : "black";
-          ctx.font = "20px Arial";
-          ctx.fillText(el.value, el.x, el.y);
+          drawText(ctx, el, darkTheme);
+          break;
+        default:
           break;
       }
     },

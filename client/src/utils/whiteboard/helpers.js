@@ -23,3 +23,44 @@ export function isPointInsideBox(point, start, end, padding = 0) {
     point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY
   );
 }
+
+export const drawPencil = (ctx, el) => {
+  ctx.strokeStyle = el.color || "#000000";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let i = 1; i < el.points.length; i++) {
+    const from = el.points[i - 1];
+    const to = el.points[i];
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x, to.y);
+  }
+  ctx.stroke();
+};
+
+export const drawLine = (rc, el) => {
+  rc.line(el.start.x, el.start.y, el.end.x, el.end.y);
+};
+
+export const drawRectangle = (rc, el) => {
+  rc.rectangle(
+    el.start.x,
+    el.start.y,
+    el.end.x - el.start.x,
+    el.end.y - el.start.y
+  );
+};
+
+export const drawEllipse = (rc, el) => {
+  rc.ellipse(
+    (el.start.x + el.end.x) / 2,
+    (el.start.y + el.end.y) / 2,
+    Math.abs(el.end.x - el.start.x),
+    Math.abs(el.end.y - el.start.y)
+  );
+};
+
+export const drawText = (ctx, el, darkTheme) => {
+  ctx.fillStyle = darkTheme ? "white" : "black";
+  ctx.font = "20px Arial";
+  ctx.fillText(el.value, el.x, el.y);
+};
