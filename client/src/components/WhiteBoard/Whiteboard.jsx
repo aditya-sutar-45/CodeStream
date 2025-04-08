@@ -1,6 +1,5 @@
 import { Box } from "@radix-ui/themes";
 import { useEffect, useRef, useState, useCallback } from "react";
-import rough from "roughjs/bin/rough";
 import WhiteboardControls from "./WhiteboardControls";
 import {
   drawPencil,
@@ -8,16 +7,18 @@ import {
   drawLine,
   drawRectangle,
   drawText,
-  isPointInsideBox,
-  isPointNearLine,
   getContextWithTransform,
   clearCanvasWithTransform,
   drawElements,
+  getMouseCoords,
 } from "../../utils/whiteboard/helpers";
 import {
   resizeCanvasToContainer,
   setupUndoHandler,
   setupZoomHandlers,
+  drawTempCanvas,
+  clearTempCanvas,
+  eraseAtPosition,
 } from "../../utils/whiteboard/handlers";
 
 function Whiteboard() {
@@ -108,16 +109,8 @@ function Whiteboard() {
     return cleanupUndo;
   }, [redrawMainCanvas]);
 
-  const getMouseCoords = (e) => {
-    const rect = canvasRef.current.getBoundingClientRect();
-    return {
-      x: (e.clientX - rect.left - offset.x) / scale,
-      y: (e.clientY - rect.top - offset.y) / scale,
-    };
-  };
-
   const handleMouseDown = (e) => {
-    const pos = getMouseCoords(e);
+    const pos = getMouseCoords(e, canvasRef, offset, scale);
 
     if (activeTool === "hand") {
       setIsPanning(true);
@@ -145,7 +138,7 @@ function Whiteboard() {
     } else if (["rectangle", "ellipse", "line"].includes(activeTool)) {
       setCurrentElement({ type: activeTool, start: pos, end: pos });
     } else if (activeTool === "eraser") {
-      eraseAtPosition(pos);
+      eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
     }
   };
 
@@ -159,16 +152,22 @@ function Whiteboard() {
     }
 
     if (!isDrawing || !currentElement) return;
-    const pos = getMouseCoords(e);
+    const pos = getMouseCoords(e, canvasRef, offset, scale);
 
     if (currentElement.type === "pencil") {
       const newPoints = [...currentElement.points, pos];
       setCurrentElement({ ...currentElement, points: newPoints });
-      drawTempCanvas({ ...currentElement, points: newPoints });
+      drawTempCanvas(
+        tempCanvasRef,
+        { ...currentElement, points: newPoints },
+        scale,
+        offset,
+        drawElement
+      );
     } else {
       const updated = { ...currentElement, end: pos };
       setCurrentElement(updated);
-      drawTempCanvas(updated);
+      drawTempCanvas(tempCanvasRef, updated, scale, offset, drawElement);
     }
   };
 
@@ -186,7 +185,7 @@ function Whiteboard() {
 
     setCurrentElement(null);
     setIsDrawing(false);
-    clearTempCanvas();
+    clearTempCanvas(tempCanvasRef, scale, offset);
     redrawMainCanvas();
   };
 
@@ -209,61 +208,6 @@ function Whiteboard() {
 
     setTextInput({ visible: false, x: 0, y: 0, value: "" });
     redrawMainCanvas();
-  };
-
-  const eraseAtPosition = (pos) => {
-    const radius = 10;
-    const filtered = elementsRef.current.filter((el) => {
-      if (el.type === "pencil") {
-        return !el.points.some(
-          (p) => Math.hypot(p.x - pos.x, p.y - pos.y) < radius
-        );
-      } else if (el.type === "line") {
-        return !isPointNearLine(pos, el.start, el.end, radius);
-      } else if (["rectangle", "ellipse"].includes(el.type)) {
-        return !isPointInsideBox(pos, el.start, el.end, radius);
-      } else if (el.type === "text") {
-        return !(Math.abs(el.x - pos.x) < 20 && Math.abs(el.y - pos.y) < 20);
-      }
-      return true;
-    });
-
-    elementsRef.current = filtered;
-
-    // Push snapshot to history
-    historyRef.current.push([...filtered]);
-
-    redrawMainCanvas();
-  };
-
-  const drawTempCanvas = (el) => {
-    const canvas = tempCanvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(
-      -offset.x / scale,
-      -offset.y / scale,
-      canvas.width / scale,
-      canvas.height / scale
-    );
-    const rc = rough.canvas(canvas);
-    drawElement(rc, ctx, el);
-    ctx.restore();
-  };
-
-  const clearTempCanvas = () => {
-    const canvas = tempCanvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(
-      -offset.x / scale,
-      -offset.y / scale,
-      canvas.width / scale,
-      canvas.height / scale
-    );
-    ctx.restore();
   };
 
   return (

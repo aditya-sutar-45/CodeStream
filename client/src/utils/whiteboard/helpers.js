@@ -1,3 +1,5 @@
+import rough from "roughjs/bundled/rough.esm.js";
+
 export function isPointNearLine(point, start, end, threshold) {
   const A = point.x - start.x;
   const B = point.y - start.y;
@@ -81,8 +83,15 @@ export const clearCanvasWithTransform = (ctx, canvas, scale, offset) => {
   );
 };
 
-export const drawElements = (rough, canvas, ctx, elements, drawElement) => {
+export const drawElements = (canvas, ctx, elements, drawElement) => {
   const rc = rough.canvas(canvas);
   elements.forEach((el) => drawElement(rc, ctx, el));
 };
 
+export const getMouseCoords = (e, canvasRef, offset, scale) => {
+  const rect = canvasRef.current.getBoundingClientRect();
+  return {
+    x: (e.clientX - rect.left - offset.x) / scale,
+    y: (e.clientY - rect.top - offset.y) / scale,
+  };
+};
