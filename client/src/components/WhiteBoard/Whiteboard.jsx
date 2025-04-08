@@ -149,7 +149,9 @@ function Whiteboard() {
             x: pos.x - (el.x || el.start?.x),
             y: pos.y - (el.y || el.start?.y),
           });
-          setIsDrawing(true);
+
+          setIsDrawing(true); // <- ADD THIS LINE
+
           return;
         }
       }
@@ -161,7 +163,7 @@ function Whiteboard() {
     if (activeTool === "pencil") {
       setCurrentElement({ type: "pencil", points: [pos], color: pencilColor });
     } else if (["rectangle", "ellipse", "line"].includes(activeTool)) {
-      const seed = Math.floor(Math.random() * 1000000); // 🔥 Add this
+      const seed = Math.floor(Math.random() * 1000000);
       setCurrentElement({
         type: activeTool,
         start: pos,
@@ -194,7 +196,12 @@ function Whiteboard() {
       return;
     }
 
-    if (activeTool === "select" && isDrawing && selectedElementIndex !== null) {
+    if (
+      activeTool === "select" &&
+      isDrawing &&
+      selectedElementIndex !== null &&
+      e.buttons === 1
+    ) {
       const pos = getMouseCoords(e, canvasRef, offset, scale);
       const elements = [...elementsRef.current];
       const el = { ...elements[selectedElementIndex] };
@@ -250,14 +257,12 @@ function Whiteboard() {
       elementsRef.current = updatedElements;
       historyRef.current.push(updatedElements);
     }
-    if (activeTool === "select" && isDrawing && selectedElementIndex !== null) {
+    if (activeTool === "select" && selectedElementIndex !== null) {
       historyRef.current.push([...elementsRef.current]);
-      setIsDrawing(false);
-      setSelectedElementIndex(null);
     }
 
-    setCurrentElement(null);
     setIsDrawing(false);
+    setCurrentElement(null);
     clearTempCanvas(tempCanvasRef, scale, offset);
     redrawMainCanvas();
   };
@@ -317,6 +322,10 @@ function Whiteboard() {
               ? "cell"
               : activeTool === "hand"
               ? "grab"
+              : activeTool === "select"
+              ? "default"
+              : activeTool === "text"
+              ? "text"
               : "crosshair",
         }}
       />
