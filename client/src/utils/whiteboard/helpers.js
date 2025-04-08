@@ -51,13 +51,27 @@ export const drawPencil = (ctx, el) => {
 };
 
 
-export const drawLine = (rc, el) => {
+export const drawLine = (rc, el, isSelected = false) => {
   rc.line(el.start.x, el.start.y, el.end.x, el.end.y, {
-    ...el.options, // Use the options object to pass the seed
+    ...el.options,
   });
+
+  if (isSelected) {
+    const ctx = rc.canvas.getContext("2d");
+    ctx.save();
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 2]);
+    ctx.beginPath();
+    ctx.moveTo(el.start.x, el.start.y);
+    ctx.lineTo(el.end.x, el.end.y);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
 };
 
-export const drawRectangle = (rc, el) => {
+export const drawRectangle = (rc, el, isSelected = false) => {
   rc.rectangle(
     el.start.x,
     el.start.y,
@@ -65,23 +79,70 @@ export const drawRectangle = (rc, el) => {
     el.end.y - el.start.y,
     el.options
   );
+
+  if (isSelected) {
+    const ctx = rc.canvas.getContext("2d");
+    ctx.save();
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 2]);
+    ctx.strokeRect(
+      el.start.x,
+      el.start.y,
+      el.end.x - el.start.x,
+      el.end.y - el.start.y
+    );
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
 };
 
-export const drawEllipse = (rc, el) => {
-  rc.ellipse(
-    (el.start.x + el.end.x) / 2,
-    (el.start.y + el.end.y) / 2,
-    Math.abs(el.end.x - el.start.x),
-    Math.abs(el.end.y - el.start.y),
-    el.options
-  );
+export const drawEllipse = (rc, el, isSelected = false) => {
+  const centerX = (el.start.x + el.end.x) / 2;
+  const centerY = (el.start.y + el.end.y) / 2;
+  const width = Math.abs(el.end.x - el.start.x);
+  const height = Math.abs(el.end.y - el.start.y);
+
+  rc.ellipse(centerX, centerY, width, height, el.options);
+
+  if (isSelected) {
+    const ctx = rc.canvas.getContext("2d");
+    ctx.save();
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 2]);
+    ctx.beginPath();
+    ctx.ellipse(centerX, centerY, width / 2, height / 2, 0, 0, 2 * Math.PI);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
 };
 
-export const drawText = (ctx, el, darkTheme) => {
+export const drawText = (ctx, el, darkTheme, isSelected = false) => {
   ctx.fillStyle = darkTheme ? "white" : "black";
   ctx.font = "20px Arial";
   ctx.fillText(el.value, el.x, el.y);
+
+  if (isSelected) {
+    const textMetrics = ctx.measureText(el.value);
+    const padding = 4;
+    const height = 24; // rough approximation of 20px font height
+    ctx.save();
+    ctx.strokeStyle = "blue";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 2]);
+    ctx.strokeRect(
+      el.x - padding,
+      el.y - height + padding,
+      textMetrics.width + 2 * padding,
+      height
+    );
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
 };
+
 
 export const getContextWithTransform = (canvas, scale, offset) => {
   const ctx = canvas.getContext("2d");
@@ -99,10 +160,11 @@ export const clearCanvasWithTransform = (ctx, canvas, scale, offset) => {
   );
 };
 
-export const drawElements = (canvas, ctx, elements, drawElement) => {
+export const drawElements = (canvas, ctx, elements, drawFn) => {
   const rc = rough.canvas(canvas);
-  elements.forEach((el) => drawElement(rc, ctx, el));
+  elements.forEach((el, index) => drawFn(rc, ctx, el, index));
 };
+
 
 export const getMouseCoords = (e, canvasRef, offset, scale) => {
   const rect = canvasRef.current.getBoundingClientRect();

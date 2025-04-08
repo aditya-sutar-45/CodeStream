@@ -52,29 +52,32 @@ function Whiteboard() {
 
   // Main draw function
   const drawElement = useCallback(
-    (rc, ctx, el) => {
-      switch (el.type) {
-        case "pencil":
-          drawPencil(ctx, el);
-          break;
-        case "line":
-          drawLine(rc, el);
-          break;
-        case "rectangle":
-          drawRectangle(rc, el);
-          break;
-        case "ellipse":
-          drawEllipse(rc, el);
-          break;
-        case "text":
-          drawText(ctx, el, darkTheme);
-          break;
-        default:
-          break;
-      }
-    },
-    [darkTheme]
-  );
+  (rc, ctx, el, index) => {
+    const isSelected = index === selectedElementIndex;
+
+    switch (el.type) {
+      case "pencil":
+        drawPencil(ctx, el, isSelected);
+        break;
+      case "line":
+        drawLine(rc, el, isSelected);
+        break;
+      case "rectangle":
+        drawRectangle(rc, el, isSelected);
+        break;
+      case "ellipse":
+        drawEllipse(rc, el, isSelected);
+        break;
+      case "text":
+        drawText(ctx, el, darkTheme, isSelected);
+        break;
+      default:
+        break;
+    }
+  },
+  [darkTheme, selectedElementIndex]
+);
+
 
   const redrawMainCanvas = useCallback(() => {
     const canvas = canvasRef.current;
