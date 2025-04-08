@@ -1,3 +1,4 @@
+// import rough from "roughjs/bundled/rough.esm.js";
 import rough from "roughjs";
 
 export function isPointNearLine(point, start, end, threshold) {
@@ -144,7 +145,6 @@ export const drawEllipse = (rc, el, isSelected = false) => {
     ctx.restore();
   }
 };
-
 
 export const drawText = (ctx, el, darkTheme, isSelected = false) => {
   ctx.fillStyle = darkTheme ? "white" : "black";
