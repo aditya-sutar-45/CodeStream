@@ -14,6 +14,11 @@ import {
   clearCanvasWithTransform,
   drawElements,
 } from "../../utils/whiteboard/helpers";
+import {
+  resizeCanvasToContainer,
+  setupUndoHandler,
+  setupZoomHandlers,
+} from "../../utils/whiteboard/handlers";
 
 function Whiteboard() {
   const containerRef = useRef(null);
@@ -73,82 +78,27 @@ function Whiteboard() {
     ctx.restore();
   }, [scale, offset, drawElement]);
 
-  // Resize and initial draw
   useEffect(() => {
-    const resizeCanvas = () => {
-      const container = containerRef.current;
-      const canvas = canvasRef.current;
-      const tempCanvas = tempCanvasRef.current;
-      if (!container || !canvas || !tempCanvas) return;
+  const resize = () =>
+    resizeCanvasToContainer(canvasRef, tempCanvasRef, containerRef, redrawMainCanvas);
 
-      const { width, height } = container.getBoundingClientRect();
-      canvas.width = tempCanvas.width = width;
-      canvas.height = tempCanvas.height = height;
+  resize();
+  const observer = new ResizeObserver(resize);
+  observer.observe(containerRef.current);
 
-      redrawMainCanvas();
-    };
+  return () => observer.disconnect();
+}, [scale, offset, redrawMainCanvas]);
 
-    resizeCanvas();
-    const resizeObserver = new ResizeObserver(resizeCanvas);
-    resizeObserver.observe(containerRef.current);
-    return () => resizeObserver.disconnect();
-  }, [scale, offset, redrawMainCanvas]);
+useEffect(() => {
+  const cleanupZoom = setupZoomHandlers(setScale);
+  return cleanupZoom;
+}, []);
 
-  // Zoom handlers
-  useEffect(() => {
-    const handleZoomKeys = (e) => {
-      if (e.ctrlKey) {
-        if (e.key === "+") {
-          setScale((prev) => Math.min(prev + 0.1, 5));
-          e.preventDefault();
-        } else if (e.key === "-") {
-          setScale((prev) => Math.max(prev - 0.1, 0.2));
-          e.preventDefault();
-        }
-      }
-    };
+useEffect(() => {
+  const cleanupUndo = setupUndoHandler(historyRef, elementsRef, redrawMainCanvas);
+  return cleanupUndo;
+}, [redrawMainCanvas]);
 
-    const handleWheel = (e) => {
-      if (e.ctrlKey) {
-        e.preventDefault();
-        const direction = e.deltaY > 0 ? -1 : 1;
-        setScale((prev) => {
-          const newScale = prev + direction * 0.1;
-          return Math.max(0.2, Math.min(5, newScale));
-        });
-      }
-    };
-
-    window.addEventListener("keydown", handleZoomKeys);
-    window.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      window.removeEventListener("keydown", handleZoomKeys);
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
-
-  // Undo handler
-  useEffect(() => {
-    const handleUndo = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "z") {
-        e.preventDefault();
-        if (historyRef.current.length > 1) {
-          historyRef.current = historyRef.current.slice(0, -1);
-          const lastState = historyRef.current[historyRef.current.length - 1];
-          elementsRef.current = lastState;
-          redrawMainCanvas();
-        } else {
-          elementsRef.current = [];
-          historyRef.current = [[]];
-          redrawMainCanvas();
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleUndo);
-    return () => window.removeEventListener("keydown", handleUndo);
-  }, [redrawMainCanvas]);
 
   const getMouseCoords = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
