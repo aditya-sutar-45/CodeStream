@@ -49,7 +49,8 @@ function Whiteboard() {
   });
   const [selectedElementIndex, setSelectedElementIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [strokeWidth, setStrokeWidth] = useState(10);
+  const [pencilStrokeWidth, setPencilStrokeWidth] = useState(4);
+  const [shapeStrokeWidth, setShapeStrokeWidth] = useState(3);
 
   const cursorMap = {
     eraser: "cell",
@@ -202,7 +203,7 @@ function Whiteboard() {
         type: "pencil",
         points: [pos],
         color: pencilColor,
-        strokeWidth: strokeWidth,
+        strokeWidth: pencilStrokeWidth,
       });
     } else if (["rectangle", "ellipse", "line"].includes(activeTool)) {
       const seed = Math.floor(Math.random() * 1000000);
@@ -212,7 +213,7 @@ function Whiteboard() {
         end: pos,
         options: {
           stroke: "black",
-          strokeWidth: 1,
+          strokeWidth: shapeStrokeWidth,
           roughness: 1,
           seed,
         },
@@ -356,8 +357,10 @@ function Whiteboard() {
         activeTool={activeTool}
         pencilColor={pencilColor}
         setPencilColor={setPencilColor}
-        strokeWidth={strokeWidth}
-        setStrokeWidth={setStrokeWidth}
+        pencilStrokeWidth={pencilStrokeWidth}
+        setPencileStrokeWidth={setPencilStrokeWidth}
+        shapeStrokeWidth={shapeStrokeWidth}
+        setShapeStrokeWidth={setShapeStrokeWidth}
       />
 
       <canvas ref={canvasRef} className="whiteboardCanvas" />
