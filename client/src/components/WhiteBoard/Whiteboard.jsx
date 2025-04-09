@@ -186,7 +186,7 @@ function Whiteboard() {
             y: pos.y - elY,
           });
 
-          setIsDrawing(true); // <- ADD THIS LINE
+          setIsDrawing(true);
 
           return;
         }
@@ -205,7 +205,7 @@ function Whiteboard() {
         start: pos,
         end: pos,
         options: {
-          stroke: "black", // customize if needed
+          stroke: "black",
           strokeWidth: 1,
           roughness: 1,
           seed,
