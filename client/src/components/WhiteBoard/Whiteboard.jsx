@@ -49,6 +49,7 @@ function Whiteboard() {
   });
   const [selectedElementIndex, setSelectedElementIndex] = useState(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [selectedWidth, setSelectedWidth] = useState(10);
 
   const cursorMap = {
     eraser: "cell",
@@ -197,7 +198,12 @@ function Whiteboard() {
     setIsDrawing(true);
 
     if (activeTool === "pencil") {
-      setCurrentElement({ type: "pencil", points: [pos], color: pencilColor });
+      setCurrentElement({
+        type: "pencil",
+        points: [pos],
+        color: pencilColor,
+        strokeWidth: selectedWidth,
+      });
     } else if (["rectangle", "ellipse", "line"].includes(activeTool)) {
       const seed = Math.floor(Math.random() * 1000000);
       setCurrentElement({

@@ -48,7 +48,7 @@ export const drawPencil = (ctx, el, isSelected = false) => {
   if (points.length < 2) return;
 
   ctx.strokeStyle = el.color || "#000000";
-  ctx.lineWidth = 2;
+  ctx.lineWidth = el.strokeWidth || 2;
   ctx.lineJoin = "round";
   ctx.lineCap = "round";
 
