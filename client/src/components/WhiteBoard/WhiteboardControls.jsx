@@ -1,4 +1,4 @@
-import { Button, Flex, Switch } from "@radix-ui/themes";
+import { Box,Text, Button, Flex, Slider, Switch } from "@radix-ui/themes";
 import { useState } from "react";
 import "./WhiteboardControls.css";
 import ToolButton from "./ToolButton";
@@ -25,6 +25,8 @@ function WhiteboardControls({
   activeTool,
   setPencilColor,
   pencilColor,
+  strokeWidth,
+  setStrokeWidth,
 }) {
   const [showShapeOptions, setShowShapeOptions] = useState(false);
   const [showColorOptions, setShowColorOptions] = useState(false);
@@ -83,6 +85,16 @@ function WhiteboardControls({
           />
           {showColorOptions && activeTool === "pencil" && (
             <div className="color-options">
+              <Box width="100%">
+                <Text>Thickness: {strokeWidth}</Text>
+                <Slider
+                  defaultValue={[strokeWidth]}
+                  min={1}
+                  max={9}
+                  step={1}
+                  onValueChange={([value]) => setStrokeWidth(value)}
+                />
+              </Box>
               {COLORS.map(({ name, hex }) => (
                 <button
                   key={name}
