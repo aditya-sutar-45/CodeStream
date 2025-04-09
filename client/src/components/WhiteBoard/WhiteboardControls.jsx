@@ -91,7 +91,7 @@ function WhiteboardControls({
                   defaultValue={[strokeWidth]}
                   min={1}
                   max={9}
-                  step={1}
+                  step={2}
                   onValueChange={([value]) => setStrokeWidth(value)}
                 />
               </Box>
