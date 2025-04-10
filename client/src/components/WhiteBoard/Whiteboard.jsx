@@ -1,119 +1,149 @@
 import { Box } from "@radix-ui/themes";
-import { useEffect, useRef, useState } from "react";
-import rough from "roughjs/bin/rough";
+import "./Whiteboard.css";
+import { useEffect, useRef, useState, useCallback } from "react";
 import WhiteboardControls from "./WhiteboardControls";
+import {
+  drawPencil,
+  drawEllipse,
+  drawLine,
+  drawRectangle,
+  drawText,
+  getContextWithTransform,
+  clearCanvasWithTransform,
+  drawElements,
+  getMouseCoords,
+  isInsideElement,
+} from "../../utils/whiteboard/helpers";
+import {
+  resizeCanvasToContainer,
+  setupUndoHandler,
+  setupZoomHandlers,
+  drawTempCanvas,
+  clearTempCanvas,
+  eraseAtPosition,
+} from "../../utils/whiteboard/handlers";
+import WhiteboardTextInput from "./WhiteboardTextInput";
 
 function Whiteboard() {
-  const [pencilColor, setPencilColor] = useState("#000000");  
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const tempCanvasRef = useRef(null);
   const inputRef = useRef(null);
+  const elementsRef = useRef([]);
+  const panStart = useRef({ x: 0, y: 0 });
+  const historyRef = useRef([[]]);
 
+  const [pencilColor, setPencilColor] = useState("#000000");
   const [activeTool, setActiveTool] = useState("pencil");
   const [darkTheme, setDarkTheme] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentElement, setCurrentElement] = useState(null);
-  const elementsRef = useRef([]);
   const [scale, setScale] = useState(1);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [isPanning, setIsPanning] = useState(false);
-  const panStart = useRef({ x: 0, y: 0 });
-  const [textInput, setTextInput] = useState({ visible: false, x: 0, y: 0, value: "" });
-  const [history, setHistory] = useState([[]]);
+  const [textInput, setTextInput] = useState({
+    visible: false,
+    x: 0,
+    y: 0,
+    value: "",
+  });
+  const [selectedElementIndex, setSelectedElementIndex] = useState(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [pencilStrokeWidth, setPencilStrokeWidth] = useState(4);
+  const [shapeStrokeWidth, setShapeStrokeWidth] = useState(3);
 
-  // Resize and initial draw
-  useEffect(() => {
-    const resizeCanvas = () => {
-      const container = containerRef.current;
-      const canvas = canvasRef.current;
-      const tempCanvas = tempCanvasRef.current;
-      if (!container || !canvas || !tempCanvas) return;
-
-      const { width, height } = container.getBoundingClientRect();
-      canvas.width = tempCanvas.width = width;
-      canvas.height = tempCanvas.height = height;
-
-      redrawMainCanvas();
-    };
-
-    resizeCanvas();
-    const resizeObserver = new ResizeObserver(resizeCanvas);
-    resizeObserver.observe(containerRef.current);
-    return () => resizeObserver.disconnect();
-  }, [scale, offset]);
-
-  // Zoom handlers
-  useEffect(() => {
-    const handleZoomKeys = (e) => {
-      if (e.ctrlKey) {
-        if (e.key === "+") {
-          setScale((prev) => Math.min(prev + 0.1, 5));
-          e.preventDefault();
-        } else if (e.key === "-") {
-          setScale((prev) => Math.max(prev - 0.1, 0.2));
-          e.preventDefault();
-        }
-      }
-    };
-
-    const handleWheel = (e) => {
-      if (e.ctrlKey) {
-        e.preventDefault();
-        const direction = e.deltaY > 0 ? -1 : 1;
-        setScale((prev) => {
-          const newScale = prev + direction * 0.1;
-          return Math.max(0.2, Math.min(5, newScale));
-        });
-      }
-    };
-
-    window.addEventListener("keydown", handleZoomKeys);
-    window.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      window.removeEventListener("keydown", handleZoomKeys);
-      window.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
-
-  // Undo handler
-  useEffect(() => {
-    const handleUndo = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key === "z") {
-        e.preventDefault();
-        setHistory((prevHistory) => {
-          if (prevHistory.length > 1) {
-            const newHistory = prevHistory.slice(0, -1);
-            const lastState = newHistory[newHistory.length - 1];
-            elementsRef.current = lastState;
-            redrawMainCanvas();
-            return newHistory;
-          } else {
-            elementsRef.current = [];
-            redrawMainCanvas();
-            return [[]];
-          }
-        });
-      }
-    };
-
-    window.addEventListener("keydown", handleUndo);
-    return () => window.removeEventListener("keydown", handleUndo);
-  }, []);
-
-  const getMouseCoords = (e) => {
-    const rect = canvasRef.current.getBoundingClientRect();
-    return {
-      x: (e.clientX - rect.left - offset.x) / scale,
-      y: (e.clientY - rect.top - offset.y) / scale,
-    };
+  const cursorMap = {
+    eraser: "cell",
+    hand: "grab",
+    select: "default",
+    text: "text",
   };
 
-  const handleMouseDown = (e) => {
-    const pos = getMouseCoords(e);
+  // Main draw function
+  const drawElement = useCallback(
+    (rc, ctx, el, index) => {
+      const isSelected = index === selectedElementIndex;
 
-    if (activeTool === "hand") {
+      switch (el.type) {
+        case "pencil":
+          drawPencil(ctx, el, isSelected);
+          break;
+        case "line":
+          drawLine(rc, el, isSelected);
+          break;
+        case "rectangle":
+          drawRectangle(rc, el, isSelected);
+          break;
+        case "ellipse":
+          drawEllipse(rc, el, isSelected);
+          break;
+        case "text":
+          drawText(ctx, el, darkTheme, isSelected);
+          break;
+        default:
+          break;
+      }
+    },
+    [darkTheme, selectedElementIndex]
+  );
+
+  const redrawMainCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    const ctx = getContextWithTransform(canvas, scale, offset);
+    clearCanvasWithTransform(ctx, canvas, scale, offset);
+    drawElements(canvas, ctx, elementsRef.current, drawElement);
+    ctx.restore();
+  }, [scale, offset, drawElement]);
+
+  useEffect(() => {
+    const resize = () =>
+      resizeCanvasToContainer(
+        canvasRef,
+        tempCanvasRef,
+        containerRef,
+        redrawMainCanvas
+      );
+
+    resize();
+    const observer = new ResizeObserver(resize);
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [scale, offset, redrawMainCanvas]);
+
+  useEffect(() => {
+    const cleanupZoom = setupZoomHandlers(setScale, setOffset, canvasRef);
+    return cleanupZoom;
+  }, []);
+
+  useEffect(() => {
+    const cleanupUndo = setupUndoHandler(
+      historyRef,
+      elementsRef,
+      redrawMainCanvas
+    );
+    return cleanupUndo;
+  }, [redrawMainCanvas]);
+
+  useEffect(() => {
+    const preventMiddleClickScroll = (e) => {
+      if (e.button === 1) {
+        e.preventDefault();
+      }
+    };
+
+    const canvas = canvasRef.current;
+    canvas.addEventListener("mousedown", preventMiddleClickScroll);
+
+    return () => {
+      canvas.removeEventListener("mousedown", preventMiddleClickScroll);
+    };
+  }, []);
+
+  const handleMouseDown = (e) => {
+    const pos = getMouseCoords(e, canvasRef, offset, scale);
+
+    if (activeTool === "hand" || e.button === 1) {
       setIsPanning(true);
       panStart.current = { x: e.clientX, y: e.clientY };
       return;
@@ -133,19 +163,71 @@ function Whiteboard() {
       return;
     }
 
+    if (activeTool === "select") {
+      const pos = getMouseCoords(e, canvasRef, offset, scale);
+      for (let i = elementsRef.current.length - 1; i >= 0; i--) {
+        const el = elementsRef.current[i];
+        if (isInsideElement(pos, el)) {
+          setSelectedElementIndex(i);
+          let elX = 0,
+            elY = 0;
+
+          if (el.type === "text") {
+            elX = el.x;
+            elY = el.y;
+          } else if (["rectangle", "ellipse", "line"].includes(el.type)) {
+            elX = el.start.x;
+            elY = el.start.y;
+          } else if (el.type === "pencil") {
+            elX = el.points[0].x;
+            elY = el.points[0].y;
+          }
+
+          setDragOffset({
+            x: pos.x - elX,
+            y: pos.y - elY,
+          });
+
+          setIsDrawing(true);
+
+          return;
+        }
+      }
+      setSelectedElementIndex(null);
+    }
+
     setIsDrawing(true);
+
     if (activeTool === "pencil") {
-      
-      setCurrentElement({ type: "pencil", points: [pos], color: pencilColor });
+      setCurrentElement({
+        type: "pencil",
+        points: [pos],
+        color: pencilColor,
+        strokeWidth: pencilStrokeWidth,
+      });
     } else if (["rectangle", "ellipse", "line"].includes(activeTool)) {
-      setCurrentElement({ type: activeTool, start: pos, end: pos });
+      const seed = Math.floor(Math.random() * 1000000);
+      setCurrentElement({
+        type: activeTool,
+        start: pos,
+        end: pos,
+        options: {
+          stroke: "black",
+          strokeWidth: shapeStrokeWidth,
+          roughness: 1,
+          seed,
+        },
+      });
     } else if (activeTool === "eraser") {
-      eraseAtPosition(pos);
+      // eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
+      setIsDrawing(true);
     }
   };
 
   const handleMouseMove = (e) => {
-    if (isPanning) {
+    if (e.buttons === 4 && !isPanning) return;
+
+    if (isPanning || e.buttons === 4) {
       const dx = e.clientX - panStart.current.x;
       const dy = e.clientY - panStart.current.y;
       setOffset((prev) => ({ x: prev.x + dx, y: prev.y + dy }));
@@ -153,22 +235,70 @@ function Whiteboard() {
       return;
     }
 
+    if (activeTool === "eraser" && isDrawing) {
+      const pos = getMouseCoords(e, canvasRef, offset, scale);
+      eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
+      return;
+    }
+
+    if (
+      activeTool === "select" &&
+      isDrawing &&
+      selectedElementIndex !== null &&
+      e.buttons === 1
+    ) {
+      const pos = getMouseCoords(e, canvasRef, offset, scale);
+      const elements = [...elementsRef.current];
+      const el = { ...elements[selectedElementIndex] };
+
+      const dx = pos.x - dragOffset.x;
+      const dy = pos.y - dragOffset.y;
+
+      if (el.type === "text") {
+        el.x = dx;
+        el.y = dy;
+      } else if (["rectangle", "ellipse", "line"].includes(el.type)) {
+        const width = el.end.x - el.start.x;
+        const height = el.end.y - el.start.y;
+
+        el.start = { x: dx, y: dy };
+        el.end = { x: dx + width, y: dy + height };
+      } else if (el.type === "pencil") {
+        const movedPoints = el.points.map((pt) => ({
+          x: pt.x - (el.points[0].x - dx),
+          y: pt.y - (el.points[0].y - dy),
+        }));
+        el.points = movedPoints;
+      }
+
+      elements[selectedElementIndex] = el;
+      elementsRef.current = elements;
+      redrawMainCanvas();
+    }
+
     if (!isDrawing || !currentElement) return;
-    const pos = getMouseCoords(e);
+
+    const pos = getMouseCoords(e, canvasRef, offset, scale);
 
     if (currentElement.type === "pencil") {
       const newPoints = [...currentElement.points, pos];
       setCurrentElement({ ...currentElement, points: newPoints });
-      drawTempCanvas({ ...currentElement, points: newPoints });
+      drawTempCanvas(
+        tempCanvasRef,
+        { ...currentElement, points: newPoints },
+        scale,
+        offset,
+        drawElement
+      );
     } else {
       const updated = { ...currentElement, end: pos };
       setCurrentElement(updated);
-      drawTempCanvas(updated);
+      drawTempCanvas(tempCanvasRef, updated, scale, offset, drawElement);
     }
   };
 
-  const handleMouseUp = () => {
-    if (isPanning) {
+  const handleMouseUp = (e) => {
+    if (isPanning || e.button === 1) {
       setIsPanning(false);
       return;
     }
@@ -176,12 +306,15 @@ function Whiteboard() {
     if (currentElement) {
       const updatedElements = [...elementsRef.current, currentElement];
       elementsRef.current = updatedElements;
-      setHistory((prev) => [...prev, updatedElements]);
+      historyRef.current.push(updatedElements);
+    }
+    if (activeTool === "select" && selectedElementIndex !== null) {
+      historyRef.current.push([...elementsRef.current]);
     }
 
-    setCurrentElement(null);
     setIsDrawing(false);
-    clearTempCanvas();
+    setCurrentElement(null);
+    clearTempCanvas(tempCanvasRef, scale, offset);
     redrawMainCanvas();
   };
 
@@ -200,175 +333,59 @@ function Whiteboard() {
 
     const updatedElements = [...elementsRef.current, newText];
     elementsRef.current = updatedElements;
-    setHistory((prev) => [...prev, updatedElements]);
+    historyRef.current.push(updatedElements);
 
     setTextInput({ visible: false, x: 0, y: 0, value: "" });
     redrawMainCanvas();
   };
 
-  const eraseAtPosition = (pos) => {
-    const radius = 10;
-    const filtered = elementsRef.current.filter((el) => {
-      if (el.type === "pencil") {
-        return !el.points.some((p) => Math.hypot(p.x - pos.x, p.y - pos.y) < radius);
-      } else if (el.type === "line") {
-        return !isPointNearLine(pos, el.start, el.end, radius);
-      } else if (["rectangle", "ellipse"].includes(el.type)) {
-        return !isPointInsideBox(pos, el.start, el.end, radius);
-      } else if (el.type === "text") {
-        return !(Math.abs(el.x - pos.x) < 20 && Math.abs(el.y - pos.y) < 20);
-      }
-      return true;
-    });
-
-    elementsRef.current = filtered;
-    setHistory((prev) => [...prev, filtered]);
-    redrawMainCanvas();
-  };
-
-  const redrawMainCanvas = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(-offset.x / scale, -offset.y / scale, canvas.width / scale, canvas.height / scale);
-    const rc = rough.canvas(canvas);
-    elementsRef.current.forEach((el) => drawElement(rc, ctx, el));
-    ctx.restore();
-  };
-
-  const drawTempCanvas = (el) => {
-    const canvas = tempCanvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(-offset.x / scale, -offset.y / scale, canvas.width / scale, canvas.height / scale);
-    const rc = rough.canvas(canvas);
-    drawElement(rc, ctx, el);
-    ctx.restore();
-  };
-
-  const clearTempCanvas = () => {
-    const canvas = tempCanvasRef.current;
-    const ctx = canvas.getContext("2d");
-    ctx.save();
-    ctx.setTransform(scale, 0, 0, scale, offset.x, offset.y);
-    ctx.clearRect(-offset.x / scale, -offset.y / scale, canvas.width / scale, canvas.height / scale);
-    ctx.restore();
-  };
-
-  const drawElement = (rc, ctx, el) => {
-    switch (el.type) {
-      case "pencil":
-        ctx.strokeStyle = el.color || "#000000";
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        for (let i = 1; i < el.points.length; i++) {
-          const from = el.points[i - 1];
-          const to = el.points[i];
-          ctx.moveTo(from.x, from.y);
-          ctx.lineTo(to.x, to.y);
-        }
-        ctx.stroke();
-        break;
-  
-      case "line":
-        rc.line(el.start.x, el.start.y, el.end.x, el.end.y);
-        break;
-      case "rectangle":
-        rc.rectangle(el.start.x, el.start.y, el.end.x - el.start.x, el.end.y - el.start.y);
-        break;
-      case "ellipse":
-        rc.ellipse((el.start.x + el.end.x) / 2, (el.start.y + el.end.y) / 2, Math.abs(el.end.x - el.start.x), Math.abs(el.end.y - el.start.y));
-        break;
-      case "text":
-        ctx.fillStyle = darkTheme ? "white" : "black";
-        ctx.font = "20px Arial";
-        ctx.fillText(el.value, el.x, el.y);
-        break;
-    }
-  };
-
   return (
     <Box
       ref={containerRef}
+      position="relative"
+      width="100%"
+      height="100%"
       style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
         backgroundColor: darkTheme ? "black" : "white",
         overflow: "hidden",
       }}
     >
-      <WhiteboardControls setDarkTheme={setDarkTheme} darkTheme={darkTheme} setActiveTool={setActiveTool} activeTool={activeTool}  pencilColor={pencilColor}
-  setPencilColor={setPencilColor}/>
+      <WhiteboardControls
+        setDarkTheme={setDarkTheme}
+        darkTheme={darkTheme}
+        setActiveTool={setActiveTool}
+        activeTool={activeTool}
+        pencilColor={pencilColor}
+        setPencilColor={setPencilColor}
+        pencilStrokeWidth={pencilStrokeWidth}
+        setPencileStrokeWidth={setPencilStrokeWidth}
+        shapeStrokeWidth={shapeStrokeWidth}
+        setShapeStrokeWidth={setShapeStrokeWidth}
+      />
 
-      <canvas ref={canvasRef} style={{ width: "100%", height: "100%", position: "absolute", zIndex: 1 }} />
+      <canvas ref={canvasRef} className="whiteboardCanvas" />
       <canvas
         ref={tempCanvasRef}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseUp}
+        className="tempCanvas"
         style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-          zIndex: 2,
-          cursor: activeTool === "eraser" ? "cell" : activeTool === "hand" ? "grab" : "crosshair",
+          cursor: cursorMap[activeTool] || "crosshair",
         }}
       />
 
       {textInput.visible && (
-        <input
-          ref={inputRef}
-          style={{
-            position: "absolute",
-            left: textInput.x,
-            top: textInput.y,
-            zIndex: 10,
-            fontSize: "20px",
-            border: "1px solid gray",
-            padding: "4px",
-            outline: "none",
-          }}
-          value={textInput.value}
-          onChange={(e) => setTextInput({ ...textInput, value: e.target.value })}
-          onBlur={handleTextSubmit}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleTextSubmit();
-            }
-          }}
+        <WhiteboardTextInput
+          inputRef={inputRef}
+          textInput={textInput}
+          setTextInput={setTextInput}
+          handleTextSubmit={handleTextSubmit}
         />
       )}
     </Box>
   );
-}
-
-function isPointNearLine(point, start, end, threshold) {
-  const A = point.x - start.x;
-  const B = point.y - start.y;
-  const C = end.x - start.x;
-  const D = end.y - start.y;
-
-  const dot = A * C + B * D;
-  const len_sq = C * C + D * D;
-  const param = len_sq ? dot / len_sq : -1;
-
-  const xx = param < 0 ? start.x : param > 1 ? end.x : start.x + param * C;
-  const yy = param < 0 ? start.y : param > 1 ? end.y : start.y + param * D;
-
-  return Math.hypot(point.x - xx, point.y - yy) < threshold;
-}
-
-function isPointInsideBox(point, start, end, padding = 0) {
-  const minX = Math.min(start.x, end.x) - padding;
-  const maxX = Math.max(start.x, end.x) + padding;
-  const minY = Math.min(start.y, end.y) - padding;
-  const maxY = Math.max(start.y, end.y) + padding;
-  return point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY;
 }
 
 export default Whiteboard;
