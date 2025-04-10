@@ -44,6 +44,16 @@ export const updateUser = catchAsync(async (req, res) => {
   const { uid } = req.params;
   const updates = req.body;
 
+  if (updates.username) {
+    const existingUser = await User.findOne({
+      username: updates.username,
+      firebaseUid: { $ne: uid },
+    });
+    if (existingUser) {
+      throw new ExpressError("username already taken!", 400);
+    }
+  }
+
   const user = await User.findOneAndUpdate({ firebaseUid: uid }, updates, {
     new: true,
   });

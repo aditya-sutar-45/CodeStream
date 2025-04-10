@@ -8,9 +8,34 @@ import {
 } from "@radix-ui/themes";
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { useAuth } from "../../hooks/useAuth";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 function EditProfile() {
-  const { username } = useAuth();
+  const [newUsername, setNewUsername] = useState("");
+  const { currentUser, username, setUsername } = useAuth();
+  const updateUsername = (_username) => {
+    axios
+      .patch(
+        `http://localhost:3000/user/${currentUser.uid}`,
+        {
+          username: _username,
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then(() => {
+        setUsername(_username);
+        toast.success("username updated!");
+      })
+      .catch((error) => {
+        console.error("error: ", error);
+        const msg = error.response?.data?.message || "Something went wrong";
+        toast.error(msg);
+      });
+  };
   return (
     <Dialog.Root>
       <Dialog.Trigger>
@@ -27,6 +52,7 @@ function EditProfile() {
             <TextField.Root
               defaultValue={username}
               placeholder="your username..."
+              onChange={(e) => setNewUsername(e.target.value)}
             />
           </label>
         </Flex>
@@ -37,7 +63,7 @@ function EditProfile() {
             </Button>
           </Dialog.Close>
           <Dialog.Close>
-            <Button>Save</Button>
+            <Button onClick={() => updateUsername(newUsername)}>Save</Button>
           </Dialog.Close>
         </Flex>
       </Dialog.Content>
