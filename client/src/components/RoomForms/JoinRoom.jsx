@@ -14,6 +14,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import socket from "../../socket";
 import { EVENTS } from "../../utils/constants";
+import { Box } from "@radix-ui/themes";
+import "../Home/Home.css";
+import { BackgroundBeams } from "../Home/BackgroundBeams";
+
 
 function JoinRoom() {
   const [roomId, setRoomId] = useState("");
@@ -43,7 +47,7 @@ function JoinRoom() {
   return (
     <>
       <NavHeader />
-      <Flex align="center" justify="center" height="100vh">
+      <Flex align="center" justify="center" height="100vh" className="mainContainer">
         <Container size="2">
           <Heading mb="1rem" align={"center"} size="9">
             Join a Room
@@ -96,6 +100,17 @@ function JoinRoom() {
           </form>
         </Container>
       </Flex>
+      <Box
+        style={{
+          position: "fixed",
+          inset: "0",
+          zIndex: "0",
+          pointerEvents: "none",
+          height: "100vh",
+        }}
+      >
+        <BackgroundBeams/>
+      </Box>
     </>
   );
 }

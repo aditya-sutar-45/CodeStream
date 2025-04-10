@@ -145,6 +145,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     username,
+    setUsername,
     profilePic,
     setProfilePic,
     login,

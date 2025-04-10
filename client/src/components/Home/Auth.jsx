@@ -1,5 +1,5 @@
 import { Dialog, Callout, Flex, Button, Link } from "@radix-ui/themes";
-import { ExitIcon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { InfoCircledIcon } from "@radix-ui/react-icons";
 import SignUpForm from "./Auth/SignUpForm";
 import { useState } from "react";
 import LoginForm from "./Auth/LoginForm";
@@ -7,6 +7,7 @@ import { useAuth } from "../../hooks/useAuth.js";
 import { useMatch, useNavigate } from "react-router-dom";
 import ProfilePicture from "../ProfilePicture.jsx";
 import toast from "react-hot-toast";
+import LogoutButton from "./Auth/LogoutButton.jsx";
 
 function Auth() {
   const isDashboard = useMatch("/user/dashboard");
@@ -59,10 +60,7 @@ function Auth() {
             <ProfilePicture username={username} styles={{}} />
           </Link>
         ) : (
-          <Button onClick={handleLogout}>
-            Logout
-            <ExitIcon />
-          </Button>
+          <LogoutButton handleLogout={handleLogout} />
         )
       ) : (
         <Dialog.Root>
