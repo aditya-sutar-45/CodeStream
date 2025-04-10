@@ -15,8 +15,8 @@
   
   /* Custom button styling */
   .custom-button {
-    /* background: #6a0dad; Nice purple color */
-    /* color: white; */
+    background: #6a0dad; /*Nice purple color*/
+     color: white; 
     border-radius: 8px;
     padding: 12px;
     height: 45px;
