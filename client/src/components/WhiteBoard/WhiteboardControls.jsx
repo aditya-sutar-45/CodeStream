@@ -6,14 +6,16 @@ import {
   Slider,
   Switch,
   HoverCard,
+  IconButton,
 } from "@radix-ui/themes";
 import "./WhiteboardControls.css";
 import ToolButton from "./ToolButton";
+import { CircleIcon, SlashIcon, SquareIcon } from "@radix-ui/react-icons";
 
 const SHAPES = [
-  { name: "rectangle", label: "Rectangle" },
-  { name: "ellipse", label: "Ellipse" },
-  { name: "line", label: "Line" },
+  { name: "rectangle", label: <SquareIcon /> },
+  { name: "ellipse", label: <CircleIcon /> },
+  { name: "line", label: <SlashIcon /> },
 ];
 
 const COLORS = [
@@ -165,9 +167,16 @@ function WhiteboardControls({
                 />
               </Box>
               {SHAPES.map(({ name, label }) => (
-                <Button key={name} mx="1" onClick={() => handleToolClick(name)}>
+                <IconButton
+                  key={name}
+                  mx="1"
+                  onClick={() => handleToolClick(name)}
+                  style={{
+                    backgroundColor: activeTool === name ? "gray" : "#6a0dad",
+                  }}
+                >
                   {label}
-                </Button>
+                </IconButton>
               ))}
             </HoverCard.Content>
           </HoverCard.Root>
