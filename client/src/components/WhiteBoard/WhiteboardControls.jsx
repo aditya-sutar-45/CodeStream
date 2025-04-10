@@ -7,7 +7,6 @@ import {
   Switch,
   HoverCard,
 } from "@radix-ui/themes";
-import { useState } from "react";
 import "./WhiteboardControls.css";
 import ToolButton from "./ToolButton";
 
@@ -38,24 +37,12 @@ function WhiteboardControls({
   shapeStrokeWidth,
   setShapeStrokeWidth,
 }) {
-  const [showShapeOptions, setShowShapeOptions] = useState(false);
-  const [showColorOptions, setShowColorOptions] = useState(false);
-
   const handleToolClick = (tool) => {
     setActiveTool(tool);
-    setShowShapeOptions(false);
-    setShowColorOptions(false);
   };
 
   const handlePencilClick = () => {
     setActiveTool("pencil");
-    setShowColorOptions(!showColorOptions);
-    setShowShapeOptions(false);
-  };
-
-  const handleShapeToggle = () => {
-    setShowShapeOptions(!showShapeOptions);
-    setShowColorOptions(false);
   };
 
   return (
@@ -88,7 +75,13 @@ function WhiteboardControls({
         <Box>
           <HoverCard.Root>
             <HoverCard.Trigger>
-              <Button onClick={handlePencilClick} className="custom-button">
+              <Button
+                onClick={handlePencilClick}
+                style={{
+                  background: activeTool === "pencil" ? "gray" : "#6a0dad",
+                }}
+                className="custom-button"
+              >
                 <img
                   src={
                     activeTool === "pencil"
@@ -114,8 +107,9 @@ function WhiteboardControls({
               {COLORS.map(({ name, hex }) => (
                 <button
                   key={name}
-                  className={`color-circle ${pencilColor === hex ? "selected" : ""
-                    }`}
+                  className={`color-circle ${
+                    pencilColor === hex ? "selected" : ""
+                  }`}
                   style={{ backgroundColor: hex }}
                   onClick={() => setPencilColor(hex)}
                 />
@@ -137,10 +131,20 @@ function WhiteboardControls({
         <Box>
           <HoverCard.Root>
             <HoverCard.Trigger>
-              <Button onClick={handlePencilClick} className="custom-button">
+              <Button
+                className="custom-button"
+                style={{
+                  backgroundColor:
+                    activeTool === "rectangle" ||
+                    activeTool === "ellipse" ||
+                    activeTool === "line"
+                      ? "gray"
+                      : "#6a0dad",
+                }}
+              >
                 <img
                   src={
-                    activeTool === "pencil"
+                    activeTool === "shapes"
                       ? `/images/icons/whiteboard/shapes.gif`
                       : `/images/icons/whiteboard/shapes-static.png`
                   }
@@ -150,7 +154,7 @@ function WhiteboardControls({
               </Button>
             </HoverCard.Trigger>
             <HoverCard.Content>
-              <Box width="100%">
+              <Box width="100%" my="2">
                 <Text>Thickness: {shapeStrokeWidth}</Text>
                 <Slider
                   defaultValue={[shapeStrokeWidth]}
@@ -161,7 +165,7 @@ function WhiteboardControls({
                 />
               </Box>
               {SHAPES.map(({ name, label }) => (
-                <Button key={name} onClick={() => handleToolClick(name)}>
+                <Button key={name} mx="1" onClick={() => handleToolClick(name)}>
                   {label}
                 </Button>
               ))}

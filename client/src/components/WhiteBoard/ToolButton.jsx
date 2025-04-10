@@ -8,19 +8,19 @@ const TOOL_ICONS = {
   line: "shapes",
   eraser: "eraser",
   hand: "hand",
-  select: "select"
+  select: "select",
 };
 
-function ToolButton({
-  tool,
-  activeTool,
-  onClick,
-  tooltip,
-  iconClass,
-}) {
+function ToolButton({ tool, activeTool, onClick, tooltip, iconClass }) {
   return (
     <Tooltip content={tooltip}>
-      <Button onClick={onClick} className="custom-button">
+      <Button
+        onClick={onClick}
+        className="custom-button"
+        style={{
+          background: activeTool === tool ? "gray" : "#6a0dad",
+        }}
+      >
         <img
           src={
             activeTool === tool
