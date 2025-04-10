@@ -9,7 +9,7 @@ import {
 import NavHeader from "../Home/NavHeader";
 import DashboardAvatar from "./DashboardAvatar";
 
-export default function UserProfile() {
+export default function Dashboard() {
   const { currentUser, username} = useAuth();
 
   return (
