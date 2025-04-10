@@ -114,9 +114,8 @@ function WhiteboardControls({
               {COLORS.map(({ name, hex }) => (
                 <button
                   key={name}
-                  className={`color-circle ${
-                    pencilColor === hex ? "selected" : ""
-                  }`}
+                  className={`color-circle ${pencilColor === hex ? "selected" : ""
+                    }`}
                   style={{ backgroundColor: hex }}
                   onClick={() => setPencilColor(hex)}
                 />
@@ -135,16 +134,22 @@ function WhiteboardControls({
         />
 
         {/* Shape Dropdown */}
-        <div className="custom-button shape-dropdown-wrapper">
-          <ToolButton
-            tool="rectangle"
-            activeTool={activeTool}
-            onClick={handleShapeToggle}
-            tooltip="Shapes"
-            iconClass="shapes-icon"
-          />
-          {showShapeOptions && (
-            <Flex direction="column" gap="1" mt="1">
+        <Box>
+          <HoverCard.Root>
+            <HoverCard.Trigger>
+              <Button onClick={handlePencilClick} className="custom-button">
+                <img
+                  src={
+                    activeTool === "pencil"
+                      ? `/images/icons/whiteboard/shapes.gif`
+                      : `/images/icons/whiteboard/shapes-static.png`
+                  }
+                  className="icon"
+                  alt={"pencil"}
+                />
+              </Button>
+            </HoverCard.Trigger>
+            <HoverCard.Content>
               <Box width="100%">
                 <Text>Thickness: {shapeStrokeWidth}</Text>
                 <Slider
@@ -160,9 +165,9 @@ function WhiteboardControls({
                   {label}
                 </Button>
               ))}
-            </Flex>
-          )}
-        </div>
+            </HoverCard.Content>
+          </HoverCard.Root>
+        </Box>
 
         {/* Eraser Tool */}
         <ToolButton
