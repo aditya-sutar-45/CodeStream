@@ -8,6 +8,7 @@ const TOOL_ICONS = {
   line: "shapes",
   eraser: "eraser",
   hand: "hand",
+  select: "select"
 };
 
 function ToolButton({

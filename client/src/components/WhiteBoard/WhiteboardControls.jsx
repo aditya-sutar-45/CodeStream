@@ -73,7 +73,7 @@ function WhiteboardControls({
           activeTool={activeTool}
           onClick={() => handleToolClick("select")}
           tooltip="Select"
-          iconClass="select-icon"
+          iconClass=" icon"
         />
 
         {/* Pencil Tool */}
