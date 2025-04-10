@@ -25,8 +25,6 @@ export default function Dashboard() {
           >
             <DashboardAvatar username={username} />
 
-            {/* <Separator orientation="vertical" style={{height: "90%"}} /> */}
-
             <Flex
               width="50%"
               overflow="hidden"
@@ -62,7 +60,7 @@ export default function Dashboard() {
                   {currentUser.email}
                 </Heading>
                 <Flex justify="start" gap="2" mt="6rem">
-                  <Button color="red" style={{ width: "8rem" }}>
+                  <Button color="red" size="3">
                     Delete Account
                   </Button>
                 </Flex>
