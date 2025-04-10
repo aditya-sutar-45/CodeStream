@@ -25,8 +25,10 @@ function WhiteboardControls({
   activeTool,
   setPencilColor,
   pencilColor,
-  strokeWidth,
-  setStrokeWidth,
+  pencilStrokeWidth,
+  setPencileStrokeWidth,
+  shapeStrokeWidth,
+  setShapeStrokeWidth,
 }) {
   const [showShapeOptions, setShowShapeOptions] = useState(false);
   const [showColorOptions, setShowColorOptions] = useState(false);
@@ -86,13 +88,13 @@ function WhiteboardControls({
           {showColorOptions && activeTool === "pencil" && (
             <div className="color-options">
               <Box width="100%">
-                <Text>Thickness: {strokeWidth}</Text>
+                <Text>Thickness: {pencilStrokeWidth}</Text>
                 <Slider
-                  defaultValue={[strokeWidth]}
+                  defaultValue={[pencilStrokeWidth]}
                   min={1}
                   max={9}
                   step={2}
-                  onValueChange={([value]) => setStrokeWidth(value)}
+                  onValueChange={([value]) => setPencileStrokeWidth(value)}
                 />
               </Box>
               {COLORS.map(({ name, hex }) => (
@@ -129,6 +131,16 @@ function WhiteboardControls({
           />
           {showShapeOptions && (
             <Flex direction="column" gap="1" mt="1">
+              <Box width="100%">
+                <Text>Thickness: {shapeStrokeWidth}</Text>
+                <Slider
+                  defaultValue={[shapeStrokeWidth]}
+                  min={1}
+                  max={9}
+                  step={2}
+                  onValueChange={([value]) => setShapeStrokeWidth(value)}
+                />
+              </Box>
               {SHAPES.map(({ name, label }) => (
                 <Button key={name} onClick={() => handleToolClick(name)}>
                   {label}
