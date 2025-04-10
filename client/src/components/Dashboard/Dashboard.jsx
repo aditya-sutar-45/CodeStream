@@ -1,16 +1,11 @@
 import { useAuth } from "../../hooks/useAuth";
-import {
-  Box,
-  Flex,
-  Heading,
-  Button,
-  Separator,
-} from "@radix-ui/themes";
+import { Box, Flex, Heading, Button, Separator } from "@radix-ui/themes";
 import NavHeader from "../Home/NavHeader";
 import DashboardAvatar from "./DashboardAvatar";
+import EditProfile from "./EditProfile";
 
 export default function Dashboard() {
-  const { currentUser, username} = useAuth();
+  const { currentUser, username } = useAuth();
 
   return (
     <Box style={{ overflow: "hidden" }}>
@@ -18,7 +13,7 @@ export default function Dashboard() {
       <Flex height="100%" width="100%" justify="center">
         <Box
           height="100vh"
-          width="75vw"
+          width="80vw"
           style={{ backgroundColor: "var(--gray-2)" }}
         >
           <Flex
@@ -28,28 +23,35 @@ export default function Dashboard() {
             gap="2rem"
             align="center"
           >
-
-            <DashboardAvatar username={username}/>
+            <DashboardAvatar username={username} />
 
             {/* <Separator orientation="vertical" style={{height: "90%"}} /> */}
 
             <Flex
-              width="40%"
+              width="50%"
               overflow="hidden"
               height="100%"
               justify="start"
               mx="3"
               align="center"
             >
-              <Box>
-                <Heading
-                  weight="bold"
-                  as="h1"
-                  style={{ fontSize: "3rem", height: "40%" }}
-                  my="4"
+              <Box width="100%">
+                <Flex
+                  justify="start"
+                  align="center"
+                  width="100%"
+                  height="40%"
+                  gap="4"
                 >
-                  {username}
-                </Heading>
+                  <Heading
+                    weight="bold"
+                    as="h1"
+                    style={{ fontSize: "3rem", height: "100%" }}
+                  >
+                    {username}
+                  </Heading>
+                  <EditProfile />
+                </Flex>
                 <Heading
                   weight="regular"
                   as="h2"
@@ -60,12 +62,8 @@ export default function Dashboard() {
                   {currentUser.email}
                 </Heading>
                 <Flex justify="start" gap="2" mt="6rem">
-                  <Button style={{ width: "8rem" }}>
-                    Edit Profile
-                  </Button>
-
                   <Button color="red" style={{ width: "8rem" }}>
-                   Delete Account 
+                    Delete Account
                   </Button>
                 </Flex>
               </Box>
