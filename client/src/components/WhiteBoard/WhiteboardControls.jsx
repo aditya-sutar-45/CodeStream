@@ -1,4 +1,12 @@
-import { Box,Text, Button, Flex, Slider, Switch } from "@radix-ui/themes";
+import {
+  Box,
+  Text,
+  Button,
+  Flex,
+  Slider,
+  Switch,
+  HoverCard,
+} from "@radix-ui/themes";
 import { useState } from "react";
 import "./WhiteboardControls.css";
 import ToolButton from "./ToolButton";
@@ -77,16 +85,22 @@ function WhiteboardControls({
         />
 
         {/* Pencil Tool */}
-        <div className="pencil-wrapper">
-          <ToolButton
-            tool="pencil"
-            activeTool={activeTool}
-            onClick={handlePencilClick}
-            tooltip="Pencil"
-            iconClass="icon"
-          />
-          {showColorOptions && activeTool === "pencil" && (
-            <div className="color-options">
+        <Box>
+          <HoverCard.Root>
+            <HoverCard.Trigger>
+              <Button onClick={handlePencilClick} className="custom-button">
+                <img
+                  src={
+                    activeTool === "pencil"
+                      ? `/images/icons/whiteboard/pencil.gif`
+                      : `/images/icons/whiteboard/pencil-static.png`
+                  }
+                  className="icon"
+                  alt={"pencil"}
+                />
+              </Button>
+            </HoverCard.Trigger>
+            <HoverCard.Content>
               <Box width="100%">
                 <Text>Thickness: {pencilStrokeWidth}</Text>
                 <Slider
@@ -107,9 +121,9 @@ function WhiteboardControls({
                   onClick={() => setPencilColor(hex)}
                 />
               ))}
-            </div>
-          )}
-        </div>
+            </HoverCard.Content>
+          </HoverCard.Root>
+        </Box>
 
         {/* Text Tool */}
         <ToolButton
