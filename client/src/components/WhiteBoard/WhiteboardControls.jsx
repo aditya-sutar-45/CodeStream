@@ -145,6 +145,7 @@ function WhiteboardControls({
                       ? "gray"
                       : "#6a0dad",
                 }}
+                onClick={() => handleToolClick("rectangle")}
               >
                 <img
                   src={
