@@ -1,5 +1,6 @@
 import rough from "roughjs/bin/rough";
 import { isPointInsideBox, isPointNearLine } from "./helpers";
+import { EVENTS } from "../constants";
 
 export const resizeCanvasToContainer = (
   canvasRef,
@@ -80,7 +81,7 @@ export const setupZoomHandlers = (setScale, setOffset, canvasRef) => {
   };
 };
 
-export const setupUndoHandler = (historyRef, elementsRef, redrawMainCanvas) => {
+export const setupUndoHandler = (historyRef, elementsRef, redrawMainCanvas, socket, roomId) => {
   const handleUndo = (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "z") {
       e.preventDefault();
@@ -93,6 +94,12 @@ export const setupUndoHandler = (historyRef, elementsRef, redrawMainCanvas) => {
         historyRef.current = [[]];
       }
       redrawMainCanvas();
+
+      socket.emit(EVENTS.WHITEBOARD.UNDO, {
+        roomId,
+        userId: socket.id,
+        elements: elementsRef.current,
+      });
     }
   };
 

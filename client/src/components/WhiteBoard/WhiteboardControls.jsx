@@ -6,14 +6,16 @@ import {
   Slider,
   Switch,
   HoverCard,
+  IconButton,
 } from "@radix-ui/themes";
 import "./WhiteboardControls.css";
 import ToolButton from "./ToolButton";
+import { CircleIcon, SlashIcon, SquareIcon } from "@radix-ui/react-icons";
 
 const SHAPES = [
-  { name: "rectangle", label: "Rectangle" },
-  { name: "ellipse", label: "Ellipse" },
-  { name: "line", label: "Line" },
+  { name: "rectangle", label: <SquareIcon /> },
+  { name: "ellipse", label: <CircleIcon /> },
+  { name: "line", label: <SlashIcon /> },
 ];
 
 const COLORS = [
@@ -32,6 +34,8 @@ function WhiteboardControls({
   activeTool,
   setPencilColor,
   pencilColor,
+  shapeColor,
+  setShapeColor,
   pencilStrokeWidth,
   setPencileStrokeWidth,
   shapeStrokeWidth,
@@ -141,6 +145,7 @@ function WhiteboardControls({
                       ? "gray"
                       : "#6a0dad",
                 }}
+                onClick={() => handleToolClick("rectangle")}
               >
                 <img
                   src={
@@ -154,6 +159,18 @@ function WhiteboardControls({
               </Button>
             </HoverCard.Trigger>
             <HoverCard.Content>
+              {SHAPES.map(({ name, label }) => (
+                <IconButton
+                  key={name}
+                  mx="1"
+                  onClick={() => handleToolClick(name)}
+                  style={{
+                    backgroundColor: activeTool === name ? "gray" : "#6a0dad",
+                  }}
+                >
+                  {label}
+                </IconButton>
+              ))}
               <Box width="100%" my="2">
                 <Text>Thickness: {shapeStrokeWidth}</Text>
                 <Slider
@@ -164,10 +181,15 @@ function WhiteboardControls({
                   onValueChange={([value]) => setShapeStrokeWidth(value)}
                 />
               </Box>
-              {SHAPES.map(({ name, label }) => (
-                <Button key={name} mx="1" onClick={() => handleToolClick(name)}>
-                  {label}
-                </Button>
+              {COLORS.map(({ name, hex }) => (
+                <button
+                  key={name}
+                  className={`color-circle ${
+                    shapeColor === hex ? "selected" : ""
+                  }`}
+                  style={{ backgroundColor: hex }}
+                  onClick={() => setShapeColor(hex)}
+                />
               ))}
             </HoverCard.Content>
           </HoverCard.Root>

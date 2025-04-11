@@ -17,6 +17,12 @@ export const EVENTS = {
     LANUGAGE_CHANGE: "lanugageChange",
     LANGUAGE_UPDATE: "languageUpdate",
   },
+  WHITEBOARD: {
+    DRAW: "whiteboardDraw",
+    UNDO: "whiteboardUndo",
+    ERASE: "whiteboardErase",
+    MOVE: "whiteboardMove",
+  },
   USER: {
     DISCONNECT: "disconnect",
   },
