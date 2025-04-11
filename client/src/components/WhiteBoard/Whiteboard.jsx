@@ -174,10 +174,18 @@ function Whiteboard({ roomId }) {
       eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
     });
 
+    socket.on(EVENTS.WHITEBOARD.MOVE, ({ index, updatedElement, userId }) => {
+      if (userId === socket.id) return;
+      elementsRef.current[index] = updatedElement;
+      historyRef.current.push([...elementsRef.current]);
+      redrawMainCanvas();
+    });
+
     return () => {
       socket.off(EVENTS.WHITEBOARD.DRAW);
       socket.off(EVENTS.WHITEBOARD.UNDO);
       socket.off(EVENTS.WHITEBOARD.ERASE);
+      socket.off(EVENTS.WHITEBOARD.MOVE);
     };
   }, [redrawMainCanvas]);
 
@@ -358,7 +366,15 @@ function Whiteboard({ roomId }) {
       });
     }
     if (activeTool === "select" && selectedElementIndex !== null) {
+      const updatedElement = elementsRef.current[selectedElementIndex];
       historyRef.current.push([...elementsRef.current]);
+
+      socket.emit(EVENTS.WHITEBOARD.MOVE, {
+        roomId,
+        userId: socket.id,
+        index: selectedElementIndex,
+        updatedElement
+      });
     }
 
     setIsDrawing(false);
@@ -412,8 +428,8 @@ function Whiteboard({ roomId }) {
         activeTool={activeTool}
         pencilColor={pencilColor}
         setPencilColor={setPencilColor}
-        shapeColor = {shapeColor}
-        setShapeColor = {setShapeColor}
+        shapeColor={shapeColor}
+        setShapeColor={setShapeColor}
         pencilStrokeWidth={pencilStrokeWidth}
         setPencileStrokeWidth={setPencilStrokeWidth}
         shapeStrokeWidth={shapeStrokeWidth}

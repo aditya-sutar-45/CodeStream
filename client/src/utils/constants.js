@@ -55,6 +55,7 @@ export const EVENTS = {
     DRAW: "whiteboardDraw", 
     UNDO: "whiteboardUndo",
     ERASE: "whiteboardErase",
+    MOVE: "whiteboardMove",
   },
   USER: {
     DISCONNECT: "disconnect",

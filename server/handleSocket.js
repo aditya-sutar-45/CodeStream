@@ -55,9 +55,18 @@ const handleSocket = (io) => {
     //   socket.to(roomId).emit(EVENTS.WHITEBOARD.CLEAR);
     // });
 
-    socket.on(EVENTS.WHITEBOARD.ERASE, ({roomId, userId, pos}) => {
+    socket.on(EVENTS.WHITEBOARD.ERASE, ({ roomId, userId, pos }) => {
       socket.to(roomId).emit(EVENTS.WHITEBOARD.ERASE, { pos, userId });
-    })
+    });
+
+    socket.on(
+      EVENTS.WHITEBOARD.MOVE,
+      ({ roomId, userId, index, updatedElement }) => {
+        socket
+          .to(roomId)
+          .emit(EVENTS.WHITEBOARD.MOVE, { userId, index, updatedElement });
+      }
+    );
   });
 
   process.on("SIGINT", () => handleShutdown(io, rooms));
