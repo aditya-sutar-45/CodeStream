@@ -1,17 +1,26 @@
 import { Box, Button, Flex, Text, Tooltip } from "@radix-ui/themes";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./Home.css";
 import HomeCanvas from "./HomeCanvas";
 import NavHeader from "./NavHeader";
 import { BackgroundBeams } from "./BackgroundBeams";
-import { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 
 function Home() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.unauthorized) {
+      toast.error("Unauthorized access, login first!");
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
   return (
     <>
       <Box>
-        <Toaster />
         {/* Header with Authentication */}
         <NavHeader />
 

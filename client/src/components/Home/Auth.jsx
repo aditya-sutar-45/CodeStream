@@ -31,8 +31,7 @@ function Auth() {
     setError("");
     try {
       await logout();
-      navigate("/");
-      toast.success("logged out :(");
+      navigate("/").then(() => toast.success("logged out :("));
     } catch (e) {
       setError("Failed to log out! " + e.message);
       toast.error(e);

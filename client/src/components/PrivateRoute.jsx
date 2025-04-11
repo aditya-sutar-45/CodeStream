@@ -3,10 +3,12 @@ import { useAuth } from "../hooks/useAuth";
 
 function PrivateRoute() {
   const { currentUser } = useAuth();
-  if (!currentUser) {
-    return <Navigate to="/" replace/>
-  }
-  return currentUser ? <Outlet /> : <Navigate to="/" />;
+
+  return currentUser ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" state={{ unauthorized: true }} replace />
+  );
 }
 
 export default PrivateRoute;
