@@ -64,7 +64,7 @@ function Room() {
       </Panel>
       <PanelResizeHandle style={{ padding: "3px" }} />
       <Panel defaultSize={0} maxSize={75}>
-        <Whiteboard />
+        <Whiteboard roomId={room.roomId} />
       </Panel>
     </PanelGroup>
   );

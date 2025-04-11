@@ -23,8 +23,10 @@ import {
   eraseAtPosition,
 } from "../../utils/whiteboard/handlers";
 import WhiteboardTextInput from "./WhiteboardTextInput";
+import socket from "../../socket";
+import { EVENTS } from "../../utils/constants";
 
-function Whiteboard() {
+function Whiteboard({ roomId }) {
   const containerRef = useRef(null);
   const canvasRef = useRef(null);
   const tempCanvasRef = useRef(null);
@@ -120,10 +122,12 @@ function Whiteboard() {
     const cleanupUndo = setupUndoHandler(
       historyRef,
       elementsRef,
-      redrawMainCanvas
+      redrawMainCanvas,
+      socket,
+      roomId
     );
     return cleanupUndo;
-  }, [redrawMainCanvas]);
+  }, [redrawMainCanvas, roomId]);
 
   useEffect(() => {
     const preventMiddleClickScroll = (e) => {
@@ -139,6 +143,42 @@ function Whiteboard() {
       canvas.removeEventListener("mousedown", preventMiddleClickScroll);
     };
   }, []);
+
+  // socket useEffect
+  useEffect(() => {
+    socket.on(EVENTS.WHITEBOARD.DRAW, ({ element, userId }) => {
+      if (userId === socket.id) return;
+      console.log("recived drawing");
+      elementsRef.current = [...elementsRef.current, element];
+      redrawMainCanvas();
+    });
+
+    socket.on(EVENTS.WHITEBOARD.UNDO, ({ userId, elements }) => {
+      if (userId === socket.id) return;
+
+      elementsRef.current = elements;
+      historyRef.current.push(elements);
+      redrawMainCanvas();
+    });
+
+    // TODO
+    // socket.on(EVENTS.WHITEBOARD.CLEAR, () => {
+    //   elementsRef.current = [];
+    //   historyRef.current = [];
+    //   redrawMainCanvas();
+    // });
+
+    socket.on(EVENTS.WHITEBOARD.ERASE, ({ pos, userId }) => {
+      if (userId === socket.id) return;
+      eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
+    });
+
+    return () => {
+      socket.off(EVENTS.WHITEBOARD.DRAW);
+      socket.off(EVENTS.WHITEBOARD.UNDO);
+      socket.off(EVENTS.WHITEBOARD.ERASE);
+    };
+  }, [redrawMainCanvas]);
 
   const handleMouseDown = (e) => {
     const pos = getMouseCoords(e, canvasRef, offset, scale);
@@ -238,6 +278,8 @@ function Whiteboard() {
     if (activeTool === "eraser" && isDrawing) {
       const pos = getMouseCoords(e, canvasRef, offset, scale);
       eraseAtPosition(pos, elementsRef, historyRef, redrawMainCanvas);
+
+      socket.emit(EVENTS.WHITEBOARD.ERASE, { roomId, userId: socket.id, pos });
       return;
     }
 
@@ -307,6 +349,12 @@ function Whiteboard() {
       const updatedElements = [...elementsRef.current, currentElement];
       elementsRef.current = updatedElements;
       historyRef.current.push(updatedElements);
+
+      socket.emit(EVENTS.WHITEBOARD.DRAW, {
+        roomId,
+        userId: socket.id,
+        element: currentElement,
+      });
     }
     if (activeTool === "select" && selectedElementIndex !== null) {
       historyRef.current.push([...elementsRef.current]);
@@ -334,6 +382,12 @@ function Whiteboard() {
     const updatedElements = [...elementsRef.current, newText];
     elementsRef.current = updatedElements;
     historyRef.current.push(updatedElements);
+
+    socket.emit(EVENTS.WHITEBOARD.DRAW, {
+      roomId,
+      userId: socket.id,
+      element: newText,
+    });
 
     setTextInput({ visible: false, x: 0, y: 0, value: "" });
     redrawMainCanvas();

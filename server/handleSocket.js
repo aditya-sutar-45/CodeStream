@@ -41,6 +41,23 @@ const handleSocket = (io) => {
     socket.on(EVENTS.CODE.LANUGAGE_CHANGE, (data) =>
       handleLanguageSync(socket, rooms, data)
     );
+
+    socket.on(EVENTS.WHITEBOARD.DRAW, ({ roomId, userId, element }) => {
+      socket.to(roomId).emit(EVENTS.WHITEBOARD.DRAW, { element, userId });
+    });
+
+    socket.on(EVENTS.WHITEBOARD.UNDO, ({ roomId, userId, elements }) => {
+      socket.to(roomId).emit(EVENTS.WHITEBOARD.UNDO, { userId, elements });
+    });
+
+    //TODO: ADD CLEAR
+    // socket.on(EVENTS.WHITEBOARD.CLEAR, ({ roomId }) => {
+    //   socket.to(roomId).emit(EVENTS.WHITEBOARD.CLEAR);
+    // });
+
+    socket.on(EVENTS.WHITEBOARD.ERASE, ({roomId, userId, pos}) => {
+      socket.to(roomId).emit(EVENTS.WHITEBOARD.ERASE, { pos, userId });
+    })
   });
 
   process.on("SIGINT", () => handleShutdown(io, rooms));
