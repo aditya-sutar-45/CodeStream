@@ -36,6 +36,7 @@ function Whiteboard({ roomId }) {
   const historyRef = useRef([[]]);
 
   const [pencilColor, setPencilColor] = useState("#000000");
+  const [shapeColor, setShapeColor] = useState("#000000");
   const [activeTool, setActiveTool] = useState("pencil");
   const [darkTheme, setDarkTheme] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -252,7 +253,7 @@ function Whiteboard({ roomId }) {
         start: pos,
         end: pos,
         options: {
-          stroke: "black",
+          stroke: shapeColor,
           strokeWidth: shapeStrokeWidth,
           roughness: 1,
           seed,
@@ -411,6 +412,8 @@ function Whiteboard({ roomId }) {
         activeTool={activeTool}
         pencilColor={pencilColor}
         setPencilColor={setPencilColor}
+        shapeColor = {shapeColor}
+        setShapeColor = {setShapeColor}
         pencilStrokeWidth={pencilStrokeWidth}
         setPencileStrokeWidth={setPencilStrokeWidth}
         shapeStrokeWidth={shapeStrokeWidth}

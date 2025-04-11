@@ -34,6 +34,8 @@ function WhiteboardControls({
   activeTool,
   setPencilColor,
   pencilColor,
+  shapeColor,
+  setShapeColor,
   pencilStrokeWidth,
   setPencileStrokeWidth,
   shapeStrokeWidth,
@@ -156,16 +158,6 @@ function WhiteboardControls({
               </Button>
             </HoverCard.Trigger>
             <HoverCard.Content>
-              <Box width="100%" my="2">
-                <Text>Thickness: {shapeStrokeWidth}</Text>
-                <Slider
-                  defaultValue={[shapeStrokeWidth]}
-                  min={1}
-                  max={9}
-                  step={2}
-                  onValueChange={([value]) => setShapeStrokeWidth(value)}
-                />
-              </Box>
               {SHAPES.map(({ name, label }) => (
                 <IconButton
                   key={name}
@@ -177,6 +169,26 @@ function WhiteboardControls({
                 >
                   {label}
                 </IconButton>
+              ))}
+              <Box width="100%" my="2">
+                <Text>Thickness: {shapeStrokeWidth}</Text>
+                <Slider
+                  defaultValue={[shapeStrokeWidth]}
+                  min={1}
+                  max={9}
+                  step={2}
+                  onValueChange={([value]) => setShapeStrokeWidth(value)}
+                />
+              </Box>
+              {COLORS.map(({ name, hex }) => (
+                <button
+                  key={name}
+                  className={`color-circle ${
+                    shapeColor === hex ? "selected" : ""
+                  }`}
+                  style={{ backgroundColor: hex }}
+                  onClick={() => setShapeColor(hex)}
+                />
               ))}
             </HoverCard.Content>
           </HoverCard.Root>
