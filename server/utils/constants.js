@@ -16,6 +16,7 @@ export const EVENTS = {
     UPDATE: "codeUpdate",
     LANUGAGE_CHANGE: "lanugageChange",
     LANGUAGE_UPDATE: "languageUpdate",
+    CURSOR_MOVE: "cursor:move",
   },
   WHITEBOARD: {
     DRAW: "whiteboardDraw",

@@ -13,6 +13,7 @@ import { defineMonacoThemes } from "../../utils/themes";
 import { THEMES } from "../../utils/themes";
 import EditorHeader from "./Header/EditorHeader";
 import socket from "../../socket";
+import { useAuth } from "../../hooks/useAuth";
 
 function CodeEditorPanel({ room }) {
   const editorRef = useRef();
@@ -20,6 +21,7 @@ function CodeEditorPanel({ room }) {
   const [language, setLanguage] = useState("javascript");
   const [languages, setLanguages] = useState({});
   const [theme, setTheme] = useState("vs-dark");
+  const { username } = useAuth();
 
   useEffect(() => {
     const updateLanguageVersions = async () => {
@@ -97,6 +99,7 @@ function CodeEditorPanel({ room }) {
               setValue={setValue}
               language={language}
               roomId={room.roomId}
+              displayName={username}
             />
           </Box>
         </Panel>

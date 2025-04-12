@@ -38,6 +38,15 @@ const handleSocket = (io) => {
 
     socket.on(EVENTS.CODE.SYNC, (data) => handleCodeSync(socket, rooms, data));
 
+    socket.on(EVENTS.CODE.CURSOR_MOVE, ({ roomId, position }) => {
+      socket.to(roomId).emit(EVENTS.CODE.CURSOR_MOVE, {
+        position: {
+          ...position,
+          userId: socket.id,
+        },
+      });
+    });
+
     socket.on(EVENTS.CODE.LANUGAGE_CHANGE, (data) =>
       handleLanguageSync(socket, rooms, data)
     );
