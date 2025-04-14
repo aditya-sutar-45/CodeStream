@@ -3,6 +3,7 @@ import { Editor } from "@monaco-editor/react";
 import { CODE_SNIPPETS, EVENTS } from "../../utils/constants";
 import socket from "../../socket";
 import { useEffect, useRef } from "react";
+import "../../css/index.css";
 
 function debounce(func, delay) {
   let timeoutId;
@@ -39,6 +40,25 @@ function CodeEditor({
 }) {
   const editorInstance = useRef(null);
   const cursorDecorations = useRef({}); // userId -> decorationsCollection
+
+  useEffect(() => {
+    const handleUserLeft = (user) => {
+      const userId = user.socketId;
+      if (cursorDecorations.current[userId]) {
+        cursorDecorations.current[userId].clear(); // remove decoration
+        delete cursorDecorations.current[userId]; // cleanup
+      }
+
+      delete userColors[userId];
+      delete userNames[userId];
+    };
+
+    socket.on(EVENTS.ROOM.LEFT, handleUserLeft);
+
+    return () => {
+      socket.off(EVENTS.ROOM.LEFT, handleUserLeft);
+    }
+  });
 
   useEffect(() => {
     if (!socket || !roomId) return;
@@ -96,18 +116,20 @@ function CodeEditor({
         const style = document.createElement("style");
         style.id = styleId;
         style.innerHTML = `
-      .monaco-editor .remote-cursor-label-${userId}::after {
-        content: "${label}";
-        background: ${color};
-        color: white;
-        padding: 1px 6px;
-        border-radius: 4px;
-        font-size: 12px;
-        margin-left: 4px;
-        position: relative;
-        top: -1px;
-        white-space: nowrap;
-      }
+        .monaco-editor .remote-cursor-label-${userId}::after {
+  content: "${label}";
+  background: ${color};
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  position: absolute;
+  transform: translateY(-100%);
+  margin-left: 5px;
+  white-space: nowrap;
+  z-index: 100;
+}
+
     `;
         document.head.appendChild(style);
       }

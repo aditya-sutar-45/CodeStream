@@ -1,0 +1,18 @@
+.remote-cursor {
+  position: relative;
+  min-width: 1px;
+}
+.remote-cursor::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  background: red;
+  height: 100%;
+}
+
+.remote-cursor-label::after {
+  content: "👤";
+  color: red;
+  margin-left: 2px;
+  font-size: 0.75rem;
+}

@@ -14,6 +14,7 @@ import VerifyEmail from "./components/Home/Auth/VerifyEmail.jsx";
 import JoinRoom from "./components/RoomForms/JoinRoom.jsx";
 import CreateRoom from "./components/RoomForms/CreateRoom.jsx";
 import { Toaster } from "react-hot-toast";
+import "./css/index.css";
 
 const router = createBrowserRouter([
   { path: "/", element: <App /> },

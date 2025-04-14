@@ -115,9 +115,6 @@ export const handleLeaveRoom = (socket, rooms, roomId, io, callback) => {
 
   if (isOwner || room.users.length === 0) {
     console.log(`rooms ${roomId} deleted`);
-    room.users.forEach((user) => {
-      io.to(user.socketId).emit(EVENTS.ROOM.LEFT, roomId);
-    });
     io.to(room.roomId).emit(EVENTS.ROOM.DELETED, roomId);
     socket.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
     rooms.splice(roomIndex, 1);
@@ -157,10 +154,7 @@ export const handleDisconnect = (socket, rooms, io) => {
         // Clean up room
         rooms.splice(index, 1);
       } else {
-        socket.to(room.roomId).emit(EVENTS.ROOM.LEFT, {
-          username: user.username,
-          socketId: user.socketId,
-        });
+        socket.to(room.roomId).emit(EVENTS.ROOM.LEFT, user);
 
         io.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
       }
