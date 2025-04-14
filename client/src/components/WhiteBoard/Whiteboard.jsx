@@ -37,7 +37,7 @@ function Whiteboard({ roomId }) {
 
   const [pencilColor, setPencilColor] = useState("#000000");
   const [shapeColor, setShapeColor] = useState("#000000");
-  const [activeTool, setActiveTool] = useState("pencil");
+  const [activeTool, setActiveTool] = useState(null);
   const [darkTheme, setDarkTheme] = useState(false);
   const [isDrawing, setIsDrawing] = useState(false);
   const [currentElement, setCurrentElement] = useState(null);

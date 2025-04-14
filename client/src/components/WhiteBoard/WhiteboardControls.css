@@ -4,14 +4,109 @@
     /* height: 100vh; */
   }
   
+  .tool-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* vertical spacing between label, slider, and colors */
+    padding: 8px 0;
+  }
+
+  .theme-toggle-btn {
+    width: 40px;
+    height: 40px;
+    /* border-radius: 50%; */
+    /* background-color: #e5e7eb; light gray */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    border: none;
+    outline: none;
+  }
+  
+  .theme-toggle-btn:hover {
+    background-color: #d1d5db; /* darker on hover */
+  }
+  
+  body.dark .theme-toggle-btn {
+    background-color: #374151; /* dark mode bg */
+  }
+  
+  body.dark .theme-toggle-btn:hover {
+    background-color: #4b5563;
+  }
+  
+  .theme-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .sun {
+    color: #facc15; /* yellow */
+  }
+  
+  .moon {
+    color: #1f2937; /* dark gray */
+  }
+  
+  
+  /* .pencil-label {
+    font-size: 14px;
+    font-weight: 400;
+    color: white;
+    font-family: Consolas, "Courier New", monospace;
+  } */
+  .pencil-label {
+    /* font-size: 18px;
+    /* font-weight: 600; */
+    /* margin-bottom: 8px;
+    font-family: Consolas, "Courier New", monospace; */ 
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+  }
+  
+  .slider {
+    width: 100%;
+  }
+  
+  .color-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  
+  .color-circle {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .color-circle:hover {
+    transform: scale(1.1);
+  }
+  
+  .color-circle.selected {
+    border-color: white;
+  }
+  
+  .hover-card-content {
+    background-color: #1a1a1a; /* optional dark background */
+    border-radius: px;
+    padding: 12px;
+  }
+  
   /* Toolbar styling (Top Center) */
   .toolbar {
     top: 20px;
     background: #333;
-    border-radius: 3px;
+    border-radius: 12px;
     z-index: 10; 
-    padding-right: 9px;
-    width: 450px;
   }
   
   /* Custom button styling */
@@ -50,31 +145,7 @@
     justify-content: center;
   }
   
-  /* Tooltip Styling 
-  .custom-tooltip {
-    position: absolute;
-    bottom: -45px; 
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    font-style: "Noto Sans", sans-serif;
-    padding: 6px 10px;
-    border-radius: 5px;
-    font-size: 12px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-  }
-  
-   Show tooltip on hover 
-  .pencil-button:hover .tooltip {
-    opacity: 1;
-    visibility: visible;
-  }
-  */
-
+ 
   .text-icon {
     width: 30px; /* Adjust size as needed */
     height: 33px;
@@ -102,57 +173,58 @@
     transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
   }
   
+ 
+ 
   /* Show tooltip on hover */
   .text-button:hover .tooltip {
     opacity: 1;
     visibility: visible;
   }
   
-  .shapes-icon{
-    width: 30px; /* Adjust size as needed */
-    height: 33px;
-    transition: transform 0.3s ease-in-out;
-  }
-  .move-shapes {
-    animation: wiggle 0.5s ease-in-out;
-  }
-  .shape-dropdown-wrapper {
-    position: relative;
-    display: inline-block;
+
+  .shapes-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
   }
   
-  .shape-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 10;
+  .tool-options {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-  }
-  .color-options {
-    display: flex;
     gap: 8px;
-    margin-top: 6px;
-    padding: 6px;
-    background: gray;
-    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .thickness-label {
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+  }
+  
+  .color-row {
+    display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    gap: 8px;
   }
   
   .color-circle {
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     border: 2px solid transparent;
     cursor: pointer;
-    margin: 2px;
+    transition: transform 0.2s ease;
+  }
+  
+  .color-circle:hover {
+    transform: scale(1.1);
   }
   
   .color-circle.selected {
-    border: 2px solid #9b9b9b;
+    border-color: white;
   }
+  
   
   .shape-options button {
     padding: 6px 10px;
@@ -186,6 +258,7 @@
     animation: wiggle 0.5s ease-in-out;
   }
 
+  
   
   @keyframes wiggle {
     0%, 100% { transform: rotate(0deg); }
