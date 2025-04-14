@@ -18,7 +18,8 @@ function ToolButton({ tool, activeTool, onClick, tooltip, iconClass }) {
         onClick={onClick}
         className="custom-button"
         style={{
-          background: activeTool === tool ? "gray" : "#6a0dad",
+          background: "#6a0dad",
+           border: activeTool === tool ? "2px solid white" : "none"
         }}
       >
         <img
