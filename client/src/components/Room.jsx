@@ -15,44 +15,63 @@ function Room() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.emit(EVENTS.ROOM.GET_INFO, { roomId: id });
+    const handleRoomInfo = (roomData) => setRoom(roomData);
 
-    socket.on(EVENTS.ROOM.INFO, (roomData) => {
-      setRoom(roomData);
-    });
+    const handleRoomJoined = (username) => {
+      toast(`${username} joined the room...`);
+    };
 
-    socket.on(EVENTS.ROOM.DELETED, () => {
-      console.log("room deleted");
+    const handleRoomDeleted = () => {
       setRoom(null);
       navigate("/");
-    });
-
-    socket.on(EVENTS.ROOM.ERROR, (errorMessage) => {
+    };
+    const handleRoomError = (errorMessage) => {
       toast.error(errorMessage);
       setRoomError(errorMessage);
-    });
-
-    socket.on(EVENTS.SERVER.SHUTDOWN, () => {
+    };
+    const handleUserLeft = (user) => {
+      toast(`${user.username} left the room!`);
+    };
+    const handleShutdown = () => {
       toast.error("server has shut down. you've been disconnected.");
       setRoom(null);
       navigate("/");
-    });
-
-    socket.on(EVENTS.USER.DISCONNECT, () => {
+    };
+    const handleUserDisconnect = () => {
       toast.error("lost connection to the server!");
       setRoom(null);
       navigate("/");
-    });
+    };
+
+    socket.emit(EVENTS.ROOM.GET_INFO, { roomId: id });
+
+    socket.on(EVENTS.ROOM.JOINED, handleRoomJoined);
+    socket.on(EVENTS.ROOM.INFO, handleRoomInfo);
+    socket.on(EVENTS.ROOM.DELETED, handleRoomDeleted);
+    socket.on(EVENTS.ROOM.ERROR, handleRoomError);
+    socket.on(EVENTS.ROOM.LEFT, handleUserLeft);
+    socket.on(EVENTS.SERVER.SHUTDOWN, handleShutdown);
+    socket.on(EVENTS.USER.DISCONNECT, handleUserDisconnect);
 
     return () => {
-      socket.off(EVENTS.ROOM.INFO);
-      socket.off(EVENTS.ROOM.ERROR);
-      socket.off(EVENTS.ROOM.DELETED);
-      socket.off(EVENTS.SERVER.SHUTDOWN);
-      socket.off(EVENTS.USER.DISCONNECT);
+      socket.off(EVENTS.ROOM.JOINED, handleRoomJoined);
+      socket.off(EVENTS.ROOM.INFO, handleRoomInfo);
+      socket.off(EVENTS.ROOM.DELETED, handleRoomDeleted);
+      socket.off(EVENTS.ROOM.ERROR, handleRoomError);
+      socket.off(EVENTS.ROOM.LEFT, handleUserLeft);
+      socket.off(EVENTS.SERVER.SHUTDOWN, handleShutdown);
+      socket.off(EVENTS.USER.DISCONNECT, handleUserDisconnect);
     };
   }, [id, navigate]);
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      socket.disconnect(); // optional
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, []);
 
   if (roomError) return <NotFoundPage />;
   if (!room) return <p>Loading.....</p>;

@@ -72,6 +72,7 @@ export const handleJoinRoom = async (
   exisitingRoom.users.push({ socketId: socket.id, username });
 
   socket.emit(EVENTS.ROOM.JOINED, roomId);
+  socket.to(roomId).emit(EVENTS.ROOM.JOINED, username);
   socket.to(roomId).emit(EVENTS.ROOM.INFO, exisitingRoom);
 };
 
@@ -79,10 +80,20 @@ export const getRoomInfo = (socket, roomId, rooms) => {
   const room = rooms.find((room) => room.roomId === roomId);
 
   if (!room) {
-    socket.emit(EVENTS.ROOM.ERROR, "room not found!");
+    socket.emit(EVENTS.ROOM.ERROR, "Room not found!");
     return;
   }
 
+  const userStillInRoom = room.users.find(
+    (user) => user.socketId === socket.id
+  );
+
+  if (!userStillInRoom) {
+    socket.emit(EVENTS.ROOM.ERROR, "You are no longer part of this room.");
+    return;
+  }
+
+  socket.join(roomId); // Rejoin the room if necessary
   socket.emit(EVENTS.ROOM.INFO, room);
 };
 
@@ -99,6 +110,7 @@ export const handleLeaveRoom = (socket, rooms, roomId, io, callback) => {
   const isOwner = room.owner.socketId === socket.id;
 
   // removing users
+  const user = room.users[userIndex];
   room.users.splice(userIndex, 1);
 
   if (isOwner || room.users.length === 0) {
@@ -115,7 +127,7 @@ export const handleLeaveRoom = (socket, rooms, roomId, io, callback) => {
 
   socket.leave(room.roomId);
   console.log(rooms);
-  socket.emit(EVENTS.ROOM.LEFT, roomId);
+  socket.to(roomId).emit(EVENTS.ROOM.LEFT, user);
   console.log(`user: ${socket.id} left the room`);
 
   if (callback) callback();
@@ -130,24 +142,29 @@ export const handleDisconnect = (socket, rooms, io) => {
     );
 
     if (userIndex !== -1) {
+      const user = room.users[userIndex]; // store before removing
+
       const isOwner = room.owner.socketId === socket.id;
-      room.users.splice(userIndex, 1);
+      room.users.splice(userIndex, 1); // remove from our array
+
+      socket.leave(room.roomId);
 
       if (isOwner || room.users.length === 0) {
-        console.log(`rooms ${room.roomId} deleted`);
+        console.log(`room ${room.roomId} deleted`);
 
-        room.users.forEach((user) => {
-          io.to(user.socketId).emit(EVENTS.ROOM.LEFT, room.roomId);
-        });
         io.to(room.roomId).emit(EVENTS.ROOM.DELETED, room.roomId);
-        socket.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
+
+        // Clean up room
         rooms.splice(index, 1);
       } else {
+        socket.to(room.roomId).emit(EVENTS.ROOM.LEFT, {
+          username: user.username,
+          socketId: user.socketId,
+        });
+
         io.to(room.roomId).emit(EVENTS.ROOM.INFO, room);
       }
     }
-
-    console.log(rooms);
   });
 };
 
