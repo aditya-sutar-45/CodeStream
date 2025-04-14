@@ -48,8 +48,7 @@ function Home() {
 
           <Box width="100vw">
             <Text as="p" size="4" className="subtext">
-              Code together, create faster, and innovate seamlessly in real
-              time.
+            Running on coffee and console logs...
             </Text>
 
             <Flex justify="center">
