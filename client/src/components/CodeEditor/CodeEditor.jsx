@@ -39,14 +39,14 @@ function CodeEditor({
   displayName,
 }) {
   const editorInstance = useRef(null);
-  const cursorDecorations = useRef({}); // userId -> decorationsCollection
+  const cursorDecorations = useRef({}); 
 
   useEffect(() => {
     const handleUserLeft = (user) => {
       const userId = user.socketId;
       if (cursorDecorations.current[userId]) {
-        cursorDecorations.current[userId].clear(); // remove decoration
-        delete cursorDecorations.current[userId]; // cleanup
+        cursorDecorations.current[userId].clear(); 
+        delete cursorDecorations.current[userId]; 
       }
 
       delete userColors[userId];
