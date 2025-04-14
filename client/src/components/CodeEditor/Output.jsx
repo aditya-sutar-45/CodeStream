@@ -8,19 +8,26 @@ function Output({ editorRef, language }) {
   const [isError, setIsError] = useState(false);
 
   const runCode = async () => {
-    const sourceCode = editorRef.current.getValue();
-    if (!sourceCode) return;
-    try {
-      setIsLoading(true);
-      const result = await executeCode(language, sourceCode);
-      setOutput(result.run.stdout.split("\n")); // Use result.run.stdout
-      result.run.stderr ? setIsError(true) : setIsError(false);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const sourceCode = editorRef.current.getValue();
+  if (!sourceCode) return;
+  try {
+    setIsLoading(true);
+    const result = await executeCode(language, sourceCode);
+
+    const stdout = result.run.stdout || "";
+    const stderr = result.run.stderr || "";
+
+    setIsError(!!stderr);
+
+    const combinedOutput = (stdout + "\n" + stderr).trim().split("\n");
+    setOutput(combinedOutput);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <Box height="100%">
