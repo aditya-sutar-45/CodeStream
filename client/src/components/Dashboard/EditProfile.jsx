@@ -18,7 +18,7 @@ function EditProfile() {
   const updateUsername = (_username) => {
     axios
       .patch(
-        `http://localhost:3000/user/${currentUser.uid}`,
+        `https://codestream-1mvo.onrender.com/${currentUser.uid}`,
         {
           username: _username,
         },
