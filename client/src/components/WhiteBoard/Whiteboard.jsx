@@ -417,7 +417,7 @@ function Whiteboard({ roomId }) {
       width="100%"
       height="100%"
       style={{
-        backgroundColor: darkTheme ? "black" : "white",
+        backgroundColor: darkTheme ? "" : "white",
         overflow: "hidden",
       }}
     >
