@@ -41,5 +41,35 @@
 
 ### Clone the repository
 ```bash
-git clone https://github.com/yourusername/codestream.git
+git clone https://github.com/aditya-sutar-45/CodeStream.git 
 cd codestream
+```
+
+### Setup the Server
+```bash
+cd server
+npm install
+```
+
+Create a .env file inside the server directory with the following values:
+```env
+PORT=5000
+MONGO_URI=your_mongodb_uri
+FIREBASE_API_KEY=your_firebase_api_key
+FIREBASE_AUTH_DOMAIN=your_auth_domain
+FIREBASE_PROJECT_ID=your_project_id
+```
+
+Start the development server:
+```bash
+node --watch server.js
+```
+
+### Setup the Client
+```bash
+cd ../client
+npm install
+npm run dev
+```
+The app should now be running at http://localhost:5173.
+
