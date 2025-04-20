@@ -42,7 +42,7 @@
 ### Clone the repository
 ```bash
 git clone https://github.com/aditya-sutar-45/CodeStream.git 
-cd codestream
+cd CodeStream 
 ```
 
 ### Setup the Server
