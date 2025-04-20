@@ -53,7 +53,7 @@ npm install
 
 Create a .env file inside the server directory with the following values:
 ```env
-PORT=5000
+PORT=3000
 MONGO_URI=your_mongodb_uri
 FIREBASE_API_KEY=your_firebase_api_key
 FIREBASE_AUTH_DOMAIN=your_auth_domain
