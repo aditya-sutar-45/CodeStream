@@ -7,6 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import NotFoundPage from "./NotFoundPage";
 import { EVENTS } from "../utils/constants";
 import toast from "react-hot-toast";
+import { Box } from "@radix-ui/themes";
+import ChatRoom from "./Chat/ChatRoom";
 
 function Room() {
   const [room, setRoom] = useState(null);
@@ -77,15 +79,19 @@ function Room() {
   if (!room) return <p>Loading.....</p>;
 
   return (
-    <PanelGroup direction="horizontal">
-      <Panel defaultSize={100} maxSize={100}>
-        <CodeEditorPanel room={room} roomError={roomError} />
-      </Panel>
-      <PanelResizeHandle style={{ padding: "3px" }} />
-      <Panel defaultSize={0} maxSize={75}>
-        <Whiteboard roomId={room.roomId} />
-      </Panel>
-    </PanelGroup>
+    <Box style={{ position: "relative", height: "100vh" }}>
+      <PanelGroup direction="horizontal">
+        <Panel defaultSize={100} maxSize={100}>
+          <CodeEditorPanel room={room} roomError={roomError} />
+        </Panel>
+        <PanelResizeHandle style={{ padding: "3px" }} />
+        <Panel defaultSize={0} maxSize={75}>
+          <Whiteboard roomId={room.roomId} />
+        </Panel>
+      </PanelGroup>
+
+      <ChatRoom roomId={room.roomId} />
+    </Box>
   );
 }
 

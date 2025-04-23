@@ -53,10 +53,14 @@ export const EVENTS = {
     CURSOR_MOVE: "cursor:move",
   },
   WHITEBOARD: {
-    DRAW: "whiteboardDraw", 
+    DRAW: "whiteboardDraw",
     UNDO: "whiteboardUndo",
     ERASE: "whiteboardErase",
     MOVE: "whiteboardMove",
+  },
+  CHAT: {
+    SEND: "chatSend",
+    RECEIVE: "chatReceive",
   },
   USER: {
     DISCONNECT: "disconnect",

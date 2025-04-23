@@ -76,6 +76,15 @@ const handleSocket = (io) => {
           .emit(EVENTS.WHITEBOARD.MOVE, { userId, index, updatedElement });
       }
     );
+
+    socket.on(EVENTS.CHAT.SEND, ({ roomId, message, username }) => {
+      const timeStamp = new Date();
+      io.to(roomId).emit(EVENTS.CHAT.RECEIVE, {
+        username,
+        message,
+        timeStamp,
+      });
+    });
   });
 
   process.on("SIGINT", () => handleShutdown(io, rooms));

@@ -24,6 +24,10 @@ export const EVENTS = {
     ERASE: "whiteboardErase",
     MOVE: "whiteboardMove",
   },
+  CHAT: {
+    SEND: "chatSend",
+    RECEIVE: "chatReceive",
+  },
   USER: {
     DISCONNECT: "disconnect",
   },
