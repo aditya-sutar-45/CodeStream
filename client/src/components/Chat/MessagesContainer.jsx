@@ -53,41 +53,43 @@ function MessagesContainer({ messages }) {
             </Text>
           </Flex>
           <Separator size="4" />
-          <ReactMarkdown
-            components={{
-              code({ inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || "");
-                return !inline ? (
-                  <SyntaxHighlighter
-                    style={atomOneDark}
-                    language={match?.[1] || "text"}
-                    PreTag="div"
-                    customStyle={{
-                      borderRadius: "6px",
-                      padding: "1em",
-                      backgroundColor: "var(--gray-4)",
-                    }}
-                    {...props}
-                  >
-                    {String(children).replace(/\n$/, "")}
-                  </SyntaxHighlighter>
-                ) : (
-                  <code
-                    style={{
-                      backgroundColor: "var(--gray-4)",
-                      borderRadius: "4px",
-                      padding: "0.2em 0.4em",
-                    }}
-                    {...props}
-                  >
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          >
-            {msg.message}
-          </ReactMarkdown>
+          <Box m="1">
+            <ReactMarkdown
+              components={{
+                code({ inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  return !inline ? (
+                    <SyntaxHighlighter
+                      style={atomOneDark}
+                      language={match?.[1] || "text"}
+                      PreTag="div"
+                      customStyle={{
+                        borderRadius: "6px",
+                        padding: "1em",
+                        backgroundColor: "var(--gray-4)",
+                      }}
+                      {...props}
+                    >
+                      {String(children).replace(/\n$/, "")}
+                    </SyntaxHighlighter>
+                  ) : (
+                    <code
+                      style={{
+                        backgroundColor: "var(--gray-4)",
+                        borderRadius: "4px",
+                        padding: "0.2em 0.4em",
+                      }}
+                      {...props}
+                    >
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            >
+              {msg.message}
+            </ReactMarkdown>
+          </Box>
         </Box>
       ))}
     </Flex>
