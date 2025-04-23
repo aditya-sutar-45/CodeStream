@@ -8,6 +8,7 @@ import java from "react-syntax-highlighter/dist/esm/languages/hljs/java";
 import cpp from "react-syntax-highlighter/dist/esm/languages/hljs/cpp";
 import typescript from "react-syntax-highlighter/dist/esm/languages/hljs/typescript";
 import csharp from "react-syntax-highlighter/dist/esm/languages/hljs/csharp";
+import LoadingDialogue from "./LoadingDialogue";
 
 SyntaxHighlighter.registerLanguage("js", javascript);
 SyntaxHighlighter.registerLanguage("py", python);
@@ -53,7 +54,7 @@ function MessagesContainer({ messages, loading }) {
             </Text>
           </Flex>
           <Separator size="4" />
-          <Box m="1" style={{ overflow: "hidden" }}>
+          <Box my="1" style={{ overflow: "hidden" }}>
             <div
               className="markdown-content"
               style={{
@@ -121,6 +122,7 @@ function MessagesContainer({ messages, loading }) {
           </Box>
         </Box>
       ))}
+      {loading && <LoadingDialogue />}
     </Flex>
   );
 }
