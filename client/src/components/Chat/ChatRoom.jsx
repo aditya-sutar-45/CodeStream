@@ -12,6 +12,7 @@ function ChatRoom({ roomId }) {
   const { username } = useAuth();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleMessageReceive = (data) => {
@@ -36,6 +37,7 @@ function ChatRoom({ roomId }) {
 
       socket.emit(EVENTS.CHAT.SEND, { roomId, message: trimmedMsg, username });
       setMessage("");
+      setLoading(true);
 
       try {
         const res = await axios.post("http://localhost:3000/chat", {
@@ -46,6 +48,7 @@ function ChatRoom({ roomId }) {
           message: res.data.message,
           username: res.data.username || "AI response",
         });
+        setLoading(false);
       } catch (error) {
         console.log("ERROR:", error);
         socket.emit(EVENTS.CHAT.SEND, {
@@ -113,7 +116,7 @@ function ChatRoom({ roomId }) {
               flexDirection: "column",
             }}
           >
-            <MessagesContainer messages={messages} />
+            <MessagesContainer messages={messages} loading={loading} />
             <Flex
               p="2"
               style={{
