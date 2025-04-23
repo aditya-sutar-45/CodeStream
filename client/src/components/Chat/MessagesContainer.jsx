@@ -1,4 +1,20 @@
 import { Strong, Separator, Flex, Box, Text } from "@radix-ui/themes";
+import ReactMarkdown from "react-markdown";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
+import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
+import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
+import java from "react-syntax-highlighter/dist/esm/languages/hljs/java";
+import cpp from "react-syntax-highlighter/dist/esm/languages/hljs/cpp";
+import typescript from "react-syntax-highlighter/dist/esm/languages/hljs/typescript";
+import csharp from "react-syntax-highlighter/dist/esm/languages/hljs/csharp";
+
+SyntaxHighlighter.registerLanguage("js", javascript);
+SyntaxHighlighter.registerLanguage("py", python);
+SyntaxHighlighter.registerLanguage("java", java);
+SyntaxHighlighter.registerLanguage("cpp", cpp);
+SyntaxHighlighter.registerLanguage("ts", typescript);
+SyntaxHighlighter.registerLanguage("csharp", csharp);
 
 function MessagesContainer({ messages }) {
   return (
@@ -37,17 +53,41 @@ function MessagesContainer({ messages }) {
             </Text>
           </Flex>
           <Separator size="4" />
-          <Text
-            as="div"
-            mt="1"
-            style={{
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              overflowWrap: "break-word",
+          <ReactMarkdown
+            components={{
+              code({ inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline ? (
+                  <SyntaxHighlighter
+                    style={atomOneDark}
+                    language={match?.[1] || "text"}
+                    PreTag="div"
+                    customStyle={{
+                      borderRadius: "6px",
+                      padding: "1em",
+                      backgroundColor: "var(--gray-4)",
+                    }}
+                    {...props}
+                  >
+                    {String(children).replace(/\n$/, "")}
+                  </SyntaxHighlighter>
+                ) : (
+                  <code
+                    style={{
+                      backgroundColor: "var(--gray-4)",
+                      borderRadius: "4px",
+                      padding: "0.2em 0.4em",
+                    }}
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                );
+              },
             }}
           >
             {msg.message}
-          </Text>
+          </ReactMarkdown>
         </Box>
       ))}
     </Flex>
