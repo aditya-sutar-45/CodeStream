@@ -1,6 +1,6 @@
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
 import { Box, Flex, IconButton, Strong, Text } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessagesContainer from "./MessagesContainer";
 import socket from "../../socket";
 import { EVENTS } from "../../utils/constants";
@@ -14,6 +14,27 @@ function ChatRoom({ roomId }) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const chatRef = useRef();
+  const chatButtonRef = useRef();
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        chatRef.current &&
+        !chatRef.current.contains(e.target) &&
+        !chatButtonRef.current.contains(e.target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   useEffect(() => {
     const handleMessageReceive = (data) => {
@@ -66,6 +87,7 @@ function ChatRoom({ roomId }) {
   return (
     <>
       <IconButton
+        ref={chatButtonRef}
         radius="full"
         size="4"
         onClick={() => setOpen((prev) => !prev)}
@@ -97,6 +119,7 @@ function ChatRoom({ roomId }) {
 
       {open && (
         <Flex
+          ref={chatRef}
           height="85vh"
           width="35vw"
           direction="column"
