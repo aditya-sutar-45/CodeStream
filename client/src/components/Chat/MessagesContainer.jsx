@@ -21,7 +21,8 @@ function MessagesContainer({ messages }) {
     <Flex
       direction="column"
       gap="1"
-      mx="1"
+      // mx="1"
+      width="100%"
       my="2"
       p="2"
       overflowY="auto"
@@ -53,7 +54,7 @@ function MessagesContainer({ messages }) {
             </Text>
           </Flex>
           <Separator size="4" />
-          <Box m="1">
+          <Box m="1" overflow="hidden">
             <ReactMarkdown
               components={{
                 code({ inline, className, children, ...props }) {

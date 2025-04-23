@@ -6,6 +6,7 @@ import socket from "../../socket";
 import { EVENTS } from "../../utils/constants";
 import { useAuth } from "../../hooks/useAuth";
 import background from "../../assets/img/blurry-grad.png";
+import axios from "axios";
 
 function ChatRoom({ roomId }) {
   const { username } = useAuth();
@@ -25,10 +26,36 @@ function ChatRoom({ roomId }) {
     };
   }, []);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (message.trim() === "") return;
+    const trimmedMsg = message.trim();
     console.log(roomId, message, username);
 
+    if (trimmedMsg.startsWith("/")) {
+      const command = trimmedMsg.slice(1);
+
+      socket.emit(EVENTS.CHAT.SEND, { roomId, message: trimmedMsg, username });
+      setMessage("");
+
+      try {
+        const res = await axios.post("http://localhost:3000/chat", {
+          message: command,
+        });
+        socket.emit(EVENTS.CHAT.SEND, {
+          roomId,
+          message: res.data.message,
+          username: res.data.username || "AI response",
+        });
+      } catch (error) {
+        console.log("ERROR:", error);
+        socket.emit(EVENTS.CHAT.SEND, {
+          roomId,
+          message: "failed to get response from the AI",
+          username: "AI",
+        });
+      }
+      return;
+    }
     socket.emit(EVENTS.CHAT.SEND, { roomId, message, username });
 
     setMessage("");
@@ -70,7 +97,7 @@ function ChatRoom({ roomId }) {
         <Popover.Content
           style={{
             height: "85vh",
-            width: "30vw",
+            width: "45vw",
             backgroundImage: `url(${background})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
