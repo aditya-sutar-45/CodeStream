@@ -1,5 +1,5 @@
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
-import { Box, Flex, IconButton, Popover, Strong, Text } from "@radix-ui/themes";
+import { Box, Flex, IconButton, Strong, Text } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import MessagesContainer from "./MessagesContainer";
 import socket from "../../socket";
@@ -13,6 +13,7 @@ function ChatRoom({ roomId }) {
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const handleMessageReceive = (data) => {
@@ -21,7 +22,6 @@ function ChatRoom({ roomId }) {
     };
 
     socket.on(EVENTS.CHAT.RECEIVE, handleMessageReceive);
-
     return () => {
       socket.off(EVENTS.CHAT.RECEIVE, handleMessageReceive);
     };
@@ -30,11 +30,9 @@ function ChatRoom({ roomId }) {
   const handleSendMessage = async () => {
     if (message.trim() === "") return;
     const trimmedMsg = message.trim();
-    console.log(roomId, message, username);
 
     if (trimmedMsg.startsWith("/")) {
       const command = trimmedMsg.slice(1);
-
       socket.emit(EVENTS.CHAT.SEND, { roomId, message: trimmedMsg, username });
       setMessage("");
       setLoading(true);
@@ -48,7 +46,6 @@ function ChatRoom({ roomId }) {
           message: res.data.message,
           username: res.data.username || "AI response",
         });
-        setLoading(false);
       } catch (error) {
         console.log("ERROR:", error);
         socket.emit(EVENTS.CHAT.SEND, {
@@ -56,77 +53,76 @@ function ChatRoom({ roomId }) {
           message: "failed to get response from the AI",
           username: "AI",
         });
+      } finally {
+        setLoading(false);
       }
       return;
     }
-    socket.emit(EVENTS.CHAT.SEND, { roomId, message, username });
 
+    socket.emit(EVENTS.CHAT.SEND, { roomId, message, username });
     setMessage("");
   };
 
   return (
     <>
-      <Popover.Root>
-        <Popover.Trigger>
-          <IconButton
-            radius="full"
-            size="4"
-            style={{
-              position: "absolute",
-              bottom: "20px",
-              right: "20px",
-              zIndex: 10,
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-message-circle-more-icon lucide-message-circle-more"
-            >
-              <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-              <path d="M8 12h.01" />
-              <path d="M12 12h.01" />
-              <path d="M16 12h.01" />
-            </svg>
-          </IconButton>
-        </Popover.Trigger>
-        <Popover.Content
+      <IconButton
+        radius="full"
+        size="4"
+        onClick={() => setOpen((prev) => !prev)}
+        style={{
+          position: "absolute",
+          bottom: "20px",
+          right: "20px",
+          zIndex: 10,
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-message-circle-more-icon lucide-message-circle-more"
+        >
+          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
+          <path d="M8 12h.01" />
+          <path d="M12 12h.01" />
+          <path d="M16 12h.01" />
+        </svg>
+      </IconButton>
+
+      {open && (
+        <Flex
+          height="85vh"
+          width="35vw"
+          direction="column"
+          position="absolute"
+          bottom="80px"
+          right="20px"
+          overflow="hidden"
           style={{
-            height: "85vh",
-            width: "45vw",
             backgroundImage: `url(${background})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
-            display: "flex",
-            flexDirection: "column",
+            zIndex: 100,
+            borderRadius: "8px",
           }}
         >
-          <Flex
-            style={{
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
+          <Flex m="auto" direction="column" height="98%" width="95%">
             <MessagesContainer messages={messages} loading={loading} />
             <Flex
               p="2"
               style={{
                 backgroundColor: "var(--color-background)",
-                borderRadius: "8px",
-                marginTop: "auto",
+                borderTop: "2px solid var(--accent-6)",
+                borderRadius: "0 0 8px 8px",
               }}
-              // justify="center"
               direction="column"
-              // align="end"
               width="100%"
               gap="1"
             >
@@ -170,8 +166,8 @@ function ChatRoom({ roomId }) {
               </Flex>
             </Flex>
           </Flex>
-        </Popover.Content>
-      </Popover.Root>
+        </Flex>
+      )}
     </>
   );
 }
