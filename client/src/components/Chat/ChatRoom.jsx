@@ -1,5 +1,5 @@
 import { PaperPlaneIcon } from "@radix-ui/react-icons";
-import { Flex, IconButton, Popover } from "@radix-ui/themes";
+import { Box, Flex, IconButton, Popover, Strong, Text } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import MessagesContainer from "./MessagesContainer";
 import socket from "../../socket";
@@ -124,42 +124,50 @@ function ChatRoom({ roomId }) {
                 borderRadius: "8px",
                 marginTop: "auto",
               }}
-              justify="center"
-              align="end"
+              // justify="center"
+              direction="column"
+              // align="end"
               width="100%"
               gap="1"
             >
-              <textarea
-                placeholder="send a message...."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-                rows={2}
-                style={{
-                  width: "80%",
-                  resize: "none",
-                  border: "2px solid var(--accent-6)",
-                  borderRadius: "8px",
-                  outline: "none",
-                  paddingLeft: "8px",
-                  backgroundColor: "var(--color-background)",
-                  fontFamily: "inherit",
-                  fontSize: "inherit",
-                }}
-              />
-              <IconButton
-                style={{ width: "20%", height: "100%" }}
-                mx="1"
-                variant="soft"
-                onClick={handleSendMessage}
-              >
-                <PaperPlaneIcon />
-              </IconButton>
+              <Box width="100%" flexGrow="1">
+                <Text>
+                  use <Strong>&quot;/&quot;</Strong> to ask AI
+                </Text>
+              </Box>
+              <Flex>
+                <textarea
+                  placeholder="send a message...."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
+                  rows={2}
+                  style={{
+                    width: "80%",
+                    resize: "none",
+                    border: "2px solid var(--accent-6)",
+                    borderRadius: "8px",
+                    outline: "none",
+                    paddingLeft: "8px",
+                    backgroundColor: "var(--color-background)",
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                  }}
+                />
+                <IconButton
+                  style={{ width: "20%", height: "100%" }}
+                  mx="1"
+                  variant="soft"
+                  onClick={handleSendMessage}
+                >
+                  <PaperPlaneIcon />
+                </IconButton>
+              </Flex>
             </Flex>
           </Flex>
         </Popover.Content>
