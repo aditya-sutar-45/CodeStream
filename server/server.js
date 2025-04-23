@@ -47,7 +47,7 @@ app.post(
 
     console.log(result);
     res.json({
-      username: "AI BOT",
+      username: "AI",
       message: result.text,
       timeStamp: new Date(),
     });

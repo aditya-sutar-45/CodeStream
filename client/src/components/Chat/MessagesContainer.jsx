@@ -9,6 +9,7 @@ import cpp from "react-syntax-highlighter/dist/esm/languages/hljs/cpp";
 import typescript from "react-syntax-highlighter/dist/esm/languages/hljs/typescript";
 import csharp from "react-syntax-highlighter/dist/esm/languages/hljs/csharp";
 import LoadingDialogue from "./LoadingDialogue";
+import { useEffect, useRef } from "react";
 
 SyntaxHighlighter.registerLanguage("js", javascript);
 SyntaxHighlighter.registerLanguage("py", python);
@@ -18,8 +19,17 @@ SyntaxHighlighter.registerLanguage("ts", typescript);
 SyntaxHighlighter.registerLanguage("csharp", csharp);
 
 function MessagesContainer({ messages, loading }) {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
+  }, [messages])
+
   return (
     <Flex
+      ref={containerRef}
       direction="column"
       gap="1"
       width="100%"
