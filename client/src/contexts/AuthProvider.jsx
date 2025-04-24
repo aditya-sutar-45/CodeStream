@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
 
   async function signup(email, password, username) {
     const { data } = await axios.get(
-      "http://localhost:3000/auth/checkUsername",
+      "https://codestream-bju7.onrender.com/auth/checkUsername",
       {
         params: { username },
       }
@@ -95,7 +95,7 @@ export function AuthProvider({ children }) {
           // set the username here
           try {
             const { data } = await axios.get(
-              `http://localhost:3000/user/${user.uid}`
+              `https://codestream-bju7.onrender.com/user/${user.uid}`
             );
             setUsername(data.username);
             setProfilePic(data.profilePic);
@@ -108,7 +108,7 @@ export function AuthProvider({ children }) {
 
             try {
               const { data } = await axios.get(
-                "http://localhost:3000/auth/checkUsername",
+                "https://codestream-bju7.onrender.com/auth/checkUsername",
                 { params: { username: savedData.value } }
               );
 
@@ -118,7 +118,7 @@ export function AuthProvider({ children }) {
                 return;
               }
 
-              await axios.post("http://localhost:3000/auth/signup", {
+              await axios.post("https://codestream-bju7.onrender.com/auth/signup", {
                 firebaseUid: user.uid,
                 email: user.email,
                 username: savedData.value,

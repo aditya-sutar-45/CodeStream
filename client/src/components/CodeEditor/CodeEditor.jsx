@@ -15,177 +15,68 @@ function debounce(func, delay) {
   };
 }
 
-function getRandomColor() {
-  const colors = [
-    "#f87171",
-    "#34d399",
-    "#60a5fa",
-    "#fbbf24",
-    "#a78bfa",
-    "#f472b6",
-  ];
-  return colors[Math.floor(Math.random() * colors.length)];
-}
 
-const userColors = {}; // userId -> color
-const userNames = {}; // userId -> name
+function CodeEditor({ value, onMount, setValue, language, roomId }) {
+  const editorInstance = useRef(null); // Monaco editor instance
+  const currentCode = useRef(value); // Code value ref
 
-function CodeEditor({
-  value,
-  onMount,
-  setValue,
-  language,
-  roomId,
-  displayName,
-}) {
-  const editorInstance = useRef(null);
-  const cursorDecorations = useRef({}); 
-
-  useEffect(() => {
-    const handleUserLeft = (user) => {
-      const userId = user.socketId;
-      if (cursorDecorations.current[userId]) {
-        cursorDecorations.current[userId].clear(); 
-        delete cursorDecorations.current[userId]; 
-      }
-
-      delete userColors[userId];
-      delete userNames[userId];
-    };
-
-    socket.on(EVENTS.ROOM.LEFT, handleUserLeft);
-
-    return () => {
-      socket.off(EVENTS.ROOM.LEFT, handleUserLeft);
-    }
-  });
-
+  // Sync code updates from other clients
   useEffect(() => {
     if (!socket || !roomId) return;
 
     const handleCodeUpdate = (data) => {
-      if (!editorInstance.current || data.userId === socket.id) return;
-
-      const currentValue = editorInstance.current.getValue();
-      if (currentValue !== data.code) {
-        const currentSelection = editorInstance.current.getSelection(); // Save cursor position
-
-        editorInstance.current.setValue(data.code); // Set code directly, not via setValue()
-
-        editorInstance.current.setSelection(currentSelection); // Restore cursor
-      }
-    };
-
-    const handleCursorMove = (data) => {
-      if (!editorInstance.current || data.userId === socket.id) return;
-
-      const { lineNumber, column, userId, name } = data.position;
-
-      const editor = editorInstance.current;
-      const monaco = window.monaco;
-
-      if (!userColors[userId]) userColors[userId] = getRandomColor();
-      if (!userNames[userId]) userNames[userId] = name || "Anon";
-
-      const color = userColors[userId];
-      const label = userNames[userId];
-
-      // Remove old decoration
-      if (cursorDecorations.current[userId]) {
-        cursorDecorations.current[userId].clear(); // Properly clears collection
-      }
-
-      const range = new monaco.Range(lineNumber, column, lineNumber, column);
-      const options = {
-        className: "remote-cursor",
-        afterContentClassName: `remote-cursor-label-${userId}`,
-        stickiness:
-          monaco.editor.TrackedRangeStickiness.AlwaysGrowsWhenTypingAtEdges,
-      };
-
-      // create new decorations collection
-      const decorations = editor.createDecorationsCollection([
-        { range, options },
-      ]);
-
-      cursorDecorations.current[userId] = decorations;
-
-      // Add label style only once per user
-      const styleId = `cursor-style-${userId}`;
-      if (!document.getElementById(styleId)) {
-        const style = document.createElement("style");
-        style.id = styleId;
-        style.innerHTML = `
-        .monaco-editor .remote-cursor-label-${userId}::after {
-  content: "${label}";
-  background: ${color};
-  color: white;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  position: absolute;
-  transform: translateY(-100%);
-  margin-left: 5px;
-  white-space: nowrap;
-  z-index: 100;
-}
-
-    `;
-        document.head.appendChild(style);
+      if (
+        editorInstance.current &&
+        data.userId !== socket.id &&
+        currentCode.current !== data.code
+      ) {
+        currentCode.current = data.code;
+        editorInstance.current.setValue(data.code);
       }
     };
 
     socket.on(EVENTS.CODE.UPDATE, handleCodeUpdate);
-    socket.on(EVENTS.CODE.CURSOR_MOVE, handleCursorMove);
 
     return () => {
       socket.off(EVENTS.CODE.UPDATE, handleCodeUpdate);
-      socket.off(EVENTS.CODE.CURSOR_MOVE, handleCursorMove);
     };
-  }, [roomId, setValue]);
+  }, [roomId]);
 
+  // Handle editor changes and emit updates
   const handleCodeChange = debounce((newCode) => {
-    setValue(newCode);
+    if (currentCode.current !== newCode) {
+      currentCode.current = newCode;
+      setValue(newCode);
 
-    if (socket && roomId && editorInstance.current) {
-      socket.emit(EVENTS.CODE.SYNC, {
-        roomId,
-        code: newCode,
-        language,
-      });
-
-      const position = editorInstance.current.getPosition();
-      socket.emit(EVENTS.CODE.CURSOR_MOVE, {
-        roomId,
-        position: {
-          lineNumber: position.lineNumber,
-          column: position.column,
-          userId: socket.id,
-          name: displayName,
-        },
-      });
+      if (socket && roomId) {
+        socket.emit(EVENTS.CODE.SYNC, {
+          roomId,
+          code: newCode,
+          language,
+        });
+      }
     }
-  }, 10);
+  }, 150);
 
+  // Set up editor instance reference
   const handleMount = (editor, monaco) => {
     editorInstance.current = editor;
     onMount(editor, monaco);
-
-    editor.onDidChangeCursorPosition((e) => {
-      const position = e.position;
-      if (socket && roomId) {
-        socket.emit(EVENTS.CODE.CURSOR_MOVE, {
-          roomId,
-          position: {
-            lineNumber: position.lineNumber,
-            column: position.column,
-            userId: socket.id,
-            name: displayName,
-          },
-        });
-      }
-    });
   };
+
+  // Update currentCode and editor when language changes
+  useEffect(() => {
+    const langKey = language === "c++" ? "cpp" : language;
+    const defaultSnippet = CODE_SNIPPETS[langKey];
+
+    currentCode.current = defaultSnippet;
+
+    if (editorInstance.current) {
+      editorInstance.current.setValue(defaultSnippet);
+    }
+
+    setValue(defaultSnippet); // sync with parent
+  }, [language, setValue]);
 
   return (
     <Box height="100%">
@@ -193,8 +84,7 @@ function CodeEditor({
         height="100%"
         theme="vs-dark"
         language={language === "c++" ? "cpp" : language}
-        defaultValue={CODE_SNIPPETS[language]}
-        value={value}
+        value={currentCode.current}
         onMount={handleMount}
         onChange={(val) => handleCodeChange(val)}
       />

@@ -24,7 +24,7 @@ function MemberList({ room }) {
       try {
         const responses = await Promise.all(
           users.map((user) =>
-            axios.get(`http://localhost:3000/username/${user.username}`)
+            axios.get(`https://codestream-bju7.onrender.com/username/${user.username}`)
           )
         );
 
