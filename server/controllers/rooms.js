@@ -47,6 +47,8 @@ export const handleJoinRoom = async (
 
   const exisitingRoom = rooms.find((room) => room.roomId === roomId);
   if (!exisitingRoom) {
+    console.log(roomId);
+    console.log(exisitingRoom);
     socket.emit(EVENTS.ROOM.ERROR, `room with ${roomId} does not exist`);
     return;
   }
