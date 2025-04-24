@@ -25,7 +25,7 @@ function DashboardAvatar({ username }) {
   const updateProfilePic = (url) => {
     axios
       .patch(
-        `http://localhost:3000/user/${currentUser.uid}`,
+        `https://codestream-bju7.onrender.com/user/${currentUser.uid}`,
         {
           profilePic: url,
         },
