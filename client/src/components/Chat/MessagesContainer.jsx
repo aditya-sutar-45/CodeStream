@@ -1,7 +1,5 @@
-import { Strong, Separator, Flex, Box, Text, Tooltip } from "@radix-ui/themes";
-import ReactMarkdown from "react-markdown";
+import { Strong, Separator, Flex, Box, Text } from "@radix-ui/themes";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import javascript from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
 import python from "react-syntax-highlighter/dist/esm/languages/hljs/python";
 import java from "react-syntax-highlighter/dist/esm/languages/hljs/java";
@@ -10,6 +8,8 @@ import typescript from "react-syntax-highlighter/dist/esm/languages/hljs/typescr
 import csharp from "react-syntax-highlighter/dist/esm/languages/hljs/csharp";
 import LoadingDialogue from "./LoadingDialogue";
 import { useEffect, useRef } from "react";
+import EmptyInbox from "./EmptyInbox";
+import MessageBody from "./MessageBody";
 
 SyntaxHighlighter.registerLanguage("js", javascript);
 SyntaxHighlighter.registerLanguage("py", python);
@@ -25,7 +25,7 @@ function MessagesContainer({ messages, loading }) {
     const container = containerRef.current;
     if (!container) return;
     container.scrollTop = container.scrollHeight;
-  }, [messages])
+  }, [messages]);
 
   return (
     <Flex
@@ -65,85 +65,11 @@ function MessagesContainer({ messages, loading }) {
               </Text>
             </Flex>
             <Separator size="4" />
-            <Box my="1" style={{ overflow: "hidden" }}>
-              <div
-                className="markdown-content"
-                style={{
-                  position: "relative",
-                  paddingLeft: "1rem", // Give space for list markers
-                }}
-              >
-                <ReactMarkdown
-                  components={{
-                    code({ inline, className, children, ...props }) {
-                      const match = /language-(\w+)/.exec(className || "");
-                      return !inline ? (
-                        <SyntaxHighlighter
-                          style={atomOneDark}
-                          language={match?.[1] || "text"}
-                          PreTag="div"
-                          customStyle={{
-                            borderRadius: "8px",
-                            padding: "8px",
-                            backgroundColor: "var(--gray-4)",
-                          }}
-                          {...props}
-                        >
-                          {String(children).replace(/\n$/, "")}
-                        </SyntaxHighlighter>
-                      ) : (
-                        <code
-                          style={{
-                            backgroundColor: "var(--gray-4)",
-                            borderRadius: "8px",
-                            padding: "8px",
-                          }}
-                          {...props}
-                        >
-                          {children}
-                        </code>
-                      );
-                    },
-                    ul({ ...props }) {
-                      return (
-                        <ul
-                          style={{ paddingLeft: "16px", marginLeft: 0 }}
-                          {...props}
-                        />
-                      );
-                    },
-                    ol({ ...props }) {
-                      return (
-                        <ol
-                          style={{ paddingLeft: "16px", marginLeft: 0 }}
-                          {...props}
-                        />
-                      );
-                    },
-                    li({ ...props }) {
-                      return (
-                        <li style={{ marginBottom: "0.25rem" }} {...props} />
-                      );
-                    },
-                  }}
-                >
-                  {msg.message}
-                </ReactMarkdown>
-              </div>
-            </Box>
+            <MessageBody msg={msg} />
           </Box>
         ))
       ) : (
-        <Flex height="100%" align="center" justify="center" direction="column">
-          <Tooltip content="WOW...so empty">
-            <img
-              src="/images/icons/whiteboard/cat.gif"
-              alt="cat"
-              height="100px"
-              width="auto"
-            />
-          </Tooltip>
-        </Flex>
+        <EmptyInbox />
       )}
       {loading && <LoadingDialogue />}
     </Flex>
