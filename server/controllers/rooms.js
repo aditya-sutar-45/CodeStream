@@ -56,7 +56,7 @@ export const handleJoinRoom = async (
     exisitingRoom.roomPassword
   );
   if (!passwordMatch) {
-    socket.emit(EVENTS.ROOM.ERROR, "Incorrect roomId/ password");
+    socket.emit(EVENTS.ROOM.ERROR, "Incorrect password");
     return;
   }
 
@@ -64,7 +64,10 @@ export const handleJoinRoom = async (
     (user) => user.username === username
   );
   if (userAlreadyInRoom) {
-    socket.emit(EVENTS.ROOM.ERROR, "you have already joined this room");
+    socket.emit(
+      EVENTS.ROOM.ERROR,
+      "You are already in this room from another device or tab"
+    );
     return;
   }
 
@@ -141,7 +144,7 @@ export const handleDisconnect = (socket, rooms, io) => {
     if (userIndex !== -1) {
       const user = room.users[userIndex]; // store before removing
 
-      const isOwner = room.owner.socketId === socket.id;
+      const isOwner = room.owner?.socketId === socket.id;
       room.users.splice(userIndex, 1); // remove from our array
 
       socket.leave(room.roomId);
