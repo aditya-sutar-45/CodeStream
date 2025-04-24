@@ -38,6 +38,7 @@ export const EVENTS = {
     CREATED: "roomCreated",
     JOIN: "joinRoom",
     JOINED: "roomJoined",
+    USER_JOINED: "userJoined",
     GET_INFO: "getRoomInfo",
     INFO: "roomInfo",
     LEAVE: "leaveRoom",

@@ -27,7 +27,7 @@ function JoinRoom() {
   const navigate = useNavigate();
   const { username } = useAuth();
 
-  socket.on(EVENTS.ROOM.JOINED, (roomId) => {
+  socket.on(EVENTS.ROOM.USER_JOINED, (roomId) => {
     navigate(`/rooms/${roomId}`);
   });
 
