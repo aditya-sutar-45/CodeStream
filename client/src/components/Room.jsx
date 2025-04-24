@@ -90,7 +90,7 @@ function Room() {
         </Panel>
       </PanelGroup>
 
-      <ChatRoom roomId={room.roomId} />
+      <ChatRoom room={room} />
     </Box>
   );
 }

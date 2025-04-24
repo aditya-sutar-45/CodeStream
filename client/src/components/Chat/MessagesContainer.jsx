@@ -1,4 +1,4 @@
-import { Strong, Separator, Flex, Box, Text } from "@radix-ui/themes";
+import { Strong, Separator, Flex, Box, Text, Tooltip } from "@radix-ui/themes";
 import ReactMarkdown from "react-markdown";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomOneDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
@@ -43,95 +43,108 @@ function MessagesContainer({ messages, loading }) {
         minHeight: 0,
       }}
     >
-      {messages.map((msg, i) => (
-        <Box
-          key={i}
-          p="1"
-          my="1"
-          style={{
-            backgroundColor: "var(--gray-3)",
-            borderRadius: "8px",
-          }}
-        >
-          <Flex justify="between" width="100%">
-            <Strong>{msg.username}</Strong>
-            <Text>
-              {new Date(msg.timeStamp).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-              })}
-            </Text>
-          </Flex>
-          <Separator size="4" />
-          <Box my="1" style={{ overflow: "hidden" }}>
-            <div
-              className="markdown-content"
-              style={{
-                position: "relative",
-                paddingLeft: "1rem", // Give space for list markers
-              }}
-            >
-              <ReactMarkdown
-                components={{
-                  code({ inline, className, children, ...props }) {
-                    const match = /language-(\w+)/.exec(className || "");
-                    return !inline ? (
-                      <SyntaxHighlighter
-                        style={atomOneDark}
-                        language={match?.[1] || "text"}
-                        PreTag="div"
-                        customStyle={{
-                          borderRadius: "8px",
-                          padding: "8px",
-                          backgroundColor: "var(--gray-4)",
-                        }}
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <code
-                        style={{
-                          backgroundColor: "var(--gray-4)",
-                          borderRadius: "8px",
-                          padding: "8px",
-                        }}
-                        {...props}
-                      >
-                        {children}
-                      </code>
-                    );
-                  },
-                  ul({ ...props }) {
-                    return (
-                      <ul
-                        style={{ paddingLeft: "16px", marginLeft: 0 }}
-                        {...props}
-                      />
-                    );
-                  },
-                  ol({ ...props }) {
-                    return (
-                      <ol
-                        style={{ paddingLeft: "16px", marginLeft: 0 }}
-                        {...props}
-                      />
-                    );
-                  },
-                  li({ ...props }) {
-                    return (
-                      <li style={{ marginBottom: "0.25rem" }} {...props} />
-                    );
-                  },
+      {messages.length > 0 ? (
+        messages.map((msg, i) => (
+          <Box
+            key={i}
+            p="1"
+            my="1"
+            style={{
+              backgroundColor: "var(--gray-3)",
+              borderRadius: "8px",
+            }}
+          >
+            <Flex justify="between" width="100%">
+              <Strong>{msg.username}</Strong>
+              <Text>
+                {new Date(msg.timeStamp).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true,
+                })}
+              </Text>
+            </Flex>
+            <Separator size="4" />
+            <Box my="1" style={{ overflow: "hidden" }}>
+              <div
+                className="markdown-content"
+                style={{
+                  position: "relative",
+                  paddingLeft: "1rem", // Give space for list markers
                 }}
               >
-                {msg.message}
-              </ReactMarkdown>
-            </div>
+                <ReactMarkdown
+                  components={{
+                    code({ inline, className, children, ...props }) {
+                      const match = /language-(\w+)/.exec(className || "");
+                      return !inline ? (
+                        <SyntaxHighlighter
+                          style={atomOneDark}
+                          language={match?.[1] || "text"}
+                          PreTag="div"
+                          customStyle={{
+                            borderRadius: "8px",
+                            padding: "8px",
+                            backgroundColor: "var(--gray-4)",
+                          }}
+                          {...props}
+                        >
+                          {String(children).replace(/\n$/, "")}
+                        </SyntaxHighlighter>
+                      ) : (
+                        <code
+                          style={{
+                            backgroundColor: "var(--gray-4)",
+                            borderRadius: "8px",
+                            padding: "8px",
+                          }}
+                          {...props}
+                        >
+                          {children}
+                        </code>
+                      );
+                    },
+                    ul({ ...props }) {
+                      return (
+                        <ul
+                          style={{ paddingLeft: "16px", marginLeft: 0 }}
+                          {...props}
+                        />
+                      );
+                    },
+                    ol({ ...props }) {
+                      return (
+                        <ol
+                          style={{ paddingLeft: "16px", marginLeft: 0 }}
+                          {...props}
+                        />
+                      );
+                    },
+                    li({ ...props }) {
+                      return (
+                        <li style={{ marginBottom: "0.25rem" }} {...props} />
+                      );
+                    },
+                  }}
+                >
+                  {msg.message}
+                </ReactMarkdown>
+              </div>
+            </Box>
           </Box>
-        </Box>
-      ))}
+        ))
+      ) : (
+        <Flex height="100%" align="center" justify="center" direction="column">
+          <Tooltip content="WOW...so empty">
+            <img
+              src="/images/icons/whiteboard/cat.gif"
+              alt="cat"
+              height="100px"
+              width="auto"
+            />
+          </Tooltip>
+        </Flex>
+      )}
       {loading && <LoadingDialogue />}
     </Flex>
   );

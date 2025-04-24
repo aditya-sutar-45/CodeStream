@@ -1,4 +1,4 @@
-import { PaperPlaneIcon } from "@radix-ui/react-icons";
+import { Cross1Icon, PaperPlaneIcon } from "@radix-ui/react-icons";
 import { Box, Flex, IconButton, Strong, Text } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import MessagesContainer from "./MessagesContainer";
@@ -8,7 +8,8 @@ import { useAuth } from "../../hooks/useAuth";
 import background from "../../assets/img/blurry-grad.png";
 import axios from "axios";
 
-function ChatRoom({ roomId }) {
+function ChatRoom({ room }) {
+  const roomId = room.roomId;
   const { username } = useAuth();
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState("");
@@ -137,6 +138,28 @@ function ChatRoom({ roomId }) {
           }}
         >
           <Flex m="auto" direction="column" height="98%" width="95%">
+            <Flex
+              justify="between"
+              align="center"
+              width="100%"
+              py="1"
+              px="2"
+              style={{
+                backgroundColor: "var(--color-background)",
+                borderRadius: "8px",
+              }}
+            >
+              <Text>
+                <Strong>{room.roomName}</Strong> - Chat
+              </Text>
+              <IconButton
+                color="red"
+                variant="soft"
+                onClick={() => setOpen(false)}
+              >
+                <Cross1Icon />
+              </IconButton>
+            </Flex>
             <MessagesContainer messages={messages} loading={loading} />
             <Flex
               p="2"
