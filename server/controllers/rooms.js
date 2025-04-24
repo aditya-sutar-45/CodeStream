@@ -71,6 +71,7 @@ export const handleJoinRoom = async (
   socket.join(roomId);
   exisitingRoom.users.push({ socketId: socket.id, username });
 
+  socket.emit(EVENTS.ROOM.USER_JOINED, roomId);
   socket.to(roomId).emit(EVENTS.ROOM.JOINED, username);
   socket.to(roomId).emit(EVENTS.ROOM.INFO, exisitingRoom);
 };

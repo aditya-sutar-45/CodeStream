@@ -4,6 +4,7 @@ export const EVENTS = {
     CREATED: "roomCreated",
     JOIN: "joinRoom",
     JOINED: "roomJoined",
+    USER_JOINED: "userJoined",
     LEAVE: "leaveRoom",
     LEFT: "leftRoom",
     DELETED: "roomDeleted",
