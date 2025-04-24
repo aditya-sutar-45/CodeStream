@@ -61,7 +61,7 @@ function ChatRoom({ room }) {
       setLoading(true);
 
       try {
-        const res = await axios.post("https://codestream-bju7.onrender.com/chat", {
+        const res = await axios.post("http://localhost:3000/chat", {
           message: command,
         });
         socket.emit(EVENTS.CHAT.SEND, {

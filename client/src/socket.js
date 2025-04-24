@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const socket = io.connect("https://codestream-bju7.onrender.com", {
+const socket = io.connect("http://localhost:3000", {
   transports: ["websocket"],
   autoConnect: true,
   reconnectionAttempts: 5,
