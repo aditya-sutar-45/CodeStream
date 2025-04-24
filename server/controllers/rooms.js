@@ -47,8 +47,6 @@ export const handleJoinRoom = async (
 
   const exisitingRoom = rooms.find((room) => room.roomId === roomId);
   if (!exisitingRoom) {
-    console.log(roomId);
-    console.log(exisitingRoom);
     socket.emit(EVENTS.ROOM.ERROR, `room with ${roomId} does not exist`);
     return;
   }
@@ -73,7 +71,6 @@ export const handleJoinRoom = async (
   socket.join(roomId);
   exisitingRoom.users.push({ socketId: socket.id, username });
 
-  socket.emit(EVENTS.ROOM.JOINED, roomId);
   socket.to(roomId).emit(EVENTS.ROOM.JOINED, username);
   socket.to(roomId).emit(EVENTS.ROOM.INFO, exisitingRoom);
 };
