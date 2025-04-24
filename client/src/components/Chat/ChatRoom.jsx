@@ -1,5 +1,4 @@
-import { Cross1Icon, PaperPlaneIcon } from "@radix-ui/react-icons";
-import { Box, Flex, IconButton, Strong, Text } from "@radix-ui/themes";
+import { Flex, IconButton } from "@radix-ui/themes";
 import { useEffect, useRef, useState } from "react";
 import MessagesContainer from "./MessagesContainer";
 import socket from "../../socket";
@@ -7,6 +6,8 @@ import { EVENTS } from "../../utils/constants";
 import { useAuth } from "../../hooks/useAuth";
 import background from "../../assets/img/blurry-grad.png";
 import axios from "axios";
+import ChatHeader from "./ChatHeader";
+import ChatInput from "./ChatInput";
 
 function ChatRoom({ room }) {
   const roomId = room.roomId;
@@ -138,79 +139,13 @@ function ChatRoom({ room }) {
           }}
         >
           <Flex m="auto" direction="column" height="98%" width="95%">
-            <Flex
-              justify="between"
-              align="center"
-              width="100%"
-              py="1"
-              px="2"
-              style={{
-                backgroundColor: "var(--color-background)",
-                borderRadius: "8px",
-              }}
-            >
-              <Text>
-                <Strong>{room.roomName}</Strong> - Chat
-              </Text>
-              <IconButton
-                color="red"
-                variant="soft"
-                onClick={() => setOpen(false)}
-              >
-                <Cross1Icon />
-              </IconButton>
-            </Flex>
+            <ChatHeader room={room} setOpen={setOpen} />
             <MessagesContainer messages={messages} loading={loading} />
-            <Flex
-              p="2"
-              style={{
-                backgroundColor: "var(--color-background)",
-                borderTop: "2px solid var(--accent-6)",
-                borderRadius: "0 0 8px 8px",
-              }}
-              direction="column"
-              width="100%"
-              gap="1"
-            >
-              <Box width="100%" flexGrow="1">
-                <Text>
-                  use <Strong>&quot;/&quot;</Strong> to ask AI
-                </Text>
-              </Box>
-              <Flex>
-                <textarea
-                  placeholder="send a message...."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                  rows={2}
-                  style={{
-                    width: "80%",
-                    resize: "none",
-                    border: "2px solid var(--accent-6)",
-                    borderRadius: "8px",
-                    outline: "none",
-                    paddingLeft: "8px",
-                    backgroundColor: "var(--color-background)",
-                    fontFamily: "inherit",
-                    fontSize: "inherit",
-                  }}
-                />
-                <IconButton
-                  style={{ width: "20%", height: "100%" }}
-                  mx="1"
-                  variant="soft"
-                  onClick={handleSendMessage}
-                >
-                  <PaperPlaneIcon />
-                </IconButton>
-              </Flex>
-            </Flex>
+            <ChatInput
+              message={message}
+              setMessage={setMessage}
+              handleSendMessage={handleSendMessage}
+            />
           </Flex>
         </Flex>
       )}
