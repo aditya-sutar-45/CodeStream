@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { executeCode } from "../../utils/api";
-import { Text, Box, Flex, Button, TextField } from "@radix-ui/themes";
+import { Text, Box, Flex, Button, TextArea } from "@radix-ui/themes";
 
 function Output({ editorRef, language }) {
   const [output, setOutput] = useState(null);
@@ -57,15 +57,19 @@ function Output({ editorRef, language }) {
 
       {showInputField && (
         <Box p="2" mx="1" mb="2">
-          <TextField.Root
-            placeholder="Enter input for your code here..."
+          <TextArea
+            placeholder="Enter inputs for your code here... (one input per line)"
             value={userInput}
             onChange={(e) => setUserInput(e.target.value)}
-            style={{ width: "100%" }}
+            style={{
+              width: "100%",
+              minHeight: "80px",
+              resize: "vertical",
+            }}
             size="2"
           />
           <Text as="p" size="1" color="gray">
-            This input will be passed to your code when it runs
+            Enter each input on a new line for multiple input prompts
           </Text>
         </Box>
       )}
