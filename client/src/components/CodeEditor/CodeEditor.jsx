@@ -66,7 +66,7 @@ function CodeEditor({ value, onMount, setValue, language, roomId }) {
 
   // Update currentCode and editor when language changes
   useEffect(() => {
-    const langKey = language === "c++" ? "cpp" : language;
+    const langKey = language;
     const defaultSnippet = CODE_SNIPPETS[langKey];
 
     currentCode.current = defaultSnippet;
