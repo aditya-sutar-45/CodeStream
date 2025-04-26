@@ -9,6 +9,7 @@ import cors from "cors";
 import handleSocket from "./handleSocket.js";
 import catchAsync from "./utils/catchAsync.js";
 import { GoogleGenAI } from "@google/genai";
+import { v4 as uuid } from "uuid";
 
 dotenv.config();
 
@@ -34,22 +35,48 @@ app.use(
 
 app.use("/", authRouter);
 
+const chatHistories = new Map();
 // gemini-2.5-flash-preview-04-17
 app.post(
   "/chat",
   catchAsync(async (req, res) => {
     const userMessage = req.body.message;
 
-    const result = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: userMessage,
+    let conversationId = req.body.conversationId;
+    if (!conversationId) {
+      conversationId = uuid();
+    }
+
+    if (!chatHistories.has(conversationId)) {
+      chatHistories.set(conversationId, []);
+    }
+
+    const history = chatHistories.get(conversationId);
+
+    history.push({
+      role: "user",
+      parts: [{ text: userMessage }],
     });
 
-    console.log(result);
+    const chat = ai.chats.create({
+      model: "gemini-2.0-flash",
+      history: history,
+    });
+
+    const result = await chat.sendMessage({
+      message: userMessage,
+    });
+
+    history.push({
+      role: "model",
+      parts: [{ text: result.text }],
+    });
+
     res.json({
       username: "AI",
       message: result.text,
       timeStamp: new Date(),
+      conversationId: conversationId,
     });
   })
 );

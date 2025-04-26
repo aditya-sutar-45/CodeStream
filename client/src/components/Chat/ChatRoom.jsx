@@ -16,6 +16,7 @@ function ChatRoom({ room }) {
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [AI_conversationId, setAI_conversationId] = useState(null);
 
   const chatRef = useRef();
   const chatButtonRef = useRef();
@@ -63,7 +64,13 @@ function ChatRoom({ room }) {
       try {
         const res = await axios.post("http://localhost:3000/chat", {
           message: command,
+          conversationId: AI_conversationId,
         });
+
+        if (res.data.conversationId) {
+          setAI_conversationId(res.data.conversationId);
+        }
+
         socket.emit(EVENTS.CHAT.SEND, {
           roomId,
           message: res.data.message,
