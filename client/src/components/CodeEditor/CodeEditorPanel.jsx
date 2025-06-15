@@ -34,6 +34,10 @@ function CodeEditorPanel({ room }) {
     };
     updateLanguageVersions();
 
+    if (room.language) {
+      setLanguage(room.language);
+    }
+
     if (!socket) return;
     const handleLanguageUpdate = (data) => {
       if (data.userId !== socket.id) {
@@ -44,7 +48,7 @@ function CodeEditorPanel({ room }) {
     return () => {
       socket.off(EVENTS.CODE.LANGUAGE_UPDATE, handleLanguageUpdate);
     };
-  }, []);
+  }, [room]);
 
   useEffect(() => {
     window.monaco?.editor.setTheme(theme);
@@ -104,7 +108,9 @@ function CodeEditorPanel({ room }) {
           </Box>
         </Panel>
 
-        <PanelResizeHandle style={{backgroundColor: "gray", padding: "1px"}}/>
+        <PanelResizeHandle
+          style={{ backgroundColor: "gray", padding: "1px" }}
+        />
 
         {/* output window */}
         <Panel defaultSize={40} maxSize={75}>
